@@ -64,5 +64,6 @@ var gameSetUpData = {"roundCount":50, "playerX":16, "playerY":23, "leaderX":14, 
 }
 
 
-var socketURL = "http://localhost:5000"
+// var socketURL = "http://localhost:5000"
+var socketURL = "https://asist-api.herokuapp.com/" 
 export {phaserConfig, mapData, gameSetUpData, socketURL};
