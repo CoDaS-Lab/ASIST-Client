@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>ASIST</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="/stylesheets/game.css">
+  <link href="https://fonts.googleapis.com/css2?family=Lemonada:wght@600&display=swap" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+  <script src="/js/lib/easytimer.min.js"></script>
+  <script src="/js/lib/phaser.min.js"></script>
+  <script type="module" src="/js/index.js"></script>
+  <!-- <script type="module" src="/js/gameUtils.js"></script> -->
+  <!-- <script type="module" src="/js/expNav.js"></script> -->
+  <!-- <script type="module" src="/js/config.js"></script> -->
+</head>
+
+<body>
+  <h1 class="font-weight-bold" style='display: none; text-align:center; color:indianred; font-family: Lemonada, cursive;'>CoDaS Lab | ASIST</h1>
+  <div id="tmcn" style="margin-top: 5%;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2>Terms and Conditions
+                </h2>
+            </div>
+        </div>
+            <p>
+                We allow one HIT per person, if you have recently completed a similar HIT please do not accept 
+                this one as you will not be paid for completing it again. By taking part in this experiment, you are 
+                participating in a study being performed by researchers in the Department of Mathmematics & Computer Science at 
+                Rutgers University. If you have questions about this research, please contact us at cocoscishafto@gmail.com. 
+                You must be at least 18 years old to participate. Your participation in this research is voluntary.
+                You may decline further participation, at any time, without adverse consequences. Your anonymity is assured; 
+                the researchers who have requested your participation will not receive any personal information about you. 
+                Please click Continue after you have read the instructions and are ready to begin the HIT.
+            </p>
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" value="check" id="agree"/>
+            <label class="form-check-label" for="agree">
+                Please tick the box and continue to the visit the next page. 
+            </label>
+            <div>
+                  <span id="cte">
+                    <a class="btn btn-primary disabled">Continue</a>
+                  </span>
+            </div>
+        </div>
+    </div>
+  </div>
+  <div id="mainInfo" style="display: none; margin-top: 5%;">
+    <div class="container">
+        <div class="row"></div>
+        <h3>
+            INSTRUCTIONS.
+        </h3>
+        <ul>
+            <li>
+              The game has three rooms and two victims. Each room can contain at maximum one victim.
+            </li>
+            <li>
+              Player can use the up, down, left, and right key for movement in the game.
+              Each movement of the player in any direction is counted as one round.               
+            </li>
+            <li>
+              The goal of the game is to save both victims in 100 rounds and under 2 minutes.
+            </li>              
+            <li>
+              Victims are represented by purple colored square boxes that turns yellow when saved.
+              Victims can saved from any of the adjacent location by pressing r key.
+            </li>            
+            <li>
+              The room view is blocked to hide the presence of the victim in it. 
+              The view can be unblocked as soon as a player reaches the the entrance of the room indicated by light blue square box
+              which makes the victim visible to the player
+            </li>
+            <li>
+              There is a bot in the game who knows which rooms contains the victims and may lead the player to the correct rooms.
+            </li>
+        </ul>
+        <div>
+            <a class="btn btn-primary btn-md" id="join-room">
+              Click to Join Game Room
+            </a>
+        </div>
+    </div>
+  </div>  
+ 
+  <div style='display: none; justify-content: center; margin-top: 5%;' id='phaser-game'>
+    <div id="game-time">
+      <span id="timerTitle">GAME TIMER</span><span id='timerTime'></span>
+    </div> 
+  </div>
+  <div style='display: flex; justify-content: center;'>
+  <h1 class="font-weight-bold" style='display:none; margin:20%; text-align:center; color:darkslategray;' id='wait-room'>Waiting for other players to join</h1>
+  <h1 class="font-weight-bold" style='display:none; margin:20%; text-align:center; color:darkslategray;' id='game-over'>Game Over!!</h1>
+</div>
+</body>
+</html>
