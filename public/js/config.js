@@ -56,6 +56,7 @@ var mapData = {'cols': 31,'rows': 25, 'victimIndexes': [466, 494],
     771, 772, 773, 774],
 }
 
+
 var gameSetUpData = {"roundCount":50, "playerX":16, "playerY":23, "leaderX":14, "leaderY":23, "gameTime":2, dTime: new Date().toISOString(),
 "leaderMovementIndexes": [[14, 23, "down"], [14, 23, "down"], [14, 22, "up"], [14, 21, "up"], [14, 20, "up"], [14, 19, "up"], 
 [14, 18, "up"], [14, 17, "up"], [14, 16, "up"], [13, 16, "left"], [12, 16, "left"], [13, 16, "right"],
@@ -64,5 +65,5 @@ var gameSetUpData = {"roundCount":50, "playerX":16, "playerY":23, "leaderX":14, 
 }
 
 
-var socketURL = "http://localhost:5000"
+var socketURL = "https://asist-api.herokuapp.com/"
 export {phaserConfig, mapData, gameSetUpData, socketURL};
