@@ -111,7 +111,7 @@ var gamePlayState = new Phaser.Class({
             $("#phaser-game").hide();
             $("#game-over").show();
             game.scene.stop("GamePlay");
-            socket.emit('end_game', {"key": "go_round", "k_time": new Date().toISOString(), "d_time": this.gameConfig.dTime})
+            socket.emit('end_game', {"key": "go_round", "k_time": new Date().toISOString()})
         }
 
         if (Phaser.Input.Keyboard.JustDown(this.keys.R)){
@@ -134,7 +134,7 @@ var gamePlayState = new Phaser.Class({
                             $("#phaser-game").hide();
                             $("#game-over").show();
                             game.scene.stop("GamePlay");
-                            socket.emit('end_game', {"key": "go_victim", "k_time": new Date().toISOString(), "d_time": this.gameConfig.dTime})
+                            socket.emit('end_game', {"key": "go_victim", "k_time": new Date().toISOString()})
                         }
                     }
                     
