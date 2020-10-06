@@ -9,10 +9,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
   <script src="/js/lib/easytimer.min.js"></script>
   <script src="/js/lib/phaser.min.js"></script>
+  <script src="/js/lib/mmturkey.js"></script>
   <script type="module" src="/js/index.js"></script>
-  <!-- <script type="module" src="/js/gameUtils.js"></script> -->
-  <!-- <script type="module" src="/js/expNav.js"></script> -->
-  <!-- <script type="module" src="/js/config.js"></script> -->
 </head>
 
 <body>
@@ -48,42 +46,45 @@
         </div>
     </div>
   </div>
-  <div id="mainInfo" style="display: none; margin-top: 5%;">
-    <div class="container">
-        <div class="row"></div>
-        <h3>
-            INSTRUCTIONS.
-        </h3>
-        <ul>
-            <li>
-              The game has three rooms and two victims. Each room can contain at maximum one victim.
-            </li>
-            <li>
-              Player can use the up, down, left, and right key for movement in the game.
-              Each movement of the player in any direction is counted as one round.               
-            </li>
-            <li>
-              The goal of the game is to save both victims in 50 rounds and under 2 minutes.
-            </li>              
-            <li>
-              Victims are represented by purple colored square boxes that turns yellow when saved.
-              Victims can saved from any of the adjacent location by pressing r key.
-            </li>            
-            <li>
-              The room view is blocked to hide the presence of the victim in it. 
-              The view can be unblocked as soon as a player reaches the the entrance of the room indicated by light blue square box
-              which makes the victim visible to the player
-            </li>
-            <li>
-              There is a bot in the game who knows which rooms contains the victims and may lead the player to the correct rooms.
-            </li>
-        </ul>
-        <div>
-            <a class="btn btn-primary btn-md" id="join-room">
-              Click to Join Game Room
-            </a>
+  <div id="mainInfo" style="display: none; margin-top: 5%; margin-left: 5%;">
+        <div class="row">
+          <div class="col">
+            <h3>
+              INSTRUCTIONS.
+            </h3>
+            <ul>
+              <li>
+                The game has three rooms and one victim located in one of the room.
+                Each movement of the player in any direction is counted as one round.
+                The goal of the game is to save victim in 40 rounds and under 2 minutes.
+              </li>
+              <li>
+                The room view is blocked to hide the presence of the victim in it.
+                The view can be unblocked to see the victim as soon as player reaches the door located at the entrance of the room indicated by light blue square box.
+                Victims are represented by purple colored square box that turns yellow when saved.
+              </li>
+              <li>
+                Victims can be saved from any of the adjacent location by pressing r key.
+                Player can use the up, down, left, and right key for movement in the game.
+              </li>              
+              <li>
+                There is a bot(leader) in the game who knows which room contains the victim and may lead the player to the correct room.
+              </li>            
+              <li>
+                The view of the game would be similar to the picture that can be seen on this screen.
+              </li>
+            </ul>
+            <div>
+              <a class="btn btn-primary btn-md" id="join-room">
+                Click to Join Game Room
+              </a>
+            </div>
+          </div>
+          <div class="col">
+            <h3 style="text-align:center;">GAME VIEW IMAGE</h3>
+            <img src="/assets/gameMap.png" class="image-responsive" style="width: 100%;">
+          </div>
         </div>
-    </div>
   </div>  
  
   <div style='display: none; justify-content: center; margin-top: 5%;' id='phaser-game'>

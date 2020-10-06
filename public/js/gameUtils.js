@@ -5,6 +5,8 @@ class PlayerDisplay {
         this.x = Config.x
         this.y = Config.y
         this.name = Config.name
+        this.update_time = new Date().toISOString();
+        this.direction = "down"
         this.physicsObj = gameScene.add.sprite(32, 32, Config.name);
         this.gameScene.gameState.placeAt(this.x, this.y, this.physicsObj);
         this.physicsObj.displayHeight = (this.gameScene.sys.game.scale.gameSize._height/this.gameScene.mapConfig.rows)+3;
@@ -50,10 +52,12 @@ class PlayerDisplay {
     move(x,y, direction){
         this.x = x;
         this.y = y;
+        this.direction = direction;
         this.gameScene.gameConfig.dTime = new Date().toISOString();
-        console.log(this.name, this.x, this.y, direction)
+        this.update_time = new Date().toISOString();
+        console.log(this.name, this.x, this.y, direction);
         this.gameScene.gameState.placeAt(this.x, this.y, this.physicsObj);
-        this.physicsObj.anims.play(direction);
+        this.physicsObj.anims.play(this.name+direction);
     }
  }
 
@@ -243,7 +247,7 @@ class GameState {
     }
 
     playerMove = function (message, playerId){
-        console.log(message["x"], message["y"], message["idx"], playerId)
+        console.log(message["x"], message["y"], message["idx"])
         let newIdx = (message["y"]*this.scene.mapConfig.cols)+ message["x"]
         if (message["idx"] == playerId){
             this.scene.gameConfig.roundCount -= 1;
@@ -254,7 +258,7 @@ class GameState {
             }                
         }
         this.scene.playersCurrentLoc[message["idx"]] = newIdx
-        this.scene.player_list[message["idx"]].move(message["x"], message["y"], this.scene.player_list[message["idx"]].name+message["key"])
+        this.scene.player_list[Number(message["idx"])].move(message["x"], message["y"], message["key"])
     }
 }
 

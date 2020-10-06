@@ -13,7 +13,8 @@ var phaserConfig = {
     } 
 };
 
-var mapData = {'cols': 31,'rows': 25, 'victimIndexes': [466, 494],
+var mapData = {'cols': 31,'rows': 25,
+'victimIndexes': [],
 'hallwayBoundaryIndexes':[167, 173, 198, 204, 229, 235, 260, 266, 291, 297, 
     322, 328, 353, 359,  377, 378, 379, 380, 381, 382, 383, 384, 390, 391, 
     392, 393, 394, 395, 396, 397,  563, 564, 565, 566, 567, 568, 569, 570, 576, 577, 
@@ -24,7 +25,6 @@ var mapData = {'cols': 31,'rows': 25, 'victimIndexes': [466, 494],
     496,500,527,531,558, 559, 560,561,562, 398,399,400,401,402, 429, 433, 
     460, 464, 495, 522, 526, 553, 557, 584, 585,586,587,588],
 "doorIndexes": [139, 469, 491],
-'roomVictimMapping': {'139': [], "469":[466], "491":[494]},
 'roomViewBlocksMapping': {'139': [44,45,46,47,48,75,76,77,78,79,106,107,108,109,110],
     "469":[404,405,406,435,436,437,466,467,468,497,498,499,528,529,530], 
     "491":[430,431,432,461,462,463,492,493,494,523,524,525,554,555,556]},
@@ -56,14 +56,32 @@ var mapData = {'cols': 31,'rows': 25, 'victimIndexes': [466, 494],
     771, 772, 773, 774],
 }
 
-var gameSetUpData = {"roundCount":50, "playerX":16, "playerY":23, "leaderX":14, "leaderY":23, "gameTime":2, dTime: new Date().toISOString(),
-"leaderMovementIndexes": [[14, 23, "down"], [14, 23, "down"], [14, 22, "up"], [14, 21, "up"], [14, 20, "up"], [14, 19, "up"], 
-[14, 18, "up"], [14, 17, "up"], [14, 16, "up"], [13, 16, "left"], [12, 16, "left"], [13, 16, "right"],
-[14, 16, "right"], [14, 17, "down"], [14, 18, "down"], [14, 19, "down"], [14, 20, "down"], 
-[14, 21, "down"], [14, 22, "down"], [14, 23, "down"]]
+var gameSetUpData = {"roundCount":"40", "playerX":16, "playerY":23, "leaderX":15, "leaderY":23, "gameTime":2, dTime: new Date().toISOString()}
+
+var victimSetUpDataList = [[[15, 23, "down"], [15, 23, "down"], [15, 22, "up"], [15, 21, "up"], [15, 20, "up"], [15, 19, "up"],
+[15, 18, "up"], [15, 17, "up"], [15, 16, "up"], [15, 15, "up"], [14, 15, "left"], [13, 15, "left"], [12, 15, "left"], [11, 15, "left"], [10, 15, "left"],
+[10, 15, "left"], [11, 15, "right"], [12, 15, "right"], [13, 15, "right"], [14, 15, "right"], [15, 15, "right"], [15, 15, "down"]],
+[[15, 23, "down"], [15, 23, "down"], [15, 22, "up"], [15, 21, "up"], [15, 20, "up"], [15, 19, "up"],
+[15, 18, "up"], [15, 17, "up"], [15, 16, "up"], [15, 15, "up"], [16, 15, "right"], [17, 15, "right"], [18, 15, "right"],
+[19, 15, "right"], [20, 15, "right"], [19, 15, "left"], [18, 15, "left"], [17, 15, "left"], [16, 15, "left"],[15, 15, "left"], [15, 15, "down"]],
+[[15, 23, "down"], [15, 23, "down"], [15, 22, "up"], [15, 21, "up"], [15, 20, "up"], [15, 19, "up"],
+[15, 18, "up"], [15, 17, "up"], [15, 16, "up"], [15, 15, "up"], [15, 14, "up"], [15, 13, "up"], [15, 12, "up"], [15, 11, "up"],
+[15, 10, "up"], [15, 11, "down"], [15, 12, "down"], [15, 13, "down"], [15, 14, "down"], [15, 15, "down"],[15, 15, "down"]]]
+
+
+var VictimMapList = [{'139': [], "469":[466], "491":[]}, {'139': [], "469":[], "491":[494]}, {'139': [46], "469":[], "491":[]}]
+
+const selectIdx = Math.floor(Math.random() * 3)
+
+mapData["roomVictimMapping"] = VictimMapList[selectIdx]
+for (let k in mapData.roomVictimMapping){
+    for (var i = 0; i < mapData.roomVictimMapping[k].length; i++) {
+        mapData.victimIndexes.push(mapData["roomVictimMapping"][k][i])
+    }
 }
 
+gameSetUpData["leaderMovementIndexes"] = victimSetUpDataList[selectIdx]
 
-// var socketURL = "http://localhost:5000"
-var socketURL = "https://asist-api.herokuapp.com/" 
-export {phaserConfig, mapData, gameSetUpData, socketURL};
+var socketURL = "https://asist-api.herokuapp.com/"
+
+export {phaserConfig, mapData, gameSetUpData, socketURL, selectIdx};
