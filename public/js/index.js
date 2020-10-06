@@ -67,7 +67,7 @@ var gamePlayState = new Phaser.Class({
                     let left_x = this.player_list[playerId].x - 1;
                     socket.emit("player_move", {'x': left_x, 'y': this.player_list[playerId].y,
                         "key":"left", 'rm_id':room_id, 'idx': playerId, "k_time":new Date().toISOString(),
-                        "dTime": this.player_list[playerId].update_time
+                        "dTime": this.player_list[playerId].update_time, "rcount": this.gameConfig.roundCount
                     })
                 }
             }
@@ -78,7 +78,7 @@ var gamePlayState = new Phaser.Class({
                     let right_x = this.player_list[playerId].x + 1;
                     socket.emit("player_move", {'x': right_x, 'y': this.player_list[playerId].y,
                         "key":"right", 'rm_id':room_id, 'idx': playerId, "k_time":new Date().toISOString(),
-                        "dTime": this.player_list[playerId].update_time
+                        "dTime": this.player_list[playerId].update_time, "rcount": this.gameConfig.roundCount
                     })         
                 }
             }
@@ -89,7 +89,7 @@ var gamePlayState = new Phaser.Class({
                     let up_y = this.player_list[playerId].y - 1;
                     socket.emit("player_move", {'x': this.player_list[playerId].x, 'y': up_y,
                         "key":"up", 'rm_id':room_id, 'idx': playerId, "k_time":new Date().toISOString(),
-                        "dTime": this.player_list[playerId].update_time
+                        "dTime": this.player_list[playerId].update_time, "rcount": this.gameConfig.roundCount
                     })
                 }
             }
@@ -100,13 +100,12 @@ var gamePlayState = new Phaser.Class({
                     let down_y = this.player_list[playerId].y + 1;
                     socket.emit("player_move", {'x': this.player_list[playerId].x, 'y': down_y,
                         "key":"down", 'rm_id':room_id, 'idx': playerId, "k_time":new Date().toISOString(),
-                        "dTime": this.player_list[playerId].update_time
+                        "dTime": this.player_list[playerId].update_time, "rcount": this.gameConfig.roundCount
                     })
                 }
             }
         }
-
-        else if (this.gameConfig.roundCount==0){
+        else if (this.gameConfig.roundCount<=0){
             gameTimer.stop()
             $("#phaser-game").hide();
             $("#game-over").show();
