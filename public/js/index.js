@@ -1,8 +1,8 @@
 import {actExpSmryBtn, dsplyExpSmry} from "/js/expNav.js";
 import {PlayerDisplay, GameState} from "/js/gameUtils.js"
-import {phaserConfig, mapData, gameSetUpData, socketURL} from "/js/config.js"
+import {phaserConfig, mapData, gameSetUpData, socketURL, selectIdx} from "/js/config.js"
 
-var room_id = "temp_room";
+var roomIdx = "temp_room";
 var playerId = "temp_id";
 var gameTimer = new Timer();
 const socket = io(socketURL, {transports: ['websocket']})
@@ -66,7 +66,7 @@ var gamePlayState = new Phaser.Class({
                     console.log("Move Left");
                     let left_x = this.player_list[playerId].x - 1;
                     socket.emit("player_move", {'x': left_x, 'y': this.player_list[playerId].y,
-                        "key":"left", 'rm_id':room_id, 'idx': playerId, "k_time":new Date().toISOString(),
+                        "key":"left", 'rm_id':roomIdx, 'idx': playerId, "k_time":new Date().toISOString(),
                         "dTime": this.player_list[playerId].update_time, "rcount": this.gameConfig.roundCount
                     })
                 }
@@ -77,7 +77,7 @@ var gamePlayState = new Phaser.Class({
                     console.log("Move Right");
                     let right_x = this.player_list[playerId].x + 1;
                     socket.emit("player_move", {'x': right_x, 'y': this.player_list[playerId].y,
-                        "key":"right", 'rm_id':room_id, 'idx': playerId, "k_time":new Date().toISOString(),
+                        "key":"right", 'rm_id':roomIdx, 'idx': playerId, "k_time":new Date().toISOString(),
                         "dTime": this.player_list[playerId].update_time, "rcount": this.gameConfig.roundCount
                     })         
                 }
@@ -88,7 +88,7 @@ var gamePlayState = new Phaser.Class({
                     console.log("Move Up");
                     let up_y = this.player_list[playerId].y - 1;
                     socket.emit("player_move", {'x': this.player_list[playerId].x, 'y': up_y,
-                        "key":"up", 'rm_id':room_id, 'idx': playerId, "k_time":new Date().toISOString(),
+                        "key":"up", 'rm_id':roomIdx, 'idx': playerId, "k_time":new Date().toISOString(),
                         "dTime": this.player_list[playerId].update_time, "rcount": this.gameConfig.roundCount
                     })
                 }
@@ -99,7 +99,7 @@ var gamePlayState = new Phaser.Class({
                     console.log("Move Down");
                     let down_y = this.player_list[playerId].y + 1;
                     socket.emit("player_move", {'x': this.player_list[playerId].x, 'y': down_y,
-                        "key":"down", 'rm_id':room_id, 'idx': playerId, "k_time":new Date().toISOString(),
+                        "key":"down", 'rm_id':roomIdx, 'idx': playerId, "k_time":new Date().toISOString(),
                         "dTime": this.player_list[playerId].update_time, "rcount": this.gameConfig.roundCount
                     })
                 }
@@ -110,19 +110,20 @@ var gamePlayState = new Phaser.Class({
             $("#phaser-game").hide();
             $("#game-over").show();
             game.scene.stop("GamePlay");
-            socket.emit('end_game', {"key": "go_round", "k_time": new Date().toISOString()})
+            socket.emit('end_game', {"key": "go_round", "k_time": new Date().toISOString()});
+            turk.submit({"idx":playerId, "rm_id":roomIdx});
         }
 
         if (Phaser.Input.Keyboard.JustDown(this.keys.R)){
             let rescueIndexes = this.gameState.getVictimRescueIndexes(this.player_list[playerId].y, this.player_list[playerId].x);
             socket.emit("rescue_attempt", {'x': this.player_list[playerId].x, 'y': this.player_list[playerId].y,
-            "key":"r", 'rm_id':room_id, 'idx': playerId, "victims_alive": Array.from(this.gameState.set_victims), 
+            "key":"r", 'rm_id':roomIdx, 'idx': playerId, "victims_alive": Array.from(this.gameState.set_victims), 
             "k_time":new Date().toISOString()})
             for(const victimIndex of this.mapConfig.victimIndexes){
                 if (rescueIndexes.includes(victimIndex)){                 
                     if (this.gameState.set_victims.has(victimIndex)){
                         socket.emit("rescue_success", {'x': this.player_list[playerId].x, 'y': this.player_list[playerId].y,
-                        "key":"rs", 'rm_id':room_id, 'idx': playerId, "victims_alive": Array.from(this.gameState.set_victims), 
+                        "key":"rs", 'rm_id':roomIdx, 'idx': playerId, "victims_alive": Array.from(this.gameState.set_victims), 
                         "victim":victimIndex, "k_time":new Date().toISOString()})            
                         this.gameState.victimObj[String(victimIndex)].fillColor = "0xf6fa78";
                         this.gameState.set_victims.delete(victimIndex);
@@ -134,6 +135,7 @@ var gamePlayState = new Phaser.Class({
                             $("#game-over").show();
                             game.scene.stop("GamePlay");
                             socket.emit('end_game', {"key": "go_victim", "k_time": new Date().toISOString()})
+                            turk.submit({"idx":playerId, "rm_id":roomIdx});
                         }
                     }
                     
@@ -147,7 +149,7 @@ var gamePlayState = new Phaser.Class({
         let currentLeaderloc = this.gameConfig.leaderMovementIndexes.length - (this.leaderTimer.getRepeatCount()+1)
         console.log(currentLeaderloc, this.gameConfig.leaderMovementIndexes[currentLeaderloc]);
         socket.emit("player_move", {'x': this.gameConfig.leaderMovementIndexes[currentLeaderloc][0], 'y': this.gameConfig.leaderMovementIndexes[currentLeaderloc][1],
-        "key":this.gameConfig.leaderMovementIndexes[currentLeaderloc][2], 'rm_id':room_id, 'idx': 1, "k_time":new Date().toISOString(),
+        "key":this.gameConfig.leaderMovementIndexes[currentLeaderloc][2], 'rm_id':roomIdx, 'idx': 1, "k_time":new Date().toISOString(),
         "dTime": this.player_list[1].update_time
     })
         if (this.leaderTimer.getRepeatCount()===0){
@@ -207,11 +209,12 @@ gameTimer.addEventListener('targetAchieved', function(){
     $("#game-over").show();
     game.scene.stop("GamePlay");
     socket.emit('end_game', {"key": "go_time", "k_time": new Date().toISOString()})
+    turk.submit({"idx":playerId, "rm_id":roomIdx});
 });
 
 socket.on('wait_data', (message)=>{
     gameSetUpData.dTime = new Date().toISOString();
-    room_id = message["rm_id"]
+    roomIdx = new TextDecoder().decode(message["rm_id"]);
     playerId = message["idx"]
 });
 
@@ -219,8 +222,8 @@ socket.on('wait_data', (message)=>{
 socket.on('start_game', (message)=>{
     $("#wait-room").hide();
     $("#phaser-game").css("display", "flex");
-    console.log(message, "Start Game")
-    socket.emit('start_game', {"key": "sg", "k_time": new Date().toISOString(), "d_time": gameSetUpData.dTime})
+    console.log(message, "Start Game");
+    socket.emit('start_game', {"key": "sg", "k_time": new Date().toISOString(), "d_time": gameSetUpData.dTime, "random_idx":selectIdx})
     game.scene.start("GamePlay");
     gameTimer.start({precision: 'secondTenths', countdown: true, startValues: {minutes: gameSetUpData.gameTime}})
     

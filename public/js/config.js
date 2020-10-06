@@ -71,7 +71,7 @@ var victimSetUpDataList = [[[15, 23, "down"], [15, 23, "down"], [15, 22, "up"], 
 
 var VictimMapList = [{'139': [], "469":[466], "491":[]}, {'139': [], "469":[], "491":[494]}, {'139': [46], "469":[], "491":[]}]
 
-let selectIdx = Math.floor(Math.random() * 3)
+const selectIdx = Math.floor(Math.random() * 3)
 
 mapData["roomVictimMapping"] = VictimMapList[selectIdx]
 for (let k in mapData.roomVictimMapping){
@@ -84,4 +84,4 @@ gameSetUpData["leaderMovementIndexes"] = victimSetUpDataList[selectIdx]
 
 var socketURL = "https://asist-api.herokuapp.com/"
 
-export {phaserConfig, mapData, gameSetUpData, socketURL};
+export {phaserConfig, mapData, gameSetUpData, socketURL, selectIdx};
