@@ -246,7 +246,7 @@ class GameState {
         this.placeAt(xx, yy, obj);
     }
 
-    playerMove = function (message, playerId){
+    playersMovementDisplay = function (message, playerId){
         console.log(message["x"], message["y"], message["idx"])
         let newIdx = (message["y"]*this.scene.mapConfig.cols)+ message["x"]
         if (message["idx"] == playerId){

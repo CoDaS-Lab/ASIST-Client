@@ -2,12 +2,13 @@ import {actExpSmryBtn, dsplyExpSmry} from "/js/expNav.js";
 import {PlayerDisplay, GameState} from "/js/gameUtils.js"
 import {phaserConfig, mapData, gameSetUpData, socketURL, selectIdx} from "/js/config.js"
 
-var roomIdx = "temp_room";
-var playerId = "temp_id";
-var gameTimer = new Timer();
-const socket = io(socketURL, {transports: ['websocket']})
-
-var gamePlayState = new Phaser.Class({
+$(document).ready(function() {
+    
+    var roomIdx = "temp_room";
+    var playerId = "temp_id";
+    var gameTimer = new Timer();
+    const socket = io(socketURL, {transports: ['websocket']})
+    var gamePlayState = new Phaser.Class({
     Extends: Phaser.Scene,
     initialize: function(){
         Phaser.Scene.call(this, {key: 'GamePlay'});        
@@ -44,7 +45,6 @@ var gamePlayState = new Phaser.Class({
         this._drawGameInfo();
 
         this.keys = this.input.keyboard.addKeys('W, S, A, D, R, UP, DOWN, LEFT, RIGHT');
-        this.leaderGuidance = true;
         this.leaderTimer = this.time.addEvent({
             delay: 500,
             callback: this._leaderAnimation,
@@ -53,56 +53,23 @@ var gamePlayState = new Phaser.Class({
             repeat: this.gameConfig.leaderMovementIndexes.length -1
         });
 
-        socket.on('player_move', (message)=>{this.gameState.playerMove(message, playerId)});
+        socket.on('player_move', (message)=>{this.gameState.playersMovementDisplay(message, playerId)});
 
- 
     },
 
     update: function() {
-        if ((this.gameConfig.roundCount>0) && (this.leaderGuidance)){
+        if (this.gameConfig.roundCount>0){
             if (Phaser.Input.Keyboard.JustDown(this.keys.LEFT)){
-                let newIdx = (this.player_list[playerId].y*this.mapConfig.cols)+ this.player_list[playerId].x - 1;
-                if (!(this.gameState.noRoadIndex.has(newIdx)) && !(this.playersCurrentLoc.includes(newIdx))){
-                    console.log("Move Left");
-                    let left_x = this.player_list[playerId].x - 1;
-                    socket.emit("player_move", {'x': left_x, 'y': this.player_list[playerId].y,
-                        "key":"left", 'rm_id':roomIdx, 'idx': playerId, "k_time":new Date().toISOString(),
-                        "dTime": this.player_list[playerId].update_time, "rcount": this.gameConfig.roundCount
-                    })
-                }
+                this._playerMove(this.player_list[playerId].x - 1, this.player_list[playerId].y, "left")
             }
             if (Phaser.Input.Keyboard.JustDown(this.keys.RIGHT)){
-                let newIdx = (this.player_list[playerId].y*this.mapConfig.cols)+ (this.player_list[playerId].x + 1);
-                if (!(this.gameState.noRoadIndex.has(newIdx)) && !(this.playersCurrentLoc.includes(newIdx))){
-                    console.log("Move Right");
-                    let right_x = this.player_list[playerId].x + 1;
-                    socket.emit("player_move", {'x': right_x, 'y': this.player_list[playerId].y,
-                        "key":"right", 'rm_id':roomIdx, 'idx': playerId, "k_time":new Date().toISOString(),
-                        "dTime": this.player_list[playerId].update_time, "rcount": this.gameConfig.roundCount
-                    })         
-                }
+                this._playerMove(this.player_list[playerId].x + 1, this.player_list[playerId].y, "right")
             }
             if (Phaser.Input.Keyboard.JustDown(this.keys.UP)){
-                let newIdx = ((this.player_list[playerId].y-1)*this.mapConfig.cols)+ this.player_list[playerId].x;
-                if (!(this.gameState.noRoadIndex.has(newIdx)) && !(this.playersCurrentLoc.includes(newIdx))){
-                    console.log("Move Up");
-                    let up_y = this.player_list[playerId].y - 1;
-                    socket.emit("player_move", {'x': this.player_list[playerId].x, 'y': up_y,
-                        "key":"up", 'rm_id':roomIdx, 'idx': playerId, "k_time":new Date().toISOString(),
-                        "dTime": this.player_list[playerId].update_time, "rcount": this.gameConfig.roundCount
-                    })
-                }
+                this._playerMove(this.player_list[playerId].x, this.player_list[playerId].y - 1, "up")
             }
-            if (Phaser.Input.Keyboard.JustDown(this.keys.DOWN)){             
-                let newIdx = ((this.player_list[playerId].y+1)*this.mapConfig.cols)+ this.player_list[playerId].x;
-                if (!(this.gameState.noRoadIndex.has(newIdx)) && !(this.playersCurrentLoc.includes(newIdx))){
-                    console.log("Move Down");
-                    let down_y = this.player_list[playerId].y + 1;
-                    socket.emit("player_move", {'x': this.player_list[playerId].x, 'y': down_y,
-                        "key":"down", 'rm_id':roomIdx, 'idx': playerId, "k_time":new Date().toISOString(),
-                        "dTime": this.player_list[playerId].update_time, "rcount": this.gameConfig.roundCount
-                    })
-                }
+            if (Phaser.Input.Keyboard.JustDown(this.keys.DOWN)){
+                this._playerMove(this.player_list[playerId].x, this.player_list[playerId].y + 1, "down")
             }
         }
         else if (this.gameConfig.roundCount<=0){
@@ -177,6 +144,17 @@ var gamePlayState = new Phaser.Class({
         this.add.rectangle(190,140, this.gameState.cw, this.gameState.ch, 0xf6fa78);
     },
 
+    _playerMove: function(x, y, direction){
+        let newIdx = (y*this.mapConfig.cols)+ x;
+        if (!(this.gameState.noRoadIndex.has(newIdx)) && !(this.playersCurrentLoc.includes(newIdx))){
+            console.log(direction);
+            socket.emit("player_move", {'x': x, 'y': y,
+                "key":direction, 'rm_id':roomIdx, 'idx': playerId, "k_time":new Date().toISOString(),
+                "dTime": this.player_list[playerId].update_time, "rcount": this.gameConfig.roundCount
+            })
+        }
+    }
+
 });
 
 
@@ -198,11 +176,11 @@ var dsplyGame = function(){
     $('#wait-room').show();
 }
 
-$(document).ready(function() {
+
     $("#agree").change(actExpSmryBtn);
     $("#cte").on("click", dsplyExpSmry);
     $('#join-room').click(dsplyGame);
-});
+
 
 gameTimer.addEventListener('targetAchieved', function(){
     $('#phaser-game').hide();
@@ -239,3 +217,4 @@ gameTimer.addEventListener('started', function () {
     $('#timerTime').text(" 00:"+String(gameSetUpData.gameTime)+":00");
 });
 
+});
