@@ -121,19 +121,19 @@ var gamePlayState = new Phaser.Class({
 
     _drawGameInfo: function(){
         const playerInGameInfo = new PlayerDisplay(this, {"x": 16, "y":23, "name":"dude"});
-        playerInGameInfo.physicsObj.x = 120;
+        playerInGameInfo.physicsObj.x = 115;
         playerInGameInfo.physicsObj.y = 72;
 
         const leaderInGameInfo = new PlayerDisplay(this, {"x": 15, "y":23, "name":"chirag"});
-        leaderInGameInfo.physicsObj.x = 230;
+        leaderInGameInfo.physicsObj.x = 220;
         leaderInGameInfo.physicsObj.y = 72;
 
-        this.add.text(38,66, "Player", {color: '0x000000', fontSize: '17px'});
-        this.add.text(150,66, "Leader", {color: '0x000000', fontSize: '17px'});
-        this.add.text(38,95, "Victim", {color: '0x000000', fontSize: '17px'});          
-        this.add.rectangle(120,105, this.gameState.cw, this.gameState.ch, 0x9754e3);
-        this.add.text(150,95, "Door", {color: '0x000000', fontSize: '17px'});
-        this.add.rectangle(227,105, this.gameState.cw, this.gameState.ch, 0x9dd1ed, 0.3);
+        this.add.text(35,66, "Player", {color: '0x000000', fontSize: '17px'});
+        this.add.text(140,66, "Leader", {color: '0x000000', fontSize: '17px'});
+        this.add.text(35,95, "Victim", {color: '0x000000', fontSize: '17px'});
+        this.add.rectangle(115,105, this.gameState.cw, this.gameState.ch, 0x9754e3);
+        this.add.text(140,95, "Door", {color: '0x000000', fontSize: '17px'});
+        this.add.rectangle(210,105, this.gameState.cw, this.gameState.ch, 0x9dd1ed, 0.3);
         // this.add.text(40,130, "Saved Victim", {color: '0x000000', fontSize: '17px'});
         // this.add.rectangle(190,140, this.gameState.cw, this.gameState.ch, 0xf6fa78);
     },

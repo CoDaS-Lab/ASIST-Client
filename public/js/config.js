@@ -1,7 +1,7 @@
 var phaserConfig = {
     type: Phaser.AUTO,
-    width: 775,
-    height: 625,
+    width: 620,
+    height: 500,
     parent: 'phaser-game',
     backgroundColor:0xffffff,
     physics: {
