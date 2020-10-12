@@ -1,3 +1,9 @@
+/* Original source file location https://github.com/longouyang/mmturkey/blob/master/mmturkey.js 
+BSD 3-Clause License
+
+Copyright (c) 2018, Long Ouyang
+All rights reserved.
+*/
 var turk;
 turk = turk || {};
 

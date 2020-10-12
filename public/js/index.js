@@ -1,25 +1,49 @@
-import {actExpSmryBtn, dsplyExpSmry} from "/js/expNav.js";
+import {actExpSmryBtn, dsplyExpSmry, endSession, startSession, joinGame} from "/js/expNav.js";
 import {PlayerDisplay, GameState} from "/js/gameUtils.js"
-import {phaserConfig, mapData, gameSetUpData, socketURL, selectIdx} from "/js/config.js"
+import {phaserConfig, getMapData, getGameData, socketURL, getRandomConfig} from "/js/config.js"
 
-$(document).ready(function() {
-    
-    var roomIdx = "temp_room";
-    var playerId = "temp_id";
-    var gameTimer = new Timer();
-    const socket = io(socketURL, {transports: ['websocket']})
-    var gamePlayState = new Phaser.Class({
+var gTime = new Date().toISOString();
+var roomIdx = "na";
+var playerId = "na";
+var selectIdx = "na"
+var gameTime = 0.5;
+var gameTimer = new Timer();
+var sessionId = 1;
+var sessionLimit = 4;
+var leaderDelay = 5;
+const socket = io(socketURL, {transports: ['websocket']})
+var gamePlayState = new Phaser.Class({
     Extends: Phaser.Scene,
     initialize: function(){
-        Phaser.Scene.call(this, {key: 'GamePlay'});        
-        this.playersCurrentLoc = [];
-        this.mapConfig = mapData;
-        this.mapConfig["scene"] = this
-        this.gameConfig = gameSetUpData
-        
+        console.log("GamePlay init");
+        Phaser.Scene.call(this, {key: 'GamePlay'});
+        socket.on('player_move', (message)=>{this._playersMovementDisplay(message)});
+        gameTimer.addEventListener('targetAchieved', ()=>{
+            gTime = new Date().toISOString()
+            sessionId = endSession(game, socket, turk, gameTimer, this.playerList, playerId, roomIdx, sessionId, selectIdx, "go_time", sessionLimit, "Game Time Over")
+        });
+
+        gameTimer.addEventListener('secondTenthsUpdated', function() {
+            $('#timerTime').text(" "+ gameTimer.getTimeValues().toString());
+        });
+      
+        gameTimer.addEventListener('started', function () {
+                $('#timerTime').text(" 00:"+String(gameTime)+":00");
+            });
+
     },
 
     preload: function() {
+        console.log("GamePlay preload");
+        this.playersCurrentLoc = [];
+        this.mapConfig = getMapData();
+        this.gameConfig = getGameData();
+        let randomSelectionValues = getRandomConfig();
+        selectIdx = randomSelectionValues[0]
+        this.gameConfig["leaderMovementIndexes"] = randomSelectionValues[1]
+        this.mapConfig["roomVictimMapping"] = randomSelectionValues[2]
+        this.mapConfig["victimIndexes"] = randomSelectionValues[3]
+        
         this.load.spritesheet("chirag", "/assets/dude2.png",
         {frameWidth: 32, frameHeight: 48});
         this.load.spritesheet("dude","/assets/dude.png",
@@ -27,103 +51,73 @@ $(document).ready(function() {
 
     },
     create: function() {
-        console.log("GamePlay");
-        this.gameState = new GameState(this.mapConfig)
-
+        console.log("GamePlay create");
+        this.gameState = new GameState(this.mapConfig, this)
         this.roundDisplay = this.add.text(0,0, "Round ".concat(String(this.gameConfig.roundCount)), {color: '0x000000', 
                             fontSize: '20px'}); 
         this.gameState.placeAtIndex(32, this.roundDisplay);
+        this.roundDisplay.text = "Round ".concat(String(this.gameConfig.roundCount))
         
         this.playerDude = new PlayerDisplay(this, {"x": this.gameConfig.playerX, "y":this.gameConfig.playerY, "name":"dude"});
         this.playersCurrentLoc.push((this.playerDude.y*this.mapConfig.cols)+ this.playerDude.x);
     
         this.leaderDude = new PlayerDisplay(this, {"x": this.gameConfig.leaderX, "y":this.gameConfig.leaderY, "name":"chirag"});
         this.playersCurrentLoc.push((this.leaderDude.y*this.mapConfig.cols)+ this.leaderDude.x);
-
-        this.player_list = [this.playerDude, this.leaderDude];
-
+        
+        this.playerList = Array();
+        this.playerList.push(this.playerDude);
+        this.playerList.push(this.leaderDude);
         this._drawGameInfo();
 
-        this.keys = this.input.keyboard.addKeys('W, S, A, D, R, UP, DOWN, LEFT, RIGHT');
+        gameTimer.start({precision: 'secondTenths', countdown: true, startValues: {minutes: gameTime}})
+
         this.leaderTimer = this.time.addEvent({
-            delay: 500,
+            delay: leaderDelay,
             callback: this._leaderAnimation,
             args: [],
             callbackScope: this,
-            repeat: this.gameConfig.leaderMovementIndexes.length -1
+            repeat: this.gameConfig.leaderMovementIndexes.length - 1
         });
 
-        socket.on('player_move', (message)=>{this.gameState.playersMovementDisplay(message, playerId)});
 
+        this.input.keyboard.on('keydown_UP', ()=>{this._playerMove(this.playerList[playerId].x, this.playerList[playerId].y - 1, "up")});
+        this.input.keyboard.on('keydown_DOWN', ()=>{this._playerMove(this.playerList[playerId].x, this.playerList[playerId].y + 1, "down")});
+        this.input.keyboard.on('keydown_RIGHT', ()=>{this._playerMove(this.playerList[playerId].x + 1, this.playerList[playerId].y, "right")});
+        this.input.keyboard.on('keydown_LEFT', ()=>{this._playerMove(this.playerList[playerId].x - 1, this.playerList[playerId].y, "left")});
+        this.input.keyboard.on('keydown_R', ()=>{this._victimSave()});
     },
 
-    update: function() {
-        if (this.gameConfig.roundCount>0){
-            if (Phaser.Input.Keyboard.JustDown(this.keys.LEFT)){
-                this._playerMove(this.player_list[playerId].x - 1, this.player_list[playerId].y, "left")
-            }
-            if (Phaser.Input.Keyboard.JustDown(this.keys.RIGHT)){
-                this._playerMove(this.player_list[playerId].x + 1, this.player_list[playerId].y, "right")
-            }
-            if (Phaser.Input.Keyboard.JustDown(this.keys.UP)){
-                this._playerMove(this.player_list[playerId].x, this.player_list[playerId].y - 1, "up")
-            }
-            if (Phaser.Input.Keyboard.JustDown(this.keys.DOWN)){
-                this._playerMove(this.player_list[playerId].x, this.player_list[playerId].y + 1, "down")
-            }
-        }
-        else if (this.gameConfig.roundCount<=0){
-            gameTimer.stop()
-            $("#phaser-game").hide();
-            $("#game-over").show();
-            game.scene.stop("GamePlay");
-            socket.emit('end_game', {"key": "go_round", "k_time": new Date().toISOString()});
-            turk.submit({"idx":playerId, "rm_id":roomIdx});
-        }
 
-        if (Phaser.Input.Keyboard.JustDown(this.keys.R)){
-            let rescueIndexes = this.gameState.getVictimRescueIndexes(this.player_list[playerId].y, this.player_list[playerId].x);
-            socket.emit("rescue_attempt", {'x': this.player_list[playerId].x, 'y': this.player_list[playerId].y,
-            "key":"r", 'rm_id':roomIdx, 'idx': playerId, "victims_alive": Array.from(this.gameState.set_victims), 
-            "k_time":new Date().toISOString()})
-            for(const victimIndex of this.mapConfig.victimIndexes){
-                if (rescueIndexes.includes(victimIndex)){                 
-                    if (this.gameState.set_victims.has(victimIndex)){
-                        socket.emit("rescue_success", {'x': this.player_list[playerId].x, 'y': this.player_list[playerId].y,
-                        "key":"rs", 'rm_id':roomIdx, 'idx': playerId, "victims_alive": Array.from(this.gameState.set_victims), 
-                        "victim":victimIndex, "k_time":new Date().toISOString()})            
-                        this.gameState.victimObj[String(victimIndex)].fillColor = "0xf6fa78";
-                        this.gameState.set_victims.delete(victimIndex);
-                        if (this.gameState.set_victims.size === 0){
-                            console.log("SUCCESS")
-                            this.gameConfig.roundCount = -1
-                            gameTimer.stop();
-                            $("#phaser-game").hide();
-                            $("#game-over").show();
-                            game.scene.stop("GamePlay");
-                            socket.emit('end_game', {"key": "go_victim", "k_time": new Date().toISOString()})
-                            turk.submit({"idx":playerId, "rm_id":roomIdx});
-                        }
-                    }
-                    
-                }
-            }
+    _playersMovementDisplay (message){
+        console.log(message["x"], message["y"], message["p_id"])
+        let newIdx = (message["y"]*this.mapConfig.cols)+ message["x"]
+        if (message["p_id"] == playerId){
+            this.gameConfig.roundCount = message["r"];
+            this.roundDisplay.text = "Round ".concat(String(this.gameConfig.roundCount));
+            if (this.mapConfig.doorIndexes.includes(newIdx)){
+                this.gameState.makeVictimsVisible(this.gameState.roomVictimObj[String(newIdx)]);
+                this.gameState.makeRoomVisible(this.gameState.roomViewObj[String(newIdx)]);
+            }                
+        }
+        this.playersCurrentLoc[message["p_id"]] = newIdx
+        this.playerList[message["p_id"]].move(message["x"], message["y"], message["key"])
+
+        if (this.gameConfig.roundCount <= 0){
+            gTime = new Date().toISOString()
+            sessionId = endSession(game, socket, turk, gameTimer, this.playerList, playerId, roomIdx, sessionId, selectIdx, "go_round", sessionLimit, "All Rounds Used")
         }
     },
-
 
     _leaderAnimation: function(){
         let currentLeaderloc = this.gameConfig.leaderMovementIndexes.length - (this.leaderTimer.getRepeatCount()+1)
-        console.log(currentLeaderloc, this.gameConfig.leaderMovementIndexes[currentLeaderloc]);
         socket.emit("player_move", {'x': this.gameConfig.leaderMovementIndexes[currentLeaderloc][0], 'y': this.gameConfig.leaderMovementIndexes[currentLeaderloc][1],
-        "key":this.gameConfig.leaderMovementIndexes[currentLeaderloc][2], 'rm_id':roomIdx, 'idx': 1, "k_time":new Date().toISOString(),
-        "dTime": this.player_list[1].update_time
+        "key":this.gameConfig.leaderMovementIndexes[currentLeaderloc][2], 'rm_id':roomIdx, 'p_id': 1, "kt":new Date().toISOString(),
+        "dt": this.playerList[1].updateTime
     })
         if (this.leaderTimer.getRepeatCount()===0){
             console.log(this.playersCurrentLoc);
         }
     },
-
 
     _drawGameInfo: function(){
         const playerInGameInfo = new PlayerDisplay(this, {"x": 16, "y":23, "name":"dude"});
@@ -140,81 +134,71 @@ $(document).ready(function() {
         this.add.rectangle(120,105, this.gameState.cw, this.gameState.ch, 0x9754e3);
         this.add.text(150,95, "Door", {color: '0x000000', fontSize: '17px'});
         this.add.rectangle(227,105, this.gameState.cw, this.gameState.ch, 0x9dd1ed, 0.3);
-        this.add.text(40,130, "Saved Victim", {color: '0x000000', fontSize: '17px'});
-        this.add.rectangle(190,140, this.gameState.cw, this.gameState.ch, 0xf6fa78);
+        // this.add.text(40,130, "Saved Victim", {color: '0x000000', fontSize: '17px'});
+        // this.add.rectangle(190,140, this.gameState.cw, this.gameState.ch, 0xf6fa78);
+    },
+
+    _victimSave(){
+        let rescueIndexes = this.gameState.getVictimRescueIndexes(this.playerList[playerId].y, this.playerList[playerId].x);
+        socket.emit("rescue_attempt", {'x': this.playerList[playerId].x, 'y': this.playerList[playerId].y,"key":"r", 'rm_id':roomIdx, 
+        'p_id': playerId, "victims_alive": Array.from(this.gameState.set_victims), "kt":new Date().toISOString()})
+        for(const victimIndex of this.mapConfig.victimIndexes){
+            if (rescueIndexes.includes(victimIndex)){                 
+                if (this.gameState.set_victims.has(victimIndex)){
+                    socket.emit("rescue_success", {'x': this.playerList[playerId].x, 'y': this.playerList[playerId].y,
+                    "key":"rs", 'rm_id':roomIdx, 'p_id': playerId, "victims_alive": Array.from(this.gameState.set_victims), 
+                    "victim":victimIndex, "kt":new Date().toISOString()})            
+                    this.gameState.victimObj[String(victimIndex)].fillColor = "0xf6fa78";
+                    this.gameState.set_victims.delete(victimIndex);
+                    if (this.gameState.set_victims.size === 0){
+                        console.log("SUCCESS")
+                        gTime = new Date().toISOString()
+                        sessionId = endSession(game, socket, turk, gameTimer, this.playerList, playerId, roomIdx, sessionId, selectIdx, "go_victim", sessionLimit, "Victim Saved")
+                    }
+                }  
+            }
+        }
     },
 
     _playerMove: function(x, y, direction){
         let newIdx = (y*this.mapConfig.cols)+ x;
-        if (!(this.gameState.noRoadIndex.has(newIdx)) && !(this.playersCurrentLoc.includes(newIdx))){
-            console.log(direction);
-            socket.emit("player_move", {'x': x, 'y': y,
-                "key":direction, 'rm_id':roomIdx, 'idx': playerId, "k_time":new Date().toISOString(),
-                "dTime": this.player_list[playerId].update_time, "rcount": this.gameConfig.roundCount
-            })
+        if (!(this.gameState.noRoadIndex.has(newIdx)) && !(this.playersCurrentLoc.includes(newIdx)) && (this.gameConfig.roundCount>0)){
+            socket.emit("player_move", {'x': x, 'y': y, "s_id":sessionId, "rd_idx":selectIdx,
+                "key":direction, 'rm_id':roomIdx, 'p_id': playerId, "kt":new Date().toISOString(),
+                "dt": this.playerList[playerId].updateTime, "r": this.gameConfig.roundCount - 1
+            });
         }
     }
-
 });
 
-
+console.log("Game Object");
 const game = new Phaser.Game(phaserConfig); //Instantiate the game
 game.scene.add("Gameplay", gamePlayState);
 
 
 socket.on('connect',()=>{
     socket.on('welcome',(message)=>{
-        console.log(message["data"])
+        console.log("Message from server "+message["data"])
     });
 })
 
-var dsplyGame = function(){
-    $("#mainInfo").hide();
-    console.log("join room clicked")
-    socket.emit('start_wait', {"key": "sw", "k_time": new Date().toISOString(), "d_time": gameSetUpData.dTime})
-    $("#join-room").hide();
-    $('#wait-room').show();
-}
-
-
+$(document).ready(function() {
     $("#agree").change(actExpSmryBtn);
     $("#cte").on("click", dsplyExpSmry);
-    $('#join-room').click(dsplyGame);
-
-
-gameTimer.addEventListener('targetAchieved', function(){
-    $('#phaser-game').hide();
-    $("#game-over").show();
-    game.scene.stop("GamePlay");
-    socket.emit('end_game', {"key": "go_time", "k_time": new Date().toISOString()})
-    turk.submit({"idx":playerId, "rm_id":roomIdx});
+    $("#join-room").on("click", function(){
+        joinGame(socket, "#mainInfo", "#wait-room", "start_wait", gTime)
+    });
+    $('#start-session').on("click", function(){
+        startSession(game, socket, sessionId, "#session-over", "#phaser-game", "#sessionId", "start_game", gTime);
+    });
 });
 
 socket.on('wait_data', (message)=>{
-    gameSetUpData.dTime = new Date().toISOString();
+    gTime = new Date().toISOString();
     roomIdx = new TextDecoder().decode(message["rm_id"]);
-    playerId = message["idx"]
+    playerId = message["p_id"]
 });
 
-
-socket.on('start_game', (message)=>{
-    $("#wait-room").hide();
-    $("#phaser-game").css("display", "flex");
-    console.log(message, "Start Game");
-    socket.emit('start_game', {"key": "sg", "k_time": new Date().toISOString(), "d_time": gameSetUpData.dTime, "random_idx":selectIdx})
-    game.scene.start("GamePlay");
-    gameTimer.start({precision: 'secondTenths', countdown: true, startValues: {minutes: gameSetUpData.gameTime}})
-    
-});
-
-
-gameTimer.addEventListener('secondTenthsUpdated', function() {
-      $('#timerTime').text(" "+ gameTimer.getTimeValues().toString());
-  });
-
-
-gameTimer.addEventListener('started', function () {
-    $('#timerTime').text(" 00:"+String(gameSetUpData.gameTime)+":00");
-});
-
+socket.on('start_game', ()=>{
+    startSession(game, socket, sessionId, "#wait-room", "#phaser-game", "#sessionId", "start_game", gTime);
 });
