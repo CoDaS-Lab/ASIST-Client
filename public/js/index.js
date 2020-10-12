@@ -6,11 +6,11 @@ var gTime = new Date().toISOString();
 var roomIdx = "na";
 var playerId = "na";
 var selectIdx = "na"
-var gameTime = 0.5;
+var gameTime = 2;
 var gameTimer = new Timer();
 var sessionId = 1;
-var sessionLimit = 4;
-var leaderDelay = 5;
+var sessionLimit = 5;
+var leaderDelay = 500;
 const socket = io(socketURL, {transports: ['websocket']})
 var gamePlayState = new Phaser.Class({
     Extends: Phaser.Scene,
