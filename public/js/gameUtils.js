@@ -5,13 +5,12 @@ class PlayerDisplay {
         this.x = Config.x
         this.y = Config.y
         this.name = Config.name
-        this.update_time = new Date().toISOString();
+        this.updateTime = new Date().toISOString();
         this.direction = "down"
         this.physicsObj = gameScene.add.sprite(32, 32, Config.name);
         this.gameScene.gameState.placeAt(this.x, this.y, this.physicsObj);
         this.physicsObj.displayHeight = (this.gameScene.sys.game.scale.gameSize._height/this.gameScene.mapConfig.rows)+3;
         this.physicsObj.scaleX = this.physicsObj.scaleY;
-        this.gameScene.gameConfig.dTime = new Date().toISOString();
         
         this.gameScene.anims.create(
             {
@@ -53,8 +52,7 @@ class PlayerDisplay {
         this.x = x;
         this.y = y;
         this.direction = direction;
-        this.gameScene.gameConfig.dTime = new Date().toISOString();
-        this.update_time = new Date().toISOString();
+        this.updateTime = new Date().toISOString();
         console.log(this.name, this.x, this.y, direction);
         this.gameScene.gameState.placeAt(this.x, this.y, this.physicsObj);
         this.physicsObj.anims.play(this.name+direction);
@@ -64,8 +62,8 @@ class PlayerDisplay {
 
 class GameState {
 
-    constructor(config){
-        this._storeMapVariablesFromConfig(config);
+    constructor(config, gameScene){
+        this._storeMapVariablesFromConfig(config, gameScene);
         this._generateMapVariables();
         this._drawInitiatSetUp();
         // this.map = new GameMap(mapConfig);
@@ -85,13 +83,13 @@ class GameState {
         this._drawVictims(this.config.roomVictimMapping, 0x9754e3, 0)
         this._blockRoomView(this.config.roomViewBlocksMapping, 0x8a8786, 0.8)
     }
-    _storeMapVariablesFromConfig(config){
+    _storeMapVariablesFromConfig(config, gameScene){
         this.config = config;
-        this.scene = config.scene;
-        this.game_width = config.scene.sys.game.scale.gameSize._width;
-        this.game_height = config.scene.sys.game.scale.gameSize._height;
-        this.cw = config.scene.sys.game.scale.gameSize._width / config.cols;
-        this.ch = config.scene.sys.game.scale.gameSize._height / config.rows;        
+        this.scene = gameScene;
+        this.game_width = gameScene.sys.game.scale.gameSize._width;
+        this.game_height = gameScene.sys.game.scale.gameSize._height;
+        this.cw = gameScene.sys.game.scale.gameSize._width / config.cols;
+        this.ch = gameScene.sys.game.scale.gameSize._height / config.rows;        
     } 
     _generateMapVariables(){
         this.noRoadIndex = this._generateNoRoadIndexes(this.config.hallwayBoundaryIndexes,
@@ -153,7 +151,7 @@ class GameState {
 
         for (const idx of locIndexes){
             let rect = this.scene.add.rectangle(20,20, this.cw, this.ch, colorHex, alpha);
-            this.placeAtIndex(idx,rect);
+            this.placeAtIndex(idx, rect);
 
         }
     }
@@ -244,21 +242,6 @@ class GameState {
         var yy = Math.floor(index / this.config.cols);
         var xx = index - (yy * this.config.cols);
         this.placeAt(xx, yy, obj);
-    }
-
-    playerMove = function (message, playerId){
-        console.log(message["x"], message["y"], message["idx"])
-        let newIdx = (message["y"]*this.scene.mapConfig.cols)+ message["x"]
-        if (message["idx"] == playerId){
-            this.scene.gameConfig.roundCount -= 1;
-            this.scene.roundDisplay.text = "Round ".concat(String(this.scene.gameConfig.roundCount));
-            if (this.scene.mapConfig.doorIndexes.includes(newIdx)){
-                this.scene.gameState.makeVictimsVisible(this.scene.gameState.roomVictimObj[String(newIdx)]);
-                this.scene.gameState.makeRoomVisible(this.scene.gameState.roomViewObj[String(newIdx)]);
-            }                
-        }
-        this.scene.playersCurrentLoc[message["idx"]] = newIdx
-        this.scene.player_list[Number(message["idx"])].move(message["x"], message["y"], message["key"])
     }
 }
 

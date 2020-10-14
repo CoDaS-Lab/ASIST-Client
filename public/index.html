@@ -46,34 +46,36 @@
         </div>
     </div>
   </div>
-  <div id="mainInfo" style="display: none; margin-top: 5%; margin-left: 5%;">
+  <div id="mainInfo" style="display: none; margin-top: 5%; margin-left: 5%; margin-bottom: 20%; margin-right:5%;">
         <div class="row">
           <div class="col">
             <h3>
               INSTRUCTIONS.
             </h3>
+            <p>
+              There are three rooms at the end of each of the three hallways. One of these rooms has a victim.
+              You are teamed up with a knowledgeable leader who knows where the victim is but does not have the ability to save the victim.
+              Your goal is to save the victim in the number of rounds and time limit provided.
+            </p>
             <ul>
               <li>
-                The game has three rooms and one victim located in one of the room.
-                Each movement of the player in any direction is counted as one round.
-                The goal of the game is to save victim in 40 rounds and under 2 minutes.
+                A snapshot of the beginning of the game is shown on the right.
               </li>
               <li>
-                The room view is blocked to hide the presence of the victim in it.
-                The view can be unblocked to see the victim as soon as player reaches the door located at the entrance of the room indicated by light blue square box.
-                Victims are represented by purple colored square box that turns yellow when saved.
+                Each movement in any direction is counted as one round.
               </li>
               <li>
-                Victims can be saved from any of the adjacent location by pressing r key.
-                Player can use the up, down, left, and right key for movement in the game.
+                You can use the up, down, left, and right key for movement in the game.
+                Victims can be saved from any of the adjacent locations by pressing the “r” key.
               </li>              
               <li>
-                There is a bot(leader) in the game who knows which room contains the victim and may lead the player to the correct room.
+                A room’s view is blocked until you reach its door indicated by the light blue square.
+                The victim is represented by the purple square.
               </li>            
-              <li>
-                The view of the game would be similar to the picture that can be seen on this screen.
-              </li>
             </ul>
+            <p>
+              You will be asked to play this game 5 different times. The entire experiment should take about 5 minutes.
+            </p>
             <div>
               <a class="btn btn-primary btn-md" id="join-room">
                 Click to Join Game Room
@@ -81,20 +83,25 @@
             </div>
           </div>
           <div class="col">
-            <h3 style="text-align:center;">GAME VIEW IMAGE</h3>
+            <!-- <h3 style="text-align:center;">GAME VIEW IMAGE</h3> -->
             <img src="/assets/gameMap.png" class="image-responsive" style="width: 100%;">
           </div>
         </div>
   </div>  
  
-  <div style='display: none; justify-content: center; margin-top: 5%;' id='phaser-game'>
+  <div style='display: none; justify-content: center; margin-top: 5%; margin' id='phaser-game'>
     <div id="game-time">
-      <span id="timerTitle">GAME TIMER</span><span id='timerTime'></span>
+      <span id="sessionTitle">Game No: </span><span id='sessionId'></span><span id="timerTitle">  GAME TIMER:</span><span id='timerTime'></span>
     </div> 
   </div>
-  <div style='display: flex; justify-content: center;'>
-  <h1 class="font-weight-bold" style='display:none; margin:20%; text-align:center; color:darkslategray;' id='wait-room'>Waiting for other players to join</h1>
-  <h1 class="font-weight-bold" style='display:none; margin:20%; text-align:center; color:darkslategray;' id='game-over'>Game Over!!</h1>
-</div>
+  <h1 class="font-weight-bold" style='display:none; margin:20%;  text-align:center; color:darkslategray;' id='wait-room'>Waiting for other players to join</h1>
+  <h1 class="font-weight-bold" style='display:none; margin:20%;  text-align:center; color:darkslategray;' id='game-over'>Game Over!!</h1>
+  <div style='display: none;' class="container" id="session-over">
+    <h1 class="font-weight-bold" style='text-align:center; margin:10%; color:darkslategray;' id='session-message'>Session Completed</h1>
+    <h2 class="font-weight-bold" style='text-align:center; margin:10%; color:chocolate;' id='session-completed'></h2>
+    <a class="btn btn-primary btn-lg btn-block" id="start-session">
+      Click to Start Next Game
+    </a>
+  </div>
 </body>
 </html>
