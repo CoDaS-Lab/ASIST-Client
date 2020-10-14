@@ -111,8 +111,8 @@ var gamePlayState = new Phaser.Class({
     _leaderAnimation: function(){
         let currentLeaderloc = this.gameConfig.leaderMovementIndexes.length - (this.leaderTimer.getRepeatCount()+1)
         socket.emit("player_move", {'x': this.gameConfig.leaderMovementIndexes[currentLeaderloc][0], 'y': this.gameConfig.leaderMovementIndexes[currentLeaderloc][1],
-        "key":this.gameConfig.leaderMovementIndexes[currentLeaderloc][2], 'rm_id':roomIdx, 'p_id': 1, "kt":new Date().toISOString(),
-        "dt": this.playerList[1].updateTime
+        "s_id":sessionId, "rd_idx":selectIdx, "key":this.gameConfig.leaderMovementIndexes[currentLeaderloc][2], 'rm_id':roomIdx,
+        'p_id': 1, "kt":new Date().toISOString(),"dt": this.playerList[1].updateTime
     })
         if (this.leaderTimer.getRepeatCount()===0){
             console.log(this.playersCurrentLoc);
@@ -140,7 +140,7 @@ var gamePlayState = new Phaser.Class({
 
     _victimSave(){
         let rescueIndexes = this.gameState.getVictimRescueIndexes(this.playerList[playerId].y, this.playerList[playerId].x);
-        socket.emit("rescue_attempt", {'x': this.playerList[playerId].x, 'y': this.playerList[playerId].y,"key":"r", 'rm_id':roomIdx, 
+        socket.emit("rescue_attempt", {'x': this.playerList[playerId].x, 'y': this.playerList[playerId].y,"key":"r", 'rm_id':roomIdx,
         'p_id': playerId, "victims_alive": Array.from(this.gameState.set_victims), "kt":new Date().toISOString()})
         for(const victimIndex of this.mapConfig.victimIndexes){
             if (rescueIndexes.includes(victimIndex)){                 
