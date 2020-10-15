@@ -20,6 +20,7 @@ var gamePlayState = new Phaser.Class({
         socket.on('player_move', (message)=>{this._playersMovementDisplay(message)});
         gameTimer.addEventListener('targetAchieved', ()=>{
             gTime = new Date().toISOString()
+            this.input.keyboard.removeAllKeys()
             sessionId = endSession(game, socket, turk, gameTimer, this.playerList, playerId, roomIdx, sessionId, selectIdx, "go_time", sessionLimit, "Game Time Over")
         });
 
@@ -79,12 +80,12 @@ var gamePlayState = new Phaser.Class({
             repeat: this.gameConfig.leaderMovementIndexes.length - 1
         });
 
-
-        this.input.keyboard.on('keydown_UP', ()=>{this._playerMove(this.playerList[playerId].x, this.playerList[playerId].y - 1, "up")});
-        this.input.keyboard.on('keydown_DOWN', ()=>{this._playerMove(this.playerList[playerId].x, this.playerList[playerId].y + 1, "down")});
-        this.input.keyboard.on('keydown_RIGHT', ()=>{this._playerMove(this.playerList[playerId].x + 1, this.playerList[playerId].y, "right")});
-        this.input.keyboard.on('keydown_LEFT', ()=>{this._playerMove(this.playerList[playerId].x - 1, this.playerList[playerId].y, "left")});
-        this.input.keyboard.on('keydown_R', ()=>{this._victimSave()});
+        var keys = this.input.keyboard.addKeys('UP, DOWN, RIGHT, LEFT, R')
+        keys.UP.on('down', ()=>{this._playerMove(this.playerList[playerId].x, this.playerList[playerId].y - 1, "up")});
+        keys.DOWN.on('down', ()=>{this._playerMove(this.playerList[playerId].x, this.playerList[playerId].y + 1, "down")});
+        keys.RIGHT.on('down', ()=>{this._playerMove(this.playerList[playerId].x + 1, this.playerList[playerId].y, "right")});
+        keys.LEFT.on('down', ()=>{this._playerMove(this.playerList[playerId].x - 1, this.playerList[playerId].y, "left")});
+        keys.R.on('down', ()=>{this._victimSave()});
     },
 
 
@@ -104,6 +105,7 @@ var gamePlayState = new Phaser.Class({
 
         if (this.gameConfig.roundCount <= 0){
             gTime = new Date().toISOString()
+            this.input.keyboard.removeAllKeys()
             sessionId = endSession(game, socket, turk, gameTimer, this.playerList, playerId, roomIdx, sessionId, selectIdx, "go_round", sessionLimit, "All Rounds Used")
         }
     },
@@ -111,8 +113,8 @@ var gamePlayState = new Phaser.Class({
     _leaderAnimation: function(){
         let currentLeaderloc = this.gameConfig.leaderMovementIndexes.length - (this.leaderTimer.getRepeatCount()+1)
         socket.emit("player_move", {'x': this.gameConfig.leaderMovementIndexes[currentLeaderloc][0], 'y': this.gameConfig.leaderMovementIndexes[currentLeaderloc][1],
-        "key":this.gameConfig.leaderMovementIndexes[currentLeaderloc][2], 'rm_id':roomIdx, 'p_id': 1, "kt":new Date().toISOString(),
-        "dt": this.playerList[1].updateTime
+        "s_id":sessionId, "rd_idx":selectIdx, "key":this.gameConfig.leaderMovementIndexes[currentLeaderloc][2], 'rm_id':roomIdx,
+        'p_id': 1, "kt":new Date().toISOString(),"dt": this.playerList[1].updateTime
     })
         if (this.leaderTimer.getRepeatCount()===0){
             console.log(this.playersCurrentLoc);
@@ -140,7 +142,7 @@ var gamePlayState = new Phaser.Class({
 
     _victimSave(){
         let rescueIndexes = this.gameState.getVictimRescueIndexes(this.playerList[playerId].y, this.playerList[playerId].x);
-        socket.emit("rescue_attempt", {'x': this.playerList[playerId].x, 'y': this.playerList[playerId].y,"key":"r", 'rm_id':roomIdx, 
+        socket.emit("rescue_attempt", {'x': this.playerList[playerId].x, 'y': this.playerList[playerId].y,"key":"r", 'rm_id':roomIdx,
         'p_id': playerId, "victims_alive": Array.from(this.gameState.set_victims), "kt":new Date().toISOString()})
         for(const victimIndex of this.mapConfig.victimIndexes){
             if (rescueIndexes.includes(victimIndex)){                 
@@ -153,6 +155,7 @@ var gamePlayState = new Phaser.Class({
                     if (this.gameState.set_victims.size === 0){
                         console.log("SUCCESS")
                         gTime = new Date().toISOString()
+                        this.input.keyboard.removeAllKeys()
                         sessionId = endSession(game, socket, turk, gameTimer, this.playerList, playerId, roomIdx, sessionId, selectIdx, "go_victim", sessionLimit, "Victim Saved")
                     }
                 }  

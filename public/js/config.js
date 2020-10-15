@@ -93,5 +93,5 @@ var getRandomConfig = function(){
 }
 
 var socketURL = "https://asist-api.herokuapp.com/"
-
+// var socketURL  = "http://127.0.0.1:5000"
 export {phaserConfig, getMapData, getGameData, socketURL, getRandomConfig};
