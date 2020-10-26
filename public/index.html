@@ -5,7 +5,9 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href="/stylesheets/game.css">
   <link href="https://fonts.googleapis.com/css2?family=Lemonada:wght@600&display=swap" rel="stylesheet">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://unpkg.com/jquery"></script>
+  <link href="https://surveyjs.azureedge.net/1.8.11/modern.css" type="text/css" rel="stylesheet" />
+  <script src="https://surveyjs.azureedge.net/1.8.11/survey.jquery.min.js"></script>git
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
   <script src="/js/lib/easytimer.min.js"></script>
   <script src="/js/lib/phaser.min.js"></script>
@@ -46,12 +48,29 @@
         </div>
     </div>
   </div>
+  <div style='display: none;' class="container" id="quiz-success">
+    <h1 class="font-weight-bold" style='text-align:center; margin:10%; color:chocolate;'>Succeded Attention Check Screen.</h1>
+    <h2 class="font-weight-bold" style='text-align:center; margin:10%; color:darkslategray;'>That is correct. You may now start the game. Good luck!</h2>
+    <a class="btn btn-primary btn-lg btn-block" id="join-room">
+      Click to Join Game Room
+    </a>
+  </div>
+  <div style='display: none;' class="container" id="quiz-fail">
+    <h1 class="font-weight-bold" style='text-align:center; margin:10%; color:chocolate;'>Failed Attention Check Screen.</h1>
+    <h2 class="font-weight-bold" style='text-align:center; margin:10%; color:darkslategray;'>That is incorrect. Please re-read the instructions carefully.</h2>
+    <a class="btn btn-primary btn-lg btn-block" id="revise-intructions">
+      Click to see instructions
+    </a>
+  </div>
   <div id="mainInfo" style="display: none; margin-top: 5%; margin-left: 5%; margin-bottom: 20%; margin-right:5%;">
         <div class="row">
           <div class="col">
             <h3>
               INSTRUCTIONS.
             </h3>
+            <h6>
+              You will be quizzed on the content of these instructions before you can start the game, so please read the instructions carefully.
+            </h6>>
             <p>
               There are three rooms at the end of each of the three hallways. One of these rooms has a victim.
               You are teamed up with a knowledgeable leader who knows where the victim is but does not have the ability to save the victim.
@@ -77,18 +96,17 @@
               You will be asked to play this game 5 different times. The entire experiment should take about 5 minutes.
             </p>
             <div>
-              <a class="btn btn-primary btn-md" id="join-room">
-                Click to Join Game Room
+              <a class="btn btn-primary btn-md" id="join-quiz">
+                Click to Start Quiz
               </a>
             </div>
           </div>
           <div class="col">
-            <!-- <h3 style="text-align:center;">GAME VIEW IMAGE</h3> -->
             <img src="/assets/gameMap.png" class="image-responsive" style="width: 100%;">
           </div>
         </div>
   </div>  
- 
+  <div style="display: none;" id="surveyContainer"></div>
   <div style='display: none; justify-content: center; margin-top: 5%; margin' id='phaser-game'>
     <div id="game-time">
       <span id="sessionTitle">Game No: </span><span id='sessionId'></span><span id="timerTitle">  GAME TIMER:</span><span id='timerTime'></span>
