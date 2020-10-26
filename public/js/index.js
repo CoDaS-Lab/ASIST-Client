@@ -1,4 +1,4 @@
-import {actExpSmryBtn, dsplyExpSmry, endSession, startSession, joinGame} from "/js/expNav.js";
+import {actExpSmryBtn, endSession, startSession, joinQuiz, changeDisplay} from "/js/expNav.js";
 import {PlayerDisplay, GameState} from "/js/gameUtils.js"
 import {phaserConfig, getMapData, getGameData, socketURL, getRandomConfig} from "/js/config.js"
 
@@ -187,13 +187,30 @@ socket.on('connect',()=>{
 
 $(document).ready(function() {
     $("#agree").change(actExpSmryBtn);
-    $("#cte").on("click", dsplyExpSmry);
-    $("#join-room").on("click", function(){
-        joinGame(socket, "#mainInfo", "#wait-room", "start_wait", gTime)
+    $("#cte").on("click", function(){
+        if ($("#agree").prop('checked') == true) {
+            changeDisplay(socket, "game_info" ,"#tmcn", "#mainInfo", "start_instructions", gTime);
+        } else {
+            alert('Please indicate that you have read and agree to the Terms and Conditions and Privacy Policy');
+        }
     });
+
+    $("#join-room").on("click", function(){
+        changeDisplay(socket, "start_wait", "#quiz-success", "#wait-room", "start_wait", gTime)
+    });
+
+    $("#join-quiz").on("click", function(){
+        joinQuiz(socket, gTime);
+    });
+
+    $("#revise-intructions").on("click", function(){
+        changeDisplay(socket, "game_info", "#quiz-fail", "#mainInfo", "revise_instructions", gTime)
+    });
+
     $('#start-session').on("click", function(){
         startSession(game, socket, sessionId, "#session-over", "#phaser-game", "#sessionId", "start_game", gTime);
     });
+
 });
 
 socket.on('wait_data', (message)=>{
