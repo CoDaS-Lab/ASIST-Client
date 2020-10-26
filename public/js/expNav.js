@@ -1,3 +1,5 @@
+import {surveyJSON} from "/js/config.js";
+
 var actExpSmryBtn = function () {
 // Activates the button to visit experiment information page on clicking the box to agree on the experiment conditions
     if($(this).prop('checked') == true) {
@@ -7,24 +9,39 @@ var actExpSmryBtn = function () {
     }
 };
 
-var dsplyExpSmry = function () {
-    //Display experiment information page
-    if ($("#agree").prop('checked') == true) {
-        $("#tmcn").hide();
-        $("#mainInfo").show();
-    } else {
-        alert('Please indicate that you have read and agree to the Terms and Conditions and Privacy Policy');
-    }
-};
-
-var joinGame = function(socketObj, hideElement, showElement, keyMessage, gTime){
+var changeDisplay = function(socketObj, handlerId, hideElement, showElement, keyMessage, gTime){
     $(hideElement).hide();
-    socketObj.emit('start_wait', {"key": keyMessage, "kt": new Date().toISOString(),  "dt": gTime});
-    $(showElement).show();
+    socketObj.emit(handlerId, {"key": keyMessage, "kt": new Date().toISOString(),  "dt": gTime});
+    $(showElement).show();  
+}
+
+var joinQuiz = function(socket, gTime){
+    changeDisplay(socket, "game_info", "#mainInfo", "#surveyContainer", "start_quiz", gTime)
+    const aJson = {"q1":"1", "q2":"1", "q3":"4"}
+    var sendDataToServer = function (survey) {
+        let quizResult = true;
+        for (var key in survey.data){
+            if (survey.data[key] != aJson[key]){
+                quizResult = false;
+                break
+            }
+        }
+        if (quizResult===true){
+            changeDisplay(socket, "game_info", "#surveyContainer", "#quiz-success", "quiz_passed", gTime)
+        }else{
+            changeDisplay(socket, "game_info", "#surveyContainer", "#quiz-fail", "quiz_failed", gTime)
+        }
+    }
+    console.log("Quiz load");
+    Survey.StylesManager.applyTheme("modern");
+    var survey = new Survey.Model(surveyJSON);
+    $("#surveyContainer").Survey({
+        model: survey,
+        onComplete: sendDataToServer
+    });    
 }
 
 var endSession = function(gameObj, socketObj, turkObj, timerObj, playersList, playerId, roomIdx, sessionId, selectIdx, keyMessage, sessionLimit, sessionMessage){
-
     gameObj.scene.stop("GamePlay");
     timerObj.stop();
     $("#phaser-game").hide();
@@ -53,4 +70,4 @@ var startSession = function(gameObj, socketObj, sessionId, hideElement, showElem
     gameObj.scene.start("GamePlay");
 }
 
-export {actExpSmryBtn, dsplyExpSmry, endSession, startSession, joinGame};
+export {actExpSmryBtn, endSession, startSession, joinQuiz, changeDisplay};
