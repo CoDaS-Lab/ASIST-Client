@@ -92,6 +92,48 @@ var getRandomConfig = function(){
     return [selectIdx, leaderMovementIndexes, roomVictimMapping, victimIndexes]
 }
 
+const surveyJSON = {"title":"Instruction Attention Check",
+"description":"This quiz is based on the instructions of the game that you read on the previous page.",
+"focusFirstQuestionAutomatic":false,
+"focusOnFirstError":false,
+"pages": [{"name": "page1",
+      "elements": [{"type": "radiogroup",
+                    "name": "q1",
+                    "title": "What is the goal of this game?",
+                    "isRequired":true,
+                    "choices": [{"value": "1", "text": "To rescue the victim."},
+                                {"value": "item2", "text": "To escape from the bandit."},
+                                {"value": "item3", "text": "To collect all the gold coins."},
+                                {"value": "item4", "text": "To figure out the secret word."}],
+                    "choicesOrder":"random"},
+                    {"type": "radiogroup",
+                    "name": "q2",
+                    "title": "What is the role of the leader?",
+                    "isRequired":true,
+                    "choices": [{"value": "1", "text": "To show the direction of your objective."},
+                                {"value": "item2", "text": "To help clear obstacles."},
+                                {"value": "item3", "text": "To give written orders to the player."},
+                                {"value": "item4", "text": "There is no leader in this game."}],
+                    "choicesOrder":"random"},
+                    {"type": "radiogroup",
+                    "name": "q3",
+                    "title": "What keys do you use to play this game?",
+                    "isRequired":true,
+                    "choices": [{"value": "item1", "text": "“up”, “down”, “left”, “right”, and “space”."},
+                                {"value": "item2", "text": "“up”, “down”, “left”, and “right”."},
+                                {"value": "item3", "text": "“up”, “down”, “left”, “right”, and “s”."},
+                                {"value": "4", "text": "“up”, “down”, “left”, “right”, and “r”."}],
+                    "choicesOrder":"random"}                    
+                ]                     
+            }],
+"questionsOrder":"random",    
+"showProgressBar":"both",
+"progressBarType":"questions",
+"questionTitlePattern":"numTitle",
+"completeText": "Check Result",
+"questionsOnPageMode":"singlePage"                              
+}
+
 var socketURL = "https://asist-api.herokuapp.com/"
 // var socketURL  = "http://127.0.0.1:5000"
-export {phaserConfig, getMapData, getGameData, socketURL, getRandomConfig};
+export {phaserConfig, getMapData, getGameData, socketURL, getRandomConfig, surveyJSON};
