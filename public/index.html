@@ -117,7 +117,7 @@
     </div> 
   </div>
   <h1 class="font-weight-bold" style='display:none; margin:20%;  text-align:center; color:darkslategray;' id='wait-room'>Waiting for other players to join</h1>
-  <h1 class="font-weight-bold" style='display:none; margin:20%;  text-align:center; color:darkslategray;' id='game-over'>Game Over!!</h1>
+  <h1 class="font-weight-bold" style='display:none; margin:20%;  text-align:center; color:darkslategray;' id='game-over'>Thank you! You can close this window</h1>
   <div style='display: none;' class="container" id="session-over">
     <h1 class="font-weight-bold" style='text-align:center; margin:10%; color:darkslategray;' id='session-message'>Session Completed</h1>
     <h2 class="font-weight-bold" style='text-align:center; margin:10%; color:chocolate;' id='session-completed'></h2>
@@ -125,5 +125,24 @@
       Click to Start Next Game
     </a>
   </div>
+  <div id='exp-close' style="display: none">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2>Thank you for participation. Please click the submit button to complete the experiment.</h2>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-lg-12">
+                <h3>Comments(Optional):</h3>
+                <textarea class="form-control float-center" id="ta" name="feedbackText" cols="12" rows="3"></textarea>
+                <button type="submit" class="btn btn-primary btn-lg" id="feedbackSbmt" style="margin-top:5px">Submit</button>
+                <span id="statusCntr"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 </body>
 </html>

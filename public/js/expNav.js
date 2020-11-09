@@ -9,17 +9,19 @@ var actExpSmryBtn = function () {
     }
 };
 
-var changeDisplay = function(socketObj, handlerId, hideElement, showElement, keyMessage, gTime){
+var changeDisplay = function(socketObj, handlerId, hideElement, showElement, keyData){
     $(hideElement).hide();
-    socketObj.emit(handlerId, {"key": keyMessage, "kt": new Date().toISOString(),  "dt": gTime});
-    $(showElement).show();  
+    keyData["time"]  = new Date().toISOString();
+    socketObj.emit(handlerId, keyData)
+    $(showElement).show();
 }
 
-var joinQuiz = function(socket, gTime){
-    changeDisplay(socket, "game_info", "#mainInfo", "#surveyContainer", "start_quiz", gTime)
+var joinQuiz = function(socket){
     const aJson = {"q1":"1", "q2":"1", "q3":"4"}
+    changeDisplay(socket, "game_info", "#mainInfo", "#surveyContainer", {"event":"start_quiz"})
     var sendDataToServer = function (survey) {
         let quizResult = true;
+        var quizData;
         for (var key in survey.data){
             if (survey.data[key] != aJson[key]){
                 quizResult = false;
@@ -27,9 +29,11 @@ var joinQuiz = function(socket, gTime){
             }
         }
         if (quizResult===true){
-            changeDisplay(socket, "game_info", "#surveyContainer", "#quiz-success", "quiz_passed", gTime)
+            quizData = {"event":"quiz_passed", "quiz_data": survey.data}
+            changeDisplay(socket, "game_info", "#surveyContainer", "#quiz-success", quizData)
         }else{
-            changeDisplay(socket, "game_info", "#surveyContainer", "#quiz-fail", "quiz_failed", gTime)
+            quizData = {"event":"quiz_failed", "quiz_data": survey.data}
+            changeDisplay(socket, "game_info", "#surveyContainer", "#quiz-fail", quizData)
         }
     }
     console.log("Quiz load");
@@ -41,32 +45,29 @@ var joinQuiz = function(socket, gTime){
     });    
 }
 
-var endSession = function(gameObj, socketObj, turkObj, timerObj, playersList, playerId, roomIdx, sessionId, selectIdx, keyMessage, sessionLimit, sessionMessage){
+var endSession = function(gameObj, socketObj, timerObj, playerId, roomIdx, sessionId, selectIdx, keyMessage, sessionLimit, sessionMessage){
     gameObj.scene.stop("GamePlay");
     timerObj.stop();
     $("#phaser-game").hide();
-    let playersUpdateTime = Array();
-    for (let player of playersList){
-        playersUpdateTime.push(player.updateTime)
-    }
-    socketObj.emit('end_game', {"key": keyMessage, "s_id":sessionId, "rd_idx":selectIdx, 'rm_id':roomIdx, 'p_id': playerId, "kt": new Date().toISOString(), "dt": playersUpdateTime})
+    socketObj.emit('end_game', {"event": keyMessage, "s_id":sessionId, "rd_idx":selectIdx, 'rm_id':roomIdx, 
+    'p_id': playerId, "time": new Date().toISOString()})
     if (sessionId==sessionLimit){
-        turkObj.submit({"p_id":playerId, "rm_id":roomIdx});
-        $("#game-over").show();
+        $("#exp-close").show();
     }else{
         $("#session-message").text(sessionMessage);
-        $("#session-completed").text("No of Games Played: "+sessionId);
+        $("#session-completed").text("Number of Games Played: "+sessionId);
         $("#session-over").show();
         sessionId += 1;
     }
     return sessionId
 }
 
-var startSession = function(gameObj, socketObj, sessionId, hideElement, showElement, timerElement, keyMessage, gTime){
+var startSession = function(gameObj, socketObj, hideElement, showElement, timerElement, keyData){
     $(hideElement).hide();
     $(showElement).css("display", "flex");
-    $(timerElement).text(sessionId);
-    socketObj.emit('start_game', {"key": keyMessage, "s_id":sessionId, "kt": new Date().toISOString(), "dt": gTime})
+    $(timerElement).text(keyData["s_id"]);
+    keyData["time"]  = new Date().toISOString();
+    socketObj.emit('start_game', keyData)
     gameObj.scene.start("GamePlay");
 }
 

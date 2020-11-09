@@ -1,5 +1,7 @@
 class PlayerDisplay {
+    
     constructor(gameScene, Config){
+
         this.gameScene= gameScene
         this.Config = Config
         this.x = Config.x
@@ -20,6 +22,7 @@ class PlayerDisplay {
                 ],
                 "repeat": -1
             });
+
         this.gameScene.anims.create(
             {
                 "key": this.name+"down",
@@ -28,6 +31,7 @@ class PlayerDisplay {
                 ],
                 "repeat": -1
             });
+
         this.gameScene.anims.create(
             {
                 "key": this.name+"right",
@@ -36,6 +40,7 @@ class PlayerDisplay {
                 ],
                 "repeat": -1
             });
+
         this.gameScene.anims.create(
             {
                 "key": this.name+"up",
@@ -47,6 +52,7 @@ class PlayerDisplay {
 
         this.physicsObj.anims.play(this.name+"down");              
     };
+
 
     move(x,y, direction){
         this.x = x;
@@ -69,8 +75,9 @@ class GameState {
         // this.map = new GameMap(mapConfig);
 
     }
+
+    
     _drawInitiatSetUp(){
-        
         this._drawGrid();
         this._drawRectangleBlocks(this.config.hallwayBoundaryIndexes, 0x000000,1);
         this._drawRectangleBlocks(this.config.roomWallIndexes, 0x000000,1);
@@ -79,10 +86,11 @@ class GameState {
         this.scene.add.rectangle(100,150,100,150,0xffffff,1)
         // this._drawText();
         // this._showNumbers();
-
         this._drawVictims(this.config.roomVictimMapping, 0x9754e3, 0)
         this._blockRoomView(this.config.roomViewBlocksMapping, 0x8a8786, 0.8)
     }
+
+    
     _storeMapVariablesFromConfig(config, gameScene){
         this.config = config;
         this.scene = gameScene;
@@ -90,7 +98,9 @@ class GameState {
         this.game_height = gameScene.sys.game.scale.gameSize._height;
         this.cw = gameScene.sys.game.scale.gameSize._width / config.cols;
         this.ch = gameScene.sys.game.scale.gameSize._height / config.rows;        
-    } 
+    }
+
+    
     _generateMapVariables(){
         this.noRoadIndex = this._generateNoRoadIndexes(this.config.hallwayBoundaryIndexes,
             this.config.roomWallIndexes, this.config.victimIndexes);
@@ -98,12 +108,16 @@ class GameState {
         this.set_victims = new Set(this.config.victimIndexes);
 
     }
+
+    
     _generateNoRoadIndexes(hallwayBoundaryIndexes,roomWallIndexes, victimIndexes){
         let noRoadIndex = new Set(hallwayBoundaryIndexes);
         victimIndexes.forEach(item => noRoadIndex.add(item));
         roomWallIndexes.forEach(item => noRoadIndex.add(item));
         return noRoadIndex
     }
+
+
     _drawGrid() {
         this.graphics = this.scene.add.graphics();
         this.graphics.lineStyle(0.5, 0x000000);
@@ -132,20 +146,22 @@ class GameState {
         this.placeAt(xx, yy, obj);
     }
 
-    _showNumbers() {
 
-        var count = 0;
-        for (var i = 0; i < this.config.rows; i++) {
-            for (var j = 0; j < this.config.cols; j++) {
-                var numText = this.scene.add.text(0, 0, count, {
-                    color: '#ff0000'
-                });
-                numText.setOrigin(0.5, 0.5);
-                this.placeAtIndex(count, numText);
-                count++;
-            }
-        }
-    }
+    // _showNumbers() {
+
+    //     var count = 0;
+    //     for (var i = 0; i < this.config.rows; i++) {
+    //         for (var j = 0; j < this.config.cols; j++) {
+    //             var numText = this.scene.add.text(0, 0, count, {
+    //                 color: '#ff0000'
+    //             });
+    //             numText.setOrigin(0.5, 0.5);
+    //             this.placeAtIndex(count, numText);
+    //             count++;
+    //         }
+    //     }
+    // }
+
 
     _drawRectangleBlocks(locIndexes, colorHex, alpha) {
 
@@ -155,12 +171,15 @@ class GameState {
 
         }
     }
-    _drawText(){
 
-        this.placeAtIndex(311, this.scene.add.text(0,0, "Room A", {color: '0x000000', fontSize: '20px'}));
-        this.placeAtIndex(9, this.scene.add.text(0,0, "Room B", {color: '0x000000', fontSize: '20px'}));
-        this.placeAtIndex(337, this.scene.add.text(0,0, "Room C", {color: '0x000000', fontSize: '20px'}));
-    }
+
+    // _drawText(){
+
+    //     this.placeAtIndex(311, this.scene.add.text(0,0, "Room A", {color: '0x000000', fontSize: '20px'}));
+    //     this.placeAtIndex(9, this.scene.add.text(0,0, "Room B", {color: '0x000000', fontSize: '20px'}));
+    //     this.placeAtIndex(337, this.scene.add.text(0,0, "Room C", {color: '0x000000', fontSize: '20px'}));
+    // }
+
 
     _drawVictims(locIndexesObj, colorHex, alpha){
         this.roomVictimObj = new Object(); // all victims in a a room identified by door key 
@@ -175,6 +194,8 @@ class GameState {
             }
         }
     }
+
+
     _blockRoomView(locIndexesObj, colorHex, alpha){
         this.roomViewObj = new Object();
         for (let roomIndex in locIndexesObj){
@@ -186,17 +207,21 @@ class GameState {
             }
         }        
     }
+
+
     makeVictimsVisible(victimObjArray){
         for (let i=0; i<victimObjArray.length; i++) {
             victimObjArray[i].fillAlpha = 1;
         }
     }
 
+
     makeRoomVisible(viewObjArray){
         for (let i=0; i<viewObjArray.length; i++) {
             viewObjArray[i].fillAlpha = 0;
         }      
     }
+
 
     getVictimRescueIndexes(x,y){
         let rescueIndexes = new Array();
@@ -206,42 +231,6 @@ class GameState {
             }
         }
         return rescueIndexes
-    }
-
-    makeVictimsVisible(victimObjArray){
-        for (let i=0; i<victimObjArray.length; i++) {
-            victimObjArray[i].fillAlpha = 1;
-        }
-    }
-
-    makeRoomVisible(viewObjArray){
-        for (let i=0; i<viewObjArray.length; i++) {
-            viewObjArray[i].fillAlpha = 0;
-        }      
-    }
-
-    getVictimRescueIndexes(x,y){
-        let rescueIndexes = new Array();
-        for(let i=x-1; i<=x+1; i++){
-            for(let j=y-1; j<=y+1; j++){
-                rescueIndexes.push((i*this.config.cols)+j);
-            }
-        }
-        return rescueIndexes
-    }
-
-    placeAt(xx, yy, obj) {
-        var x2 = this.cw * xx + this.cw / 2;
-        var y2 = this.ch * yy + this.ch / 2;
-        obj.x = x2;
-        obj.y = y2;
-    }
-
-    placeAtIndex(index, obj) {
-
-        var yy = Math.floor(index / this.config.cols);
-        var xx = index - (yy * this.config.cols);
-        this.placeAt(xx, yy, obj);
     }
 }
 
