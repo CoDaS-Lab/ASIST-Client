@@ -53,6 +53,7 @@ var endSession = function(gameObj, socketObj, timerObj, playerId, roomIdx, sessi
     'p_id': playerId, "time": new Date().toISOString()})
     if (sessionId==sessionLimit){
         $("#exp-close").show();
+        gameObj.destroy();
     }else{
         $("#session-message").text(sessionMessage);
         $("#session-completed").text("Number of Games Played: "+sessionId);

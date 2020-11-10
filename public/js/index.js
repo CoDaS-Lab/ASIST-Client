@@ -9,8 +9,8 @@ var socketId = "na";
 var gameTime = 2;
 var gameTimer = new Timer();
 var sessionId = 1;
-var sessionLimit = 2;
-var leaderDelay = 50;
+var sessionLimit = 5;
+var leaderDelay = 500;
 var feedback_str = "No Feedback Given";
 const socket = io(socketURL, {transports: ['websocket']})
 var gamePlayState = new Phaser.Class({
@@ -87,6 +87,7 @@ var gamePlayState = new Phaser.Class({
         });
 
         var keys = this.input.keyboard.addKeys('UP, DOWN, RIGHT, LEFT, R')
+        this.input.keyboard.preventDefault = false
         keys.UP.on('down', ()=>{this._playerMove(this.playerList[playerId].x, this.playerList[playerId].y - 1, "up")});
         keys.DOWN.on('down', ()=>{this._playerMove(this.playerList[playerId].x, this.playerList[playerId].y + 1, "down")});
         keys.RIGHT.on('down', ()=>{this._playerMove(this.playerList[playerId].x + 1, this.playerList[playerId].y, "right")});
@@ -238,13 +239,12 @@ $(document).ready(function() {
         $("#game-over").show();      
 
     });
-
 });
 
 socket.on('wait_data', (message)=>{
     console.log(message)
     roomIdx = message["rm_id"];
-    // roomIdx = new TextDecoder().decode(message["rm_id"]);
+    roomIdx = new TextDecoder().decode(message["rm_id"]);
     playerId = message["p_id"]
 });
 
