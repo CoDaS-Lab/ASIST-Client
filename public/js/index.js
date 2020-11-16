@@ -222,7 +222,8 @@ $(document).ready(function() {
     });
 
     $('#start-session').on("click", function(){
-        startSession(game, socket, "#session-over", "#phaser-game", "#sessionId", {"event":"start_game", "s_id": sessionId});
+        startSession(game, socket, "#session-over", "#phaser-game", "#sessionId", {"event":"start_game", "s_id": sessionId, 'rm_id':roomIdx, 
+        'p_id': playerId,});
     });
 
 
