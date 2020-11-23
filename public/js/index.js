@@ -140,7 +140,7 @@ var gamePlayState = new Phaser.Class({
         leaderInGameInfo.physicsObj.y = 36;
 
         this.add.text(10,30, "Player", {color: '0x000000', fontSize: '17px'});
-        this.add.text(135,30, "Leader", {color: '0x000000', fontSize: '17px'});
+        this.add.text(135,30, "Agent", {color: '0x000000', fontSize: '17px'});
         this.add.text(10,59, "Victim", {color: '0x000000', fontSize: '17px'});
         this.add.rectangle(110,69, this.gameState.cw, this.gameState.ch, 0x9754e3);
         this.add.text(135,59, "Door", {color: '0x000000', fontSize: '17px'});

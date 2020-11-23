@@ -17,7 +17,7 @@ var changeDisplay = function(socketObj, handlerId, hideElement, showElement, key
 }
 
 var joinQuiz = function(socket){
-    const aJson = {"q1":"1", "q2":"1", "q3":"4"}
+    const aJson = {"q1":"1", "q2":"2", "q3":"4"}
     changeDisplay(socket, "game_info", "#mainInfo", "#surveyContainer", {"event":"start_quiz"})
     var sendDataToServer = function (survey) {
         let quizResult = true;
