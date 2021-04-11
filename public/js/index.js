@@ -69,6 +69,9 @@ var gamePlayState = new Phaser.Class({
                         "key":"left", 'rm_id':room_id, 'idx': playerId, "k_time":new Date().toISOString(),
                         "event": "player_move", "dTime": this.gameConfig.dTime
                     })
+                    //if ((x+1) in mapData.hallwayBoundaryIndexes || (x+1) in roomWallIndexes || (y+1) in mapData.hallwayBoundaryIndexes || (y+1) in roomWallIndexes){
+                        //move map left
+                    //}
                 }
             }
             if (Phaser.Input.Keyboard.JustDown(this.keys.RIGHT)){
@@ -79,7 +82,10 @@ var gamePlayState = new Phaser.Class({
                     socket.emit("player_move", {'x': this.player_list[playerId].x, 'y': this.player_list[playerId].y,
                         "key":"right", 'rm_id':room_id, 'idx': playerId, "k_time":new Date().toISOString(),
                         "event": "player_move", "dTime": this.gameConfig.dTime
-                    })         
+                    })
+                    //if ((x+1) in mapData.hallwayBoundaryIndexes || (x+1) in roomWallIndexes || (y+1) in mapData.hallwayBoundaryIndexes || (y+1) in roomWallIndexes){
+                        //move map right
+                   // }         
                 }
             }
             if (Phaser.Input.Keyboard.JustDown(this.keys.UP)){
@@ -91,6 +97,9 @@ var gamePlayState = new Phaser.Class({
                         "key":"up", 'rm_id':room_id, 'idx': playerId, "k_time":new Date().toISOString(),
                         "event": "player_move", "dTime": this.gameConfig.dTime
                     })
+                    //if ((x+1) in mapData.hallwayBoundaryIndexes || (x+1) in roomWallIndexes || (y+1) in mapData.hallwayBoundaryIndexes || (y+1) in roomWallIndexes){
+                        //move map up
+                    //}
                 }
             }
             if (Phaser.Input.Keyboard.JustDown(this.keys.DOWN)){             
@@ -102,6 +111,9 @@ var gamePlayState = new Phaser.Class({
                         "key":"down", 'rm_id':room_id, 'idx': playerId, "k_time":new Date().toISOString(),
                         "event": "player_move", "dTime": this.gameConfig.dTime
                     })
+                    //if ((x+1) in mapData.hallwayBoundaryIndexes || (x+1) in roomWallIndexes || (y+1) in mapData.hallwayBoundaryIndexes || (y+1) in roomWallIndexes){
+                        //move map down
+                    //}
                 }
             }
         }
