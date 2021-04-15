@@ -92,6 +92,6 @@ var getRandomConfig = function(){
     return [selectIdx, leaderMovementIndexes, roomVictimMapping, victimIndexes]
 }
 
-var socketURL = "https://asist-api.herokuapp.com/"
+var socketURL = process.env.SOCKET_URL
 
 export {phaserConfig, getMapData, getGameData, socketURL, getRandomConfig};
