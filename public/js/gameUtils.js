@@ -64,7 +64,7 @@ class GameState {
         this._storeMapVariablesFromConfig(config);
         this._generateMapVariables();
         this._drawInitiatSetUp();
-        this.map = new GameMap(mapConfig);
+        //this.map = new GameMap(mapConfig);
 
     }
     _drawInitiatSetUp(){
@@ -75,8 +75,8 @@ class GameState {
         //this._drawRectangleBlocks(this.config.doorIndexes, 0x9dd1ed, 0.3);
         this._drawRectangleBlocks(this.config.noGameBox, 0xffffff, 1);
         this.scene.add.rectangle(100,150,100,150,0xffffff,1)
-        this._drawText();
-        this._showNumbers();
+        //this._drawText();
+        //this._showNumbers();
 
         this._drawVictims(this.config.roomVictimMapping, 0x9754e3, 0)
         //this._blockRoomView(this.config.roomViewBlocksMapping, 0x8a8786, 0.8)
