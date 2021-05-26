@@ -1,6 +1,6 @@
 # CODAS LAB EXPERIMENT
 
-This Client is in beta version and part of a game built for ASIST project using Phaser.js. The Client works with the API available at [ASIST-API](https://github.com/CoDaS-Lab/ASIST-API)
+This Client is in beta version and part of a game built for ASIST project using Phaser.js. The Client works with the API available at [ASIST-API](https://github.com/CoDaS-Lab/ASIST-API).
 
 ## Requirements:
 - Node 12.8.3+ installed
