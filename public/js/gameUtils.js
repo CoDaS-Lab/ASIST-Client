@@ -64,23 +64,22 @@ class GameState {
         this._storeMapVariablesFromConfig(config);
         this._generateMapVariables();
         this._drawInitiatSetUp();
-        // this.map = new GameMap(mapConfig);
+        //this.map = new GameMap(mapConfig);
 
     }
     _drawInitiatSetUp(){
         
         this._drawGrid();
         this._drawRectangleBlocks(this.config.hallwayBoundaryIndexes, 0x000000,1);
-        this._drawRectangleBlocks(this.config.roomWallIndexes, 0x000000,1);
+        //this._drawRectangleBlocks(this.config.roomWallIndexes, 0x000000,1);
         this._drawRectangleBlocks(this.config.doorIndexes, 0x9dd1ed, 0.3);
         this._drawRectangleBlocks(this.config.noGameBox, 0xffffff, 1);
         this.scene.add.rectangle(100,150,100,150,0xffffff,1)
-        // this._drawText();
-        // this._showNumbers();
+        //this._drawText();
+        //this._showNumbers();
 
         this._drawVictims(this.config.roomVictimMapping, 0x9754e3, 0)
-        this._drawRubble(this.config.roomRubbleMapping, 0x585656, 0) //method to draw rubble rectangles
-        this._blockRoomView(this.config.roomViewBlocksMapping, 0x8a8786, 0.8)
+        //this._blockRoomView(this.config.roomViewBlocksMapping, 0x8a8786, 0.8)
     }
     _storeMapVariablesFromConfig(config){
         this.config = config;
@@ -91,19 +90,16 @@ class GameState {
         this.ch = config.scene.sys.game.scale.gameSize._height / config.rows;        
     } 
     _generateMapVariables(){
-        this.noRoadIndex = this._generateNoRoadIndexes(this.config.hallwayBoundaryIndexes,
-            this.config.roomWallIndexes, this.config.victimIndexes, this.config.rubbleIndexes);
-
+        this.noRoadIndex = this._generateNoRoadIndexes(this.config.hallwayBoundaryIndexes, this.config.victimIndexes);
+        // this.config.roomWallIndexes was originally also in the above line
         this.set_victims = new Set(this.config.victimIndexes);
-        this.set_rubble = new Set(this.config.rubbleIndexes);
-        
 
     }
-    _generateNoRoadIndexes(hallwayBoundaryIndexes,roomWallIndexes, victimIndexes, rubbleIndexes){
+    _generateNoRoadIndexes(hallwayBoundaryIndexes, victimIndexes){
+        //roomWallIndexes, was originally in the above line
         let noRoadIndex = new Set(hallwayBoundaryIndexes);
         victimIndexes.forEach(item => noRoadIndex.add(item));
-        rubbleIndexes.forEach(item => noRoadIndex.add(item));
-        roomWallIndexes.forEach(item => noRoadIndex.add(item));
+        //roomWallIndexes.forEach(item => noRoadIndex.add(item));
         return noRoadIndex
     }
     _drawGrid() {
@@ -177,41 +173,20 @@ class GameState {
             }
         }
     }
-
-    _drawRubble(locIndexesObj, colorHex, alpha){
-        this.roomRubbleObj = new Object(); // all rubble in a a room identified by door key 
-        this.rubbleObj = new Object(); //all rubble identified by key
-        for (let roomIndex in locIndexesObj){
-            this.roomRubbleObj[roomIndex] = new Array();
-            for (let rubbleIndex of locIndexesObj[roomIndex]){
-                let rect = this.scene.add.rectangle(20,20, this.cw, this.ch, colorHex, alpha);
-                this.placeAtIndex(rubbleIndex, rect);
-                this.roomRubbleObj[roomIndex].push(rect);
-                this.rubbleObj[rubbleIndex] = rect;
-            }
-        }
-    }
-
-    _blockRoomView(locIndexesObj, colorHex, alpha){
-        this.roomViewObj = new Object();
-        for (let roomIndex in locIndexesObj){
-            this.roomViewObj[roomIndex] = new Array();
-            for (let viewIndex of locIndexesObj[roomIndex]){
-                let rect = this.scene.add.rectangle(20,20, this.cw, this.ch, colorHex, alpha);
-                this.placeAtIndex(viewIndex, rect);
-                this.roomViewObj[roomIndex].push(rect);
-            }
-        }        
-    }
+   // _blockRoomView(locIndexesObj, colorHex, alpha){
+   //     this.roomViewObj = new Object();
+   //     for (let roomIndex in locIndexesObj){
+   //         this.roomViewObj[roomIndex] = new Array();
+   //         for (let viewIndex of locIndexesObj[roomIndex]){
+   //             let rect = this.scene.add.rectangle(20,20, this.cw, this.ch, colorHex, alpha);
+   //            this.placeAtIndex(viewIndex, rect);
+   //             this.roomViewObj[roomIndex].push(rect);
+   //         }
+   //     }        
+   // }
     makeVictimsVisible(victimObjArray){
         for (let i=0; i<victimObjArray.length; i++) {
             victimObjArray[i].fillAlpha = 1;
-        }
-    }
-
-    makeRubbleVisible(rubbleObjArray){
-        for (let i=0; i<rubbleObjArray.length; i++) {
-            rubbleObjArray[i].fillAlpha = 1;
         }
     }
 
@@ -251,17 +226,6 @@ class GameState {
             }
         }
         return rescueIndexes
-    }
-
-    //return location of rubble 
-    getRubbleRemovalIndexes(x,y){
-        let rubbleIndexes = new Array();
-        for(let i=x-1; i<=x+1; i++){
-            for(let j=y-1; j<=y+1; j++){
-                rubbleIndexes.push((i*this.config.cols)+j);
-            }
-        }
-        return rubbleIndexes
     }
 
     placeAt(xx, yy, obj) {
@@ -286,7 +250,6 @@ class GameState {
             this.scene.roundDisplay.text = "Round ".concat(String(this.scene.gameConfig.roundCount));
             if (this.scene.mapConfig.doorIndexes.includes(newIdx)){
                 this.scene.gameState.makeVictimsVisible(this.scene.gameState.roomVictimObj[String(newIdx)]);
-                this.scene.gameState.makeRubbleVisible(this.scene.gameState.roomRubbleObj[String(newIdx)]);
                 this.scene.gameState.makeRoomVisible(this.scene.gameState.roomViewObj[String(newIdx)]);
             }                
         }
