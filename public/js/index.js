@@ -5,6 +5,7 @@ import {phaserConfig, mapData, gameSetUpData, socketURL} from "/js/config.js"
 var room_id = "temp_room";
 var playerId = "temp_id";
 var gameTimer = new Timer();
+var tone;
 const socket = io(socketURL, {transports: ['websocket']})
 
 var gamePlayState = new Phaser.Class({
@@ -23,7 +24,9 @@ var gamePlayState = new Phaser.Class({
         {frameWidth: 32, frameHeight: 48});
         this.load.spritesheet("dude","/assets/dude.png",
             {frameWidth: 32, frameHeight: 48});
-
+        this.load.audio("tone", [
+            "/assets/tone.mp3"
+        ]);
     },
     create: function() {
         console.log("GamePlay");
@@ -38,6 +41,8 @@ var gamePlayState = new Phaser.Class({
     
         this.leaderDude = new PlayerDisplay(this, {"x": this.gameConfig.leaderX, "y":this.gameConfig.leaderY, "name":"chirag"});
         this.playersCurrentLoc.push((this.leaderDude.y*this.mapConfig.cols)+ this.leaderDude.x);
+
+        this.tone = this.sound.add("tone");
 
         this.player_list = [this.playerDude, this.leaderDude];
 
@@ -63,6 +68,7 @@ var gamePlayState = new Phaser.Class({
             if (Phaser.Input.Keyboard.JustDown(this.keys.LEFT)){
                 let newIdx = (this.player_list[playerId].y*this.mapConfig.cols)+ this.player_list[playerId].x - 1;
                 if (!(this.gameState.noRoadIndex.has(newIdx)) && !(this.playersCurrentLoc.includes(newIdx))){
+                    this._playTone(newIdx);
                     console.log("Move Left");
                     this.player_list[playerId].x -= 1;
                     socket.emit("player_move", {'x': this.player_list[playerId].x, 'y': this.player_list[playerId].y,
@@ -74,6 +80,7 @@ var gamePlayState = new Phaser.Class({
             if (Phaser.Input.Keyboard.JustDown(this.keys.RIGHT)){
                 let newIdx = (this.player_list[playerId].y*this.mapConfig.cols)+ (this.player_list[playerId].x + 1);
                 if (!(this.gameState.noRoadIndex.has(newIdx)) && !(this.playersCurrentLoc.includes(newIdx))){
+                    this._playTone(newIdx);
                     console.log("Move Right");
                     this.player_list[playerId].x += 1;
                     socket.emit("player_move", {'x': this.player_list[playerId].x, 'y': this.player_list[playerId].y,
@@ -85,6 +92,7 @@ var gamePlayState = new Phaser.Class({
             if (Phaser.Input.Keyboard.JustDown(this.keys.UP)){
                 let newIdx = ((this.player_list[playerId].y-1)*this.mapConfig.cols)+ this.player_list[playerId].x;
                 if (!(this.gameState.noRoadIndex.has(newIdx)) && !(this.playersCurrentLoc.includes(newIdx))){
+                    this._playTone(newIdx);
                     console.log("Move Up");
                     this.player_list[playerId].y -= 1
                     socket.emit("player_move", {'x': this.player_list[playerId].x, 'y': this.player_list[playerId].y,
@@ -96,6 +104,7 @@ var gamePlayState = new Phaser.Class({
             if (Phaser.Input.Keyboard.JustDown(this.keys.DOWN)){             
                 let newIdx = ((this.player_list[playerId].y+1)*this.mapConfig.cols)+ this.player_list[playerId].x;
                 if (!(this.gameState.noRoadIndex.has(newIdx)) && !(this.playersCurrentLoc.includes(newIdx))){
+                    this._playTone(newIdx);
                     console.log("Move Down");
                     this.player_list[playerId].y += 1
                     socket.emit("player_move", {'x': this.player_list[playerId].x, 'y': this.player_list[playerId].y,
@@ -173,6 +182,33 @@ var gamePlayState = new Phaser.Class({
         this.add.rectangle(227,105, this.gameState.cw, this.gameState.ch, 0x9dd1ed, 0.3);
         this.add.text(40,130, "Saved Victim", {color: '0x000000', fontSize: '17px'});
         this.add.rectangle(190,140, this.gameState.cw, this.gameState.ch, 0xf6fa78);
+    },
+
+    _playTone: function(location){
+        console.log("location= " + location);
+        let tone;
+        for(const toneIndex of this.mapConfig.toneIndexes){
+            if(toneIndex == location){
+                tone = toneIndex;
+                console.log("found tone= " + tone + " " + toneIndex);
+            }
+        }
+        
+        for(let roomIndex in this.mapConfig.roomToneMapping){
+            if(this.mapConfig.roomToneMapping[roomIndex].includes(tone)){ //
+                console.log("found tone in mapping, room = " + roomIndex);
+                for(const victim of this.gameState.set_victims){
+                    console.log("victim= " + victim);
+                    if (this.mapConfig.roomVictimMapping[roomIndex].includes(victim)){
+                        console.log("found victim in set");
+                        this.tone.play({
+                            loop: false
+                        });
+                    }
+                }
+            }
+        }
+
     },
 
 });
