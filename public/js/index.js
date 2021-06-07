@@ -5,7 +5,6 @@ import {phaserConfig, mapData, gameSetUpData, socketURL} from "/js/config.js"
 var room_id = "temp_room";
 var playerId = "temp_id";
 var gameTimer = new Timer();
-var tone;
 const socket = io(socketURL, {transports: ['websocket']})
 
 var gamePlayState = new Phaser.Class({
@@ -24,9 +23,7 @@ var gamePlayState = new Phaser.Class({
         {frameWidth: 32, frameHeight: 48});
         this.load.spritesheet("dude","/assets/dude.png",
             {frameWidth: 32, frameHeight: 48});
-        this.load.audio("tone", [
-            "/assets/tone.mp3"
-        ]);
+
     },
     create: function() {
         console.log("GamePlay");
@@ -41,8 +38,6 @@ var gamePlayState = new Phaser.Class({
     
         this.leaderDude = new PlayerDisplay(this, {"x": this.gameConfig.leaderX, "y":this.gameConfig.leaderY, "name":"chirag"});
         this.playersCurrentLoc.push((this.leaderDude.y*this.mapConfig.cols)+ this.leaderDude.x);
-
-        this.tone = this.sound.add("tone");
 
         this.player_list = [this.playerDude, this.leaderDude];
 
@@ -60,57 +55,83 @@ var gamePlayState = new Phaser.Class({
 
         socket.on('player_move', (message)=>{this.gameState.playerMove(message, playerId)});
 
- 
+        this.cameras.main.setBounds(0, 0, 50, 92);
+
+        var cursors = this.input.keyboard.createCursorKeys();
+
+        var controlConfig = {
+            camera: this.cameras.main,
+            left: cursors.left,
+            right: cursors.right,
+            up: cursors.up,
+            down: cursors.down,
+            zoomIn: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q),
+            zoomOut: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E),
+            acceleration: 0.06,
+            drag: 0.0005,
+            maxSpeed: 1.0
+        };
+
+        controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
     },
+
 
     update: function() {
         if ((this.gameConfig.roundCount>0) && (this.leaderGuidance)){
             if (Phaser.Input.Keyboard.JustDown(this.keys.LEFT)){
                 let newIdx = (this.player_list[playerId].y*this.mapConfig.cols)+ this.player_list[playerId].x - 1;
                 if (!(this.gameState.noRoadIndex.has(newIdx)) && !(this.playersCurrentLoc.includes(newIdx))){
-                    this._playTone(newIdx);
                     console.log("Move Left");
                     this.player_list[playerId].x -= 1;
                     socket.emit("player_move", {'x': this.player_list[playerId].x, 'y': this.player_list[playerId].y,
                         "key":"left", 'rm_id':room_id, 'idx': playerId, "k_time":new Date().toISOString(),
                         "event": "player_move", "dTime": this.gameConfig.dTime
                     })
+                    //if ((x-1) in mapData.hallwayBoundaryIndexes){
+                    //    game.camera.x -= 4;
+                    //}
                 }
             }
             if (Phaser.Input.Keyboard.JustDown(this.keys.RIGHT)){
                 let newIdx = (this.player_list[playerId].y*this.mapConfig.cols)+ (this.player_list[playerId].x + 1);
                 if (!(this.gameState.noRoadIndex.has(newIdx)) && !(this.playersCurrentLoc.includes(newIdx))){
-                    this._playTone(newIdx);
                     console.log("Move Right");
                     this.player_list[playerId].x += 1;
                     socket.emit("player_move", {'x': this.player_list[playerId].x, 'y': this.player_list[playerId].y,
                         "key":"right", 'rm_id':room_id, 'idx': playerId, "k_time":new Date().toISOString(),
                         "event": "player_move", "dTime": this.gameConfig.dTime
-                    })        
+                    })
+                    //if ((x+1) in mapData.hallwayBoundaryIndexes){
+                    //    game.camera.x += 4;
+                    //}         
                 }
             }
             if (Phaser.Input.Keyboard.JustDown(this.keys.UP)){
                 let newIdx = ((this.player_list[playerId].y-1)*this.mapConfig.cols)+ this.player_list[playerId].x;
                 if (!(this.gameState.noRoadIndex.has(newIdx)) && !(this.playersCurrentLoc.includes(newIdx))){
-                    this._playTone(newIdx);
                     console.log("Move Up");
                     this.player_list[playerId].y -= 1
                     socket.emit("player_move", {'x': this.player_list[playerId].x, 'y': this.player_list[playerId].y,
                         "key":"up", 'rm_id':room_id, 'idx': playerId, "k_time":new Date().toISOString(),
                         "event": "player_move", "dTime": this.gameConfig.dTime
                     })
+                    //if ((y-1) in mapData.hallwayBoundaryIndexes){
+                    //    game.camera.y -= 4;
+                    //}
                 }
             }
             if (Phaser.Input.Keyboard.JustDown(this.keys.DOWN)){             
                 let newIdx = ((this.player_list[playerId].y+1)*this.mapConfig.cols)+ this.player_list[playerId].x;
                 if (!(this.gameState.noRoadIndex.has(newIdx)) && !(this.playersCurrentLoc.includes(newIdx))){
-                    this._playTone(newIdx);
                     console.log("Move Down");
                     this.player_list[playerId].y += 1
                     socket.emit("player_move", {'x': this.player_list[playerId].x, 'y': this.player_list[playerId].y,
                         "key":"down", 'rm_id':room_id, 'idx': playerId, "k_time":new Date().toISOString(),
                         "event": "player_move", "dTime": this.gameConfig.dTime
                     })
+                    //if ((y+1) in mapData.hallwayBoundaryIndexes){
+                    //    game.camera.y += 4;
+                    //}
                 }
             }
         }
@@ -184,37 +205,11 @@ var gamePlayState = new Phaser.Class({
         this.add.rectangle(190,140, this.gameState.cw, this.gameState.ch, 0xf6fa78);
     },
 
-    _playTone: function(location){
-        console.log("location= " + location);
-        let tone;
-        for(const toneIndex of this.mapConfig.toneIndexes){
-            if(toneIndex == location){
-                tone = toneIndex;
-                console.log("found tone= " + tone + " " + toneIndex);
-            }
-        }
-        
-        for(let roomIndex in this.mapConfig.roomToneMapping){
-            if(this.mapConfig.roomToneMapping[roomIndex].includes(tone)){ //
-                console.log("found tone in mapping, room = " + roomIndex);
-                for(const victim of this.gameState.set_victims){
-                    console.log("victim= " + victim);
-                    if (this.mapConfig.roomVictimMapping[roomIndex].includes(victim)){
-                        console.log("found victim in set");
-                        this.tone.play({
-                            loop: false
-                        });
-                    }
-                }
-            }
-        }
-
-    },
-
 });
 
-
-const game = new Phaser.Game(phaserConfig); //Instantiate the game
+var controls;
+//const game = new Phaser.Game(phaserConfig); //Instantiate the game
+var game = new Phaser.Game(phaserConfig); //Instantiate the game
 game.scene.add("Gameplay", gamePlayState);
 
 

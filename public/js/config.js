@@ -1,20 +1,30 @@
 var phaserConfig = {
     type: Phaser.AUTO,
-    width: 775,
-    height: 625,
-    parent: 'phaser-game',
     backgroundColor:0xffffff,
-    physics: {
-        default: 'arcade',
-        arcade: {
-            gravity: { y: 0 },
-            debug: false
-        }
+    scale: {
+        _mode: Phaser.Scale.FIT,
+        parent: 'phaser-game',
+        width: 775,
+        height: 625,
     },
-    audio: {
-        disableWebAudio: true
-    }
+    dom: {
+        createContainer: true
+    },
 };
+    //scene: {
+    //    preload: preload,
+    //    create: create,
+    //    update: update
+    //},
+    //physics: {
+    //    default: 'arcade',
+    //    arcade: {
+    //        gravity: { y: 0 },
+    //        debug: false
+    //    }
+    //} 
+
+
 
 var mapData = {'cols': 50,'rows': 92, 'victimIndexes': [2802, 3666],
 'hallwayBoundaryIndexes':[107,	108,	109,	110,	111,
@@ -111,8 +121,6 @@ var mapData = {'cols': 50,'rows': 92, 'victimIndexes': [2802, 3666],
     4586, 4587,	4588,	4589,	4590,	4591,	4592,	4593,	4594,	4595,	4596,	4597,	4598,	4599
 ],
 "doorIndexes": [509, 936, 941, 976, 1217, 1259, 1391, 1841, 1924, 1926, 2009, 2291, 2664, 2741, 2769, 2778, 2859, 3059, 3191, 3459, 3464, 3641, 3708, 4091, 4541],
-"toneIndexes":[2860, 3463],
-'roomToneMapping': {'509': [], '936': [], '941': [], '976': [], '1217': [], '1259': [], '1391': [], '1841': [], '1924': [], '1926': [], '2009': [], '2291': [], '2664': [], '2741': [], '2769': [], '2778': [], "2859": [2860], '3059': [], '3191': [], '3459': [], "3464": [3463], '3641': [], '3708': [], '4091': [], '4541': []},
 'roomVictimMapping': {'509': [], '936': [], '941': [], '976': [], '1217': [], '1259': [], '1391': [], '1841': [], '1924': [], '1926': [], '2009': [], '2291': [], '2664': [], '2741': [], '2769': [], '2778': [], "2859": [2802], '3059': [], '3191': [], '3459': [], "3464": [3666], '3641': [], '3708': [], '4091': [], '4541': []},
 'noGameBox': [0, 1,	2,	3,	4,	5,	6,	7,	8,	9,	10,	11,	12,	13,	14,	15,	16,	17,	18,	19,	20,	21,	22,	23,	24,	25,	26,	27,	28,	29,	30,	31,	32,	33,	34,	35,	36,	37,	38,	39,	40,	41,	42,	43,	44,	45,	46,	47,	48,	49,	50,
     51,	52,	53,	54,	55,	56,	57,	58,	59,	60,	61,	62,	63,	64,	65,	66,	67,	68,	69,	70,	71,	72,	73,	74,	75,	76,	77,	78,	79,	80,	81,	82,	83,	84,	85,	86,	87,	88,	89,	90,	91,	92,	93,	94,	95,	96,	97,	98,	99,	100,
@@ -140,6 +148,7 @@ var mapData = {'cols': 50,'rows': 92, 'victimIndexes': [2802, 3666],
 }
 
 var gameSetUpData = {"roundCount":100, "playerX":5, "playerY":77, "leaderX":3, "leaderY":75, "gameTime":2, dTime: new Date().toISOString(),
+//fix leaderMovementIndexes
 "leaderMovementIndexes": [[3, 75, "right"], [4, 75, "right"], [5, 75, "right"], [6, 75, "right"], [7, 75, "right"], [8, 75, "right"], 
 [8, 74, "up"], [9, 74, "right"], [10, 74, "right"], [10, 73, "up"], [10, 72, "up"], [9, 72, "left"],
 [9, 73, "down"]]
