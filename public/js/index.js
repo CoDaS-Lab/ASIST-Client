@@ -80,11 +80,21 @@ var gamePlayState = new Phaser.Class({
         });
 
 
-        this.input.keyboard.on('keydown_UP', ()=>{this._playerMove(this.playerList[playerId].x, this.playerList[playerId].y - 1, "up")});
-        this.input.keyboard.on('keydown_DOWN', ()=>{this._playerMove(this.playerList[playerId].x, this.playerList[playerId].y + 1, "down")});
-        this.input.keyboard.on('keydown_RIGHT', ()=>{this._playerMove(this.playerList[playerId].x + 1, this.playerList[playerId].y, "right")});
-        this.input.keyboard.on('keydown_LEFT', ()=>{this._playerMove(this.playerList[playerId].x - 1, this.playerList[playerId].y, "left")});
-        this.input.keyboard.on('keydown_R', ()=>{this._victimSave()});
+        this.input.keyboard.on('keydown_UP', ()=>{
+            this._playerMove(this.playerList[playerId].x, this.playerList[playerId].y - 1, "up")
+        });
+        this.input.keyboard.on('keydown_DOWN', ()=>{
+            this._playerMove(this.playerList[playerId].x, this.playerList[playerId].y + 1, "down")
+        });
+        this.input.keyboard.on('keydown_RIGHT', ()=>{
+            this._playerMove(this.playerList[playerId].x + 1, this.playerList[playerId].y, "right")
+        });
+        this.input.keyboard.on('keydown_LEFT', ()=>{
+            this._playerMove(this.playerList[playerId].x - 1, this.playerList[playerId].y, "left")
+        });
+        this.input.keyboard.on('keydown_R', ()=>{
+            this._victimSave()
+        });
     },
 
 
@@ -196,6 +206,7 @@ $(document).ready(function() {
 socket.on('wait_data', (message)=>{
     gTime = new Date().toISOString();
     roomIdx = new TextDecoder().decode(message["rm_id"]);
+    // make sure you run with ASIST-API develop branch (main.py line 62 "p_id" not "idx")
     playerId = message["p_id"]
 });
 
