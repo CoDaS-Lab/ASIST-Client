@@ -26,6 +26,8 @@ var gamePlayState = new Phaser.Class({
 
     },
     create: function() {
+        this.cameras.main.setBounds(0, 0, 1550, 1250);
+
         console.log("GamePlay");
         this.gameState = new GameState(this.mapConfig)
 
@@ -54,8 +56,7 @@ var gamePlayState = new Phaser.Class({
         });
 
         socket.on('player_move', (message)=>{this.gameState.playerMove(message, playerId)});
-
-        this.cameras.main.setBounds(0, 0, 50, 92);
+     
         this.cameras.main.startFollow(this.playerDude);
         /*
         var cursors = this.input.keyboard.createCursorKeys();
