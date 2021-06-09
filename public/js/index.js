@@ -56,7 +56,8 @@ var gamePlayState = new Phaser.Class({
         socket.on('player_move', (message)=>{this.gameState.playerMove(message, playerId)});
 
         this.cameras.main.setBounds(0, 0, 50, 92);
-
+        this.cameras.main.startFollow(this.playerDude);
+        /*
         var cursors = this.input.keyboard.createCursorKeys();
 
         var controlConfig = {
@@ -73,6 +74,7 @@ var gamePlayState = new Phaser.Class({
         };
 
         controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
+        */
     },
 
 
