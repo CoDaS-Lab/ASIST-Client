@@ -5,6 +5,7 @@ import {phaserConfig, mapData, gameSetUpData, socketURL} from "/js/config.js"
 var room_id = "temp_room";
 var playerId = "temp_id";
 var gameTimer = new Timer();
+var controls;
 const socket = io(socketURL, {transports: ['websocket']})
 
 var gamePlayState = new Phaser.Class({
@@ -26,7 +27,7 @@ var gamePlayState = new Phaser.Class({
 
     },
     create: function() {
-        this.cameras.main.setBounds(0, 0, 1550, 1250);
+        this.cameras.main.setBounds(0, 0, 4000, 4000);
 
         console.log("GamePlay");
         this.gameState = new GameState(this.mapConfig)
@@ -56,9 +57,9 @@ var gamePlayState = new Phaser.Class({
         });
 
         socket.on('player_move', (message)=>{this.gameState.playerMove(message, playerId)});
-     
-        this.cameras.main.startFollow(this.playerDude);
-        /*
+        
+        //this.cameras.main.startFollow(this.playerDude);
+        
         var cursors = this.input.keyboard.createCursorKeys();
 
         var controlConfig = {
@@ -75,11 +76,12 @@ var gamePlayState = new Phaser.Class({
         };
 
         controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
-        */
+        
     },
 
 
-    update: function() {
+    update: function(time, delta) {
+        controls.update(delta);
         if ((this.gameConfig.roundCount>0) && (this.leaderGuidance)){
             if (Phaser.Input.Keyboard.JustDown(this.keys.LEFT)){
                 let newIdx = (this.player_list[playerId].y*this.mapConfig.cols)+ this.player_list[playerId].x - 1;
@@ -210,7 +212,7 @@ var gamePlayState = new Phaser.Class({
 
 });
 
-var controls;
+//var controls;
 //const game = new Phaser.Game(phaserConfig); //Instantiate the game
 var game = new Phaser.Game(phaserConfig); //Instantiate the game
 game.scene.add("Gameplay", gamePlayState);
