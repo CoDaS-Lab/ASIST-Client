@@ -80,19 +80,19 @@ var gamePlayState = new Phaser.Class({
         });
 
 
-        this.input.keyboard.on('keydown_UP', ()=>{
+        this.input.keyboard.on('keydown-UP', ()=>{
             this._playerMove(this.playerList[playerId].x, this.playerList[playerId].y - 1, "up")
         });
-        this.input.keyboard.on('keydown_DOWN', ()=>{
+        this.input.keyboard.on('keydown-DOWN', ()=>{
             this._playerMove(this.playerList[playerId].x, this.playerList[playerId].y + 1, "down")
         });
-        this.input.keyboard.on('keydown_RIGHT', ()=>{
+        this.input.keyboard.on('keydown-RIGHT', ()=>{
             this._playerMove(this.playerList[playerId].x + 1, this.playerList[playerId].y, "right")
         });
-        this.input.keyboard.on('keydown_LEFT', ()=>{
+        this.input.keyboard.on('keydown-LEFT', ()=>{
             this._playerMove(this.playerList[playerId].x - 1, this.playerList[playerId].y, "left")
         });
-        this.input.keyboard.on('keydown_R', ()=>{
+        this.input.keyboard.on('keydown-R', ()=>{
             this._victimSave()
         });
     },
