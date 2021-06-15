@@ -19,6 +19,6 @@
   "homepage": "https://github.com/CoDaS-Lab/ASIST-Game#readme",
   "dependencies": {
     "express": "^4.17.1",
-    "phaser": "^3.24.1"
+    "phaser": "^3.50.0"
   }
 }
