@@ -27,7 +27,7 @@ var gamePlayState = new Phaser.Class({
 
     },
     create: function() {
-        this.cameras.main.setBounds(0, 0, 4000, 4000);
+        this.cameras.main.setBounds(0, 0, 775, 625);
 
         console.log("GamePlay");
         this.gameState = new GameState(this.mapConfig)
@@ -61,7 +61,7 @@ var gamePlayState = new Phaser.Class({
         this.cameras.main.startFollow(this.playerDude);
 
         this.cameras.main.setZoom(4);
-        
+        /*
         var cursors = this.input.keyboard.createCursorKeys();
 
         var controlConfig = {
@@ -78,6 +78,7 @@ var gamePlayState = new Phaser.Class({
         };
 
         controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
+        */
         
     },
 
