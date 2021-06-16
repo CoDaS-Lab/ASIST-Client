@@ -58,8 +58,9 @@ var gamePlayState = new Phaser.Class({
 
         socket.on('player_move', (message)=>{this.gameState.playerMove(message, playerId)});
         
-        this.cameras.main.startFollow(this.playerDude);
+        //this.cameras.main.startFollow(this.playerDude);
 
+        this.cameras.main.setZoom(4);
         
         var cursors = this.input.keyboard.createCursorKeys();
 
