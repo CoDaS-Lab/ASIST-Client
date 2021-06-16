@@ -30,6 +30,13 @@ var gamePlayState = new Phaser.Class({
         this.cameras.main.setBounds(0, 0, 775, 625).setName('main');
         this.cameras.main.setZoom(4);
 
+        // add a minimap camera
+        // want this to be zoomed so we can see full map
+        this.minimap = this.cameras.add(-50, -50, Math.floor(775/3), Math.floor(625/3)).setZoom(0.24).setName('minimap');
+        this.minimap.setBackgroundColor(0xffffff);
+        this.minimap.scrollX = 150;
+        this.minimap.scrollY = 130;
+
         console.log("GamePlay");
         this.gameState = new GameState(this.mapConfig)
 
@@ -63,6 +70,9 @@ var gamePlayState = new Phaser.Class({
         // set up main camera to follow player
         this.cameras.main.startFollow(this.playerDude.physicsObj);
         this.cameras.main.setLerp(0.2);  // higher for more junky movement
+
+        // hide grid lines in minimap
+        this.minimap.ignore(this.gameState.graphics);
     },
 
 

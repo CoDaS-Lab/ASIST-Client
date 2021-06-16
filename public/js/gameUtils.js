@@ -250,7 +250,9 @@ class GameState {
             this.scene.gameConfig.roundCount -= 1;
             this.scene.roundDisplay.text = "Round ".concat(String(this.scene.gameConfig.roundCount));
             if (this.scene.mapConfig.doorIndexes.includes(newIdx)){
+                // Look here for victim occlusion code
                 this.scene.gameState.makeVictimsVisible(this.scene.gameState.roomVictimObj[String(newIdx)]);
+                // FIXME: error: undefined is not an object when entering a room
                 this.scene.gameState.makeRoomVisible(this.scene.gameState.roomViewObj[String(newIdx)]);
             }                
         }
