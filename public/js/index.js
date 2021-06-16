@@ -44,7 +44,8 @@ var gamePlayState = new Phaser.Class({
 
         this.player_list = [this.playerDude, this.leaderDude];
 
-        this._drawGameInfo();
+        // uncomment this line to see legend
+        //this._drawGameInfo();
 
         this.keys = this.input.keyboard.addKeys('W, S, A, D, R, UP, DOWN, LEFT, RIGHT');
         this.leaderGuidance = true;

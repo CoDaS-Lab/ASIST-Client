@@ -74,7 +74,8 @@ class GameState {
         //this._drawRectangleBlocks(this.config.roomWallIndexes, 0x000000,1);
         this._drawRectangleBlocks(this.config.doorIndexes, 0x9dd1ed, 0.3);
         this._drawRectangleBlocks(this.config.noGameBox, 0xffffff, 1);
-        this.scene.add.rectangle(100,150,100,150,0xffffff,1)
+        // this rectangle used to frame legend (see _drawGameInfo in config.js)
+        //this.scene.add.rectangle(100,150,100,150,0xffffff,1)
         //this._drawText();
         //this._showNumbers();
 
