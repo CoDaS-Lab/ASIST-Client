@@ -5,7 +5,6 @@ import {phaserConfig, mapData, gameSetUpData, socketURL} from "/js/config.js"
 var room_id = "temp_room";
 var playerId = "temp_id";
 var gameTimer = new Timer();
-var controls;
 const socket = io(socketURL, {transports: ['websocket']})
 
 var gamePlayState = new Phaser.Class({
@@ -27,7 +26,9 @@ var gamePlayState = new Phaser.Class({
 
     },
     create: function() {
-        this.cameras.main.setBounds(0, 0, 4000, 4000);
+        // should be bounded by edge of map
+        this.cameras.main.setBounds(0, 0, 775, 625).setName('main');
+        this.cameras.main.setZoom(4);
 
         console.log("GamePlay");
         this.gameState = new GameState(this.mapConfig)
@@ -58,32 +59,14 @@ var gamePlayState = new Phaser.Class({
         });
 
         socket.on('player_move', (message)=>{this.gameState.playerMove(message, playerId)});
-        
-        this.cameras.main.startFollow(this.playerDude);
 
-        
-        var cursors = this.input.keyboard.createCursorKeys();
-
-        var controlConfig = {
-            camera: this.cameras.main,
-            left: cursors.left,
-            right: cursors.right,
-            up: cursors.up,
-            down: cursors.down,
-            zoomIn: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q),
-            zoomOut: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E),
-            acceleration: 0.06,
-            drag: 0.0005,
-            maxSpeed: 1.0
-        };
-
-        controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
-        
+        // set up main camera to follow player
+        this.cameras.main.startFollow(this.playerDude.physicsObj);
+        this.cameras.main.setLerp(0.2);  // higher for more junky movement
     },
 
 
     update: function(time, delta) {
-        controls.update(delta);
         if ((this.gameConfig.roundCount>0) && (this.leaderGuidance)){
             if (Phaser.Input.Keyboard.JustDown(this.keys.LEFT)){
                 let newIdx = (this.player_list[playerId].y*this.mapConfig.cols)+ this.player_list[playerId].x - 1;
