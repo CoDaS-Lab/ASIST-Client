@@ -58,10 +58,10 @@ var gamePlayState = new Phaser.Class({
 
         socket.on('player_move', (message)=>{this.gameState.playerMove(message, playerId)});
         
-        this.cameras.main.startFollow(this.playerDude);
+        //this.cameras.main.startFollow(this.playerDude);
 
         this.cameras.main.setZoom(4);
-        /*
+        
         var cursors = this.input.keyboard.createCursorKeys();
 
         var controlConfig = {
@@ -72,13 +72,13 @@ var gamePlayState = new Phaser.Class({
             down: cursors.down,
             zoomIn: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q),
             zoomOut: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E),
-            acceleration: 0.06,
+            acceleration: 0.01,
             drag: 0.0005,
             maxSpeed: 1.0
         };
 
         controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
-        */
+        
         
     },
 
