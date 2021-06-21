@@ -5,7 +5,7 @@ import {phaserConfig, mapData, gameSetUpData, socketURL} from "/js/config.js"
 var room_id = "temp_room";
 var playerId = "temp_id";
 var gameTimer = new Timer();
-var controls;
+//var controls;
 const socket = io(socketURL, {transports: ['websocket']})
 
 var gamePlayState = new Phaser.Class({
@@ -27,7 +27,15 @@ var gamePlayState = new Phaser.Class({
 
     },
     create: function() {
-        this.cameras.main.setBounds(0, 0, 775, 625);
+        // should be bound by the edge of map
+        this.cameras.main.setBounds(0, 0, 775, 625).setName('main');
+        cameras.main.setZoom(4);
+        
+        // add a minimap camera
+        this.minimap = this.cameras.add(-50, -50, Math.floor(755/3), Math.floor(625/3)).setZoom(0.24).setName('minimap');
+        this.minimap.setBackgroundColor(0xffffff);
+        this.minimap.scrollX = 150;
+        this.minimap.scrollY = 130;
 
         console.log("GamePlay");
         this.gameState = new GameState(this.mapConfig)
@@ -44,7 +52,8 @@ var gamePlayState = new Phaser.Class({
 
         this.player_list = [this.playerDude, this.leaderDude];
 
-        this._drawGameInfo();
+        //uncomment this line to see legend
+        //this._drawGameInfo();
 
         this.keys = this.input.keyboard.addKeys('W, S, A, D, R, UP, DOWN, LEFT, RIGHT');
         this.leaderGuidance = true;
@@ -58,33 +67,15 @@ var gamePlayState = new Phaser.Class({
 
         socket.on('player_move', (message)=>{this.gameState.playerMove(message, playerId)});
         
-        //this.cameras.main.startFollow(this.playerDude);
+        this.cameras.main.startFollow(this.playerDude.physicsObj);
+        this.cameras.main.setLerp(0.2);
 
-        this.cameras.main.setZoom(4);
-        
-        var cursors = this.input.keyboard.createCursorKeys();
-
-        var controlConfig = {
-            camera: this.cameras.main,
-            left: cursors.left,
-            right: cursors.right,
-            up: cursors.up,
-            down: cursors.down,
-            zoomIn: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q),
-            zoomOut: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E),
-            acceleration: 0.01,
-            drag: 0.0005,
-            maxSpeed: 1.0
-        };
-
-        controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
-        
-        
+        // hide grid lines in minimap
+        this.minimap.ignore(this.gameState.graphics);
     },
 
 
-    update: function(time, delta) {
-        controls.update(delta);
+    update: function() {
         if ((this.gameConfig.roundCount>0) && (this.leaderGuidance)){
             if (Phaser.Input.Keyboard.JustDown(this.keys.LEFT)){
                 let newIdx = (this.player_list[playerId].y*this.mapConfig.cols)+ this.player_list[playerId].x - 1;
