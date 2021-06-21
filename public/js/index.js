@@ -203,7 +203,7 @@ var gamePlayState = new Phaser.Class({
         leaderInGameInfo.physicsObj.x = 230;
         leaderInGameInfo.physicsObj.y = 72;
 
-        writing = game.add.group();
+        var writing = game.add.group();
         var t = this.add.text(38,66, "Player", {color: '0x000000', fontSize: '17px'});
         writing.add(t);
         t = this.add.text(150,66, "Leader", {color: '0x000000', fontSize: '17px'});
