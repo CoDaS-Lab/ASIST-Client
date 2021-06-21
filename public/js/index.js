@@ -29,7 +29,7 @@ var gamePlayState = new Phaser.Class({
     create: function() {
         // should be bound by the edge of map
         this.cameras.main.setBounds(0, 0, 775, 625).setName('main');
-        cameras.main.setZoom(4);
+        this.cameras.main.setZoom(4);
         
         // add a minimap camera
         this.minimap = this.cameras.add(-50, -50, Math.floor(755/3), Math.floor(625/3)).setZoom(0.24).setName('minimap');
