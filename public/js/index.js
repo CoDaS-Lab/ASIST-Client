@@ -58,7 +58,7 @@ var gamePlayState = new Phaser.Class({
         this.player_list = [this.playerDude, this.leaderDude];
 
         //uncomment this line to see legend
-        //this._drawGameInfo();
+        this._drawGameInfo();
 
         this.keys = this.input.keyboard.addKeys('W, S, A, D, R, UP, DOWN, LEFT, RIGHT');
         this.leaderGuidance = true;
@@ -203,14 +203,23 @@ var gamePlayState = new Phaser.Class({
         leaderInGameInfo.physicsObj.x = 230;
         leaderInGameInfo.physicsObj.y = 72;
 
-        this.add.text(38,66, "Player", {color: '0x000000', fontSize: '17px'});
-        this.add.text(150,66, "Leader", {color: '0x000000', fontSize: '17px'});
-        this.add.text(38,95, "Victim", {color: '0x000000', fontSize: '17px'});          
-        this.add.rectangle(120,105, this.gameState.cw, this.gameState.ch, 0x9754e3);
-        this.add.text(150,95, "Door", {color: '0x000000', fontSize: '17px'});
-        this.add.rectangle(227,105, this.gameState.cw, this.gameState.ch, 0x9dd1ed, 0.3);
-        this.add.text(40,130, "Saved Victim", {color: '0x000000', fontSize: '17px'});
-        this.add.rectangle(190,140, this.gameState.cw, this.gameState.ch, 0xf6fa78);
+        writing = game.add.group();
+        var t = this.add.text(38,66, "Player", {color: '0x000000', fontSize: '17px'});
+        writing.add(t);
+        t = this.add.text(150,66, "Leader", {color: '0x000000', fontSize: '17px'});
+        writing.add(t);
+        t = this.add.text(38,95, "Victim", {color: '0x000000', fontSize: '17px'});
+        writing.add(t);          
+        t = this.add.rectangle(120,105, this.gameState.cw, this.gameState.ch, 0x9754e3);
+        writing.add(t);
+        t = this.add.text(150,95, "Door", {color: '0x000000', fontSize: '17px'});
+        writing.add(t);
+        t = this.add.rectangle(227,105, this.gameState.cw, this.gameState.ch, 0x9dd1ed, 0.3);
+        writing.add(t);
+        t = this.add.text(40,130, "Saved Victim", {color: '0x000000', fontSize: '17px'});
+        writing.add(t);
+        t = this.add.rectangle(190,140, this.gameState.cw, this.gameState.ch, 0xf6fa78);
+        writing.add(t);
     },
 
     _playTone: function(location){
