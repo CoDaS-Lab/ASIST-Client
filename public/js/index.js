@@ -203,13 +203,13 @@ var gamePlayState = new Phaser.Class({
         leaderInGameInfo.physicsObj.x = 300;
         leaderInGameInfo.physicsObj.y = 320;
 
-        this.add.text(300,320, "Player", {color: '0x000000', fontSize: '16px'}).setScrollFactor(0);
-        this.add.text(330,320, "Leader", {color: '0x000000', fontSize: '16px'}).setScrollFactor(0);
-        this.add.text(300,350, "Victim", {color: '0x000000', fontSize: '16px'}).setScrollFactor(0);         
+        this.add.text(300,320, "Player", {color: '0x000000', fontSize: '4px'}).setScrollFactor(0);
+        this.add.text(330,320, "Leader", {color: '0x000000', fontSize: '4px'}).setScrollFactor(0);
+        this.add.text(300,350, "Victim", {color: '0x000000', fontSize: '4px'}).setScrollFactor(0);         
         this.add.rectangle(330,350, this.gameState.cw/2, this.gameState.ch/2, 0x9754e3).setScrollFactor(0);
-        this.add.text(340,350, "Door", {color: '0x000000', fontSize: '16px'}).setScrollFactor(0);
+        this.add.text(340,350, "Door", {color: '0x000000', fontSize: '4px'}).setScrollFactor(0);
         this.add.rectangle(360,350, this.gameState.cw/2, this.gameState.ch/2, 0x9dd1ed, 0.3).setScrollFactor(0);
-        this.add.text(300,380, "Saved Victim", {color: '0x000000', fontSize: '16px'}).setScrollFactor(0);
+        this.add.text(300,380, "Saved Victim", {color: '0x000000', fontSize: '4px'}).setScrollFactor(0);
         this.add.rectangle(350,380, this.gameState.cw/2, this.gameState.ch/2, 0xf6fa78).setScrollFactor(0);
     },
 
