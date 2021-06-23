@@ -196,21 +196,21 @@ var gamePlayState = new Phaser.Class({
 
     _drawGameInfo: function(){
         const playerInGameInfo = new PlayerDisplay(this, {"x": 16, "y":23, "name":"dude"});
-        playerInGameInfo.physicsObj.x = 308;
-        playerInGameInfo.physicsObj.y = 320;
+        playerInGameInfo.physicsObj.x = 310;
+        playerInGameInfo.physicsObj.y = 360;
 
         const leaderInGameInfo = new PlayerDisplay(this, {"x": 15, "y":23, "name":"chirag"});
-        leaderInGameInfo.physicsObj.x = 300;
-        leaderInGameInfo.physicsObj.y = 320;
+        leaderInGameInfo.physicsObj.x = 340;
+        leaderInGameInfo.physicsObj.y = 360;
 
-        this.add.text(300,320, "Player", {color: '0x000000', fontSize: '4px'}).setScrollFactor(0);
-        this.add.text(330,320, "Leader", {color: '0x000000', fontSize: '4px'}).setScrollFactor(0);
-        this.add.text(300,350, "Victim", {color: '0x000000', fontSize: '4px'}).setScrollFactor(0);         
-        this.add.rectangle(330,350, this.gameState.cw/2, this.gameState.ch/2, 0x9754e3).setScrollFactor(0);
-        this.add.text(340,350, "Door", {color: '0x000000', fontSize: '4px'}).setScrollFactor(0);
-        this.add.rectangle(360,350, this.gameState.cw/2, this.gameState.ch/2, 0x9dd1ed, 0.3).setScrollFactor(0);
+        this.add.text(300,360, "Player", {color: '0x000000', fontSize: '4px'}).setScrollFactor(0);
+        this.add.text(330,360, "Leader", {color: '0x000000', fontSize: '4px'}).setScrollFactor(0);
+        this.add.text(300,370, "Victim", {color: '0x000000', fontSize: '4px'}).setScrollFactor(0);         
+        this.add.rectangle(330,370, this.gameState.cw/2, this.gameState.ch/2, 0x9754e3).setScrollFactor(0);
+        this.add.text(340,370, "Door", {color: '0x000000', fontSize: '4px'}).setScrollFactor(0);
+        this.add.rectangle(360,370, this.gameState.cw/2, this.gameState.ch/2, 0x9dd1ed, 0.3).setScrollFactor(0);
         this.add.text(300,380, "Saved Victim", {color: '0x000000', fontSize: '4px'}).setScrollFactor(0);
-        this.add.rectangle(350,380, this.gameState.cw/2, this.gameState.ch/2, 0xf6fa78).setScrollFactor(0);
+        this.add.rectangle(340,380, this.gameState.cw/2, this.gameState.ch/2, 0xf6fa78).setScrollFactor(0);
     },
 
     _playTone: function(location){
