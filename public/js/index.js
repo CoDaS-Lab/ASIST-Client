@@ -203,7 +203,7 @@ var gamePlayState = new Phaser.Class({
         leaderInGameInfo.physicsObj.x = 230;
         leaderInGameInfo.physicsObj.y = 72;
 
-        this.ui = this.add.rectangle(0,0, this.gameState.cw, this.gameState.ch, 0xf6fa78);
+        this.ui = this.add.rectangle(300,300, this.gameState.cw, this.gameState.ch, 0xf6fa78);
         this.ui.fixedToCamera = true;
         
         /*this.group = this.add.group();
