@@ -196,34 +196,21 @@ var gamePlayState = new Phaser.Class({
 
     _drawGameInfo: function(){
         const playerInGameInfo = new PlayerDisplay(this, {"x": 16, "y":23, "name":"dude"});
-        playerInGameInfo.physicsObj.x = 120;
-        playerInGameInfo.physicsObj.y = 72;
+        playerInGameInfo.physicsObj.x = 320;
+        playerInGameInfo.physicsObj.y = 500;
 
         const leaderInGameInfo = new PlayerDisplay(this, {"x": 15, "y":23, "name":"chirag"});
-        leaderInGameInfo.physicsObj.x = 230;
-        leaderInGameInfo.physicsObj.y = 72;
+        leaderInGameInfo.physicsObj.x = 370;
+        leaderInGameInfo.physicsObj.y = 500;
 
-        this.add.rectangle(300,300, this.gameState.cw, this.gameState.ch, 0xf6fa78).setScrollFactor(0);
-        
-        
-        /*this.group = this.add.group();
-        this.group.add(this.add.rectangle(650,140, this.gameState.cw, this.gameState.ch, 0xf6fa78));
-        /*var t = this.add.text(38,66, "Player", {color: '0x000000', fontSize: '17px'});
-        writing.add(t);
-        t = this.add.text(150,66, "Leader", {color: '0x000000', fontSize: '17px'});
-        writing.add(t);
-        t = this.add.text(38,95, "Victim", {color: '0x000000', fontSize: '17px'});
-        writing.add(t);          
-        t = this.add.rectangle(120,105, this.gameState.cw, this.gameState.ch, 0x9754e3);
-        writing.add(t);
-        t = this.add.text(150,95, "Door", {color: '0x000000', fontSize: '17px'});
-        writing.add(t);
-        t = this.add.rectangle(227,105, this.gameState.cw, this.gameState.ch, 0x9dd1ed, 0.3);
-        writing.add(t);
-        t = this.add.text(40,130, "Saved Victim", {color: '0x000000', fontSize: '17px'});
-        writing.add(t);
-        t = this.add.rectangle(190,140, this.gameState.cw, this.gameState.ch, 0xf6fa78);
-        writing.add(t);*/
+        this.add.text(300,500, "Player", {color: '0x000000', fontSize: '8px'}).setScrollFactor(0);
+        this.add.text(350,500, "Leader", {color: '0x000000', fontSize: '8px'}).setScrollFactor(0);
+        this.add.text(300,520, "Victim", {color: '0x000000', fontSize: '8px'}).setScrollFactor(0);         
+        this.add.rectangle(320,520, this.gameState.cw, this.gameState.ch, 0x9754e3).setScrollFactor(0);
+        this.add.text(350,520, "Door", {color: '0x000000', fontSize: '8px'}).setScrollFactor(0);
+        this.add.rectangle(370,520, this.gameState.cw, this.gameState.ch, 0x9dd1ed, 0.3).setScrollFactor(0);
+        this.add.text(300,540, "Saved Victim", {color: '0x000000', fontSize: '8px'}).setScrollFactor(0);
+        this.add.rectangle(300,560, this.gameState.cw/2, this.gameState.ch/2, 0xf6fa78).setScrollFactor(0);
     },
 
     _playTone: function(location){
