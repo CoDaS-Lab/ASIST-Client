@@ -203,8 +203,9 @@ var gamePlayState = new Phaser.Class({
         leaderInGameInfo.physicsObj.x = 230;
         leaderInGameInfo.physicsObj.y = 72;
 
-        var writing = game.add.group();
-        var t = this.add.text(38,66, "Player", {color: '0x000000', fontSize: '17px'});
+        this.group = this.add.group();
+        this.group.add(this.add.rectangle(650,140, this.gameState.cw, this.gameState.ch, 0xf6fa78));
+        /*var t = this.add.text(38,66, "Player", {color: '0x000000', fontSize: '17px'});
         writing.add(t);
         t = this.add.text(150,66, "Leader", {color: '0x000000', fontSize: '17px'});
         writing.add(t);
@@ -219,7 +220,7 @@ var gamePlayState = new Phaser.Class({
         t = this.add.text(40,130, "Saved Victim", {color: '0x000000', fontSize: '17px'});
         writing.add(t);
         t = this.add.rectangle(190,140, this.gameState.cw, this.gameState.ch, 0xf6fa78);
-        writing.add(t);
+        writing.add(t);*/
     },
 
     _playTone: function(location){
