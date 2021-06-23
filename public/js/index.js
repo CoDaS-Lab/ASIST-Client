@@ -203,7 +203,11 @@ var gamePlayState = new Phaser.Class({
         leaderInGameInfo.physicsObj.x = 230;
         leaderInGameInfo.physicsObj.y = 72;
 
-        this.group = this.add.group();
+        this.block = new UIBlock();
+        this.block.add(this.add.rectangle(0,0, this.gameState.cw, this.gameState.ch, 0xf6fa78));
+        this.block.x = 0;
+        this.block.y = 0;
+        /*this.group = this.add.group();
         this.group.add(this.add.rectangle(650,140, this.gameState.cw, this.gameState.ch, 0xf6fa78));
         /*var t = this.add.text(38,66, "Player", {color: '0x000000', fontSize: '17px'});
         writing.add(t);
