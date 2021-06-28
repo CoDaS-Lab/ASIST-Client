@@ -27,7 +27,7 @@ var gamePlayState = new Phaser.Class({
         this.load.audio("tone", [
             "/assets/tone.mp3"
         ]);
-        this.load.image("legend", "/assets/legend");
+        this.load.image("legend", "/assets/legend.pdf");
 
     },
     create: function() {
