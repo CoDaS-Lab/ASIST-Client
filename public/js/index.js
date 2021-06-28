@@ -58,7 +58,7 @@ var gamePlayState = new Phaser.Class({
 
         this.player_list = [this.playerDude, this.leaderDude];
 
-        this.legend = this.add.image(300, 380, "legend");
+        this.legend = this.add.sprite(300, 380, "legend").setScrollFactor(0);
         //uncomment this line to see legend
         //this._drawGameInfo();
 
