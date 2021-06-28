@@ -27,6 +27,7 @@ var gamePlayState = new Phaser.Class({
         this.load.audio("tone", [
             "/assets/tone.mp3"
         ]);
+        this.load.image("legend", "/assets/legend");
 
     },
     create: function() {
@@ -57,8 +58,9 @@ var gamePlayState = new Phaser.Class({
 
         this.player_list = [this.playerDude, this.leaderDude];
 
+        this.legend = this.add.image(300, 380, "legend");
         //uncomment this line to see legend
-        this._drawGameInfo();
+        //this._drawGameInfo();
 
         this.keys = this.input.keyboard.addKeys('W, S, A, D, R, UP, DOWN, LEFT, RIGHT');
         this.leaderGuidance = true;
