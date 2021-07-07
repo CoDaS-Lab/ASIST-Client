@@ -74,6 +74,7 @@ class GameState {
         //this._drawRectangleBlocks(this.config.roomWallIndexes, 0x000000,1);
         this._drawRectangleBlocks(this.config.doorIndexes, 0x9dd1ed, 0.3);
         this._drawRectangleBlocks(this.config.noGameBox, 0xffffff, 1);
+        this._drawRectangleBlocks(this.config.rubbleIndexes, 0x585656, 1);
         //this rectangle used to frame legend 
         //this.scene.add.rectangle(100,150,100,150,0xffffff,1)
         //this._drawText();
@@ -91,15 +92,17 @@ class GameState {
         this.ch = config.scene.sys.game.scale.gameSize._height / config.rows;        
     } 
     _generateMapVariables(){
-        this.noRoadIndex = this._generateNoRoadIndexes(this.config.hallwayBoundaryIndexes, this.config.victimIndexes);
+        this.noRoadIndex = this._generateNoRoadIndexes(this.config.hallwayBoundaryIndexes, this.config.victimIndexes, this.config.rubbleIndexes);
         // this.config.roomWallIndexes was originally also in the above line
         this.set_victims = new Set(this.config.victimIndexes);
+        this.set_rubble = new Set(this.config.rubbleIndexes);
 
     }
-    _generateNoRoadIndexes(hallwayBoundaryIndexes, victimIndexes){
+    _generateNoRoadIndexes(hallwayBoundaryIndexes, victimIndexes, rubbleIndexes){
         //roomWallIndexes, was originally in the above line
         let noRoadIndex = new Set(hallwayBoundaryIndexes);
         victimIndexes.forEach(item => noRoadIndex.add(item));
+        rubbleIndexes.forEach(item => noRoadIndex.add(item));
         //roomWallIndexes.forEach(item => noRoadIndex.add(item));
         return noRoadIndex
     }
@@ -174,6 +177,7 @@ class GameState {
             }
         }
     }
+
    // _blockRoomView(locIndexesObj, colorHex, alpha){
    //     this.roomViewObj = new Object();
    //     for (let roomIndex in locIndexesObj){
