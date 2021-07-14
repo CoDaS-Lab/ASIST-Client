@@ -253,7 +253,7 @@ class GameState {
         if (message["idx"] == playerId){
             this.scene.gameConfig.roundCount -= 1;
             this.scene.roundDisplay.text = "Round ".concat(String(this.scene.gameConfig.roundCount));
-            if (this.scene.mapConfig.doorIndexes.includes(newIdx)){
+            if (this.scene.mapConfig.doorIndexes.includes(newIdx) || this.scene.mapConfig.gapIndexes.includes(newIdx)){
                 this.scene.gameState.makeVictimsVisible(this.scene.gameState.roomVictimObj[String(newIdx)]);
                 this.scene.gameState.makeRoomVisible(this.scene.gameState.roomViewObj[String(newIdx)]);
             }                
