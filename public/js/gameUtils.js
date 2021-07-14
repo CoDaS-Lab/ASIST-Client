@@ -261,8 +261,9 @@ class GameState {
                 console.log("found gap");
                 for (let roomIndex in this.scene.mapConfig.roomGapMapping){
                     if(this.scene.mapConfig.roomGapMapping[roomIndex].includes(newIdx)){
-                        this.scene.gameState.makeVictimsVisible(this.scene.gameState.roomVictimObj[String(roomIndex)]);
-                        this.scene.gameState.makeRoomVisible(this.scene.gameState.roomViewObj[String(roomIndex)]);
+                        console.log("found door for gap: " + roomIndex + " new Idx " + newIdx );
+                        this.scene.gameState.makeVictimsVisible(this.scene.gameState.roomVictimObj[roomIndex]);
+                        this.scene.gameState.makeRoomVisible(this.scene.gameState.roomViewObj[roomIndex]);
                     }
                 }
             }          
