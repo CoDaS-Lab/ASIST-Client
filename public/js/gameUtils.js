@@ -253,10 +253,17 @@ class GameState {
         if (message["idx"] == playerId){
             this.scene.gameConfig.roundCount -= 1;
             this.scene.roundDisplay.text = "Round ".concat(String(this.scene.gameConfig.roundCount));
-            if (this.scene.mapConfig.doorIndexes.includes(newIdx) || this.scene.mapConfig.gapIndexes.includes(newIdx)){
+            if (this.scene.mapConfig.doorIndexes.includes(newIdx)){
                 this.scene.gameState.makeVictimsVisible(this.scene.gameState.roomVictimObj[String(newIdx)]);
                 this.scene.gameState.makeRoomVisible(this.scene.gameState.roomViewObj[String(newIdx)]);
-            }                
+            }else if (this.scene.mapConfig.gapIndexes.includes(newIdx)){
+                for (let roomIndex in this.mapConfig.roomGapMapping){
+                    if(this.mapConfig.roomGapMapping[roomIndex].includes(newIdx)){
+                        this.scene.gameState.makeVictimsVisible(this.scene.gameState.roomVictimObj[String(roomIndex)]);
+                        this.scene.gameState.makeRoomVisible(this.scene.gameState.roomViewObj[String(roomIndex)]);
+                    }
+                }
+            }          
         }
         this.scene.playersCurrentLoc[message["idx"]] = newIdx
         this.scene.player_list[message["idx"]].move(message["x"], message["y"], this.scene.player_list[message["idx"]].name+message["key"])
