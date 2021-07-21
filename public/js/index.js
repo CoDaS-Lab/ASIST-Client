@@ -221,7 +221,7 @@ var gamePlayState = new Phaser.Class({
 
     _randomMap: function(){
         if(Math.random() < .5){ //top left
-            this.topLeft = this.add.sprite(310, 250, "topLeft").setScrollFactor(0);
+            this.topLeft = this.add.sprite(300, 250, "topLeft").setScrollFactor(0);
             this.topLeft.setScale(.10);
             this.topLeft.alpha = 1;
         }
@@ -231,7 +231,7 @@ var gamePlayState = new Phaser.Class({
             this.topRight.alpha = 1;
         }
         if(Math.random() < .5){
-            this.bottomLeft = this.add.sprite(310, 260, "bottomLeft").setScrollFactor(0);
+            this.bottomLeft = this.add.sprite(300, 260, "bottomLeft").setScrollFactor(0);
             this.bottomLeft.setScale(.10);
             this.bottomLeft.alpha = 1;
         }
