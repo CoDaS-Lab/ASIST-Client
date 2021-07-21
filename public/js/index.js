@@ -63,9 +63,9 @@ var gamePlayState = new Phaser.Class({
 
         this.player_list = [this.playerDude, this.leaderDude];
 
-        this.blankMap = this.add.sprite(310, 250, "blankMap").setScrollFactor(0);
+        /*this.blankMap = this.add.sprite(310, 250, "blankMap").setScrollFactor(0);
         this.blankMap.setScale(.10);
-        this.blankMap.alpha = 1;
+        this.blankMap.alpha = 1;*/
         this._randomMap();
 
         this.legend = this.add.sprite(310, 380, "legend").setScrollFactor(0);
@@ -224,24 +224,24 @@ var gamePlayState = new Phaser.Class({
 
     _randomMap: function(){
         if(Math.random() < .5){ //top left
-            this.topLeft = this.add.sprite(300, 240, "topLeft").setScrollFactor(0);
+            this.topLeft = this.add.sprite(300, 245, "topLeft").setScrollFactor(0);
             this.topLeft.setScale(.10);
-            this.topLeft.alpha = 1;
+            //this.topLeft.alpha = 1;
         }
         if(Math.random() < .5){
-            this.topRight = this.add.sprite(320, 240, "topRight").setScrollFactor(0);
+            this.topRight = this.add.sprite(320, 245, "topRight").setScrollFactor(0);
             this.topRight.setScale(.10);
-            this.topRight.alpha = 1;
+            //this.topRight.alpha = 1;
         }
         if(Math.random() < .5){
-            this.bottomLeft = this.add.sprite(300, 250, "bottomLeft").setScrollFactor(0);
+            this.bottomLeft = this.add.sprite(300, 255, "bottomLeft").setScrollFactor(0);
             this.bottomLeft.setScale(.10);
-            this.bottomLeft.alpha = 1;
+            //this.bottomLeft.alpha = 1;
         }
         if(Math.random() < .5){
-            this.bottomRight = this.add.sprite(320, 250, "bottomRight").setScrollFactor(0);
+            this.bottomRight = this.add.sprite(320, 255, "bottomRight").setScrollFactor(0);
             this.bottomRight.setScale(.10);
-            this.bottomRight.alpha = 1;
+            //this.bottomRight.alpha = 1;
         }
     },
 });
