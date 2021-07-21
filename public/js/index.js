@@ -30,6 +30,7 @@ var gamePlayState = new Phaser.Class({
         this.load.image("topRight", "assets/rubbleTopRight.png");
         this.load.image("bottomLeft", "assets/rubbleBottomLeft.png");
         this.load.image("bottomRight", "assets/rubbleBottomRight.png");
+        this.load.image("mapBackground", "assets/whiteBackground.png");
 
     },
     create: function() {
@@ -44,10 +45,11 @@ var gamePlayState = new Phaser.Class({
         this.minimap.scrollX = 150;
         this.minimap.scrollY = 130;*/
 
-        this.add.rectangle(310,250, Math.floor(755/3), Math.floor(625/3), 0xffffff).setScrollFactor(0);
-        /*this.blankMap = this.add.sprite(310, 250, "blankMap").setScrollFactor(0);
+        //this.add.rectangle(310,250, Math.floor(755/3), Math.floor(625/3), 0xffffff).setScrollFactor(0);
+        this.mapBackground = this.add.image(310, 250, "mapBackground").setScrollFactor(0);
+        this.blankMap = this.add.sprite(310, 250, "blankMap").setScrollFactor(0);
         this.blankMap.setScale(.10);
-        this.blankMap.alpha = 1;*/
+        this.blankMap.alpha = 1;
         this._randomMap();
 
         console.log("GamePlay");
