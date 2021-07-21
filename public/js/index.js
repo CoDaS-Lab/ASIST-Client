@@ -44,9 +44,9 @@ var gamePlayState = new Phaser.Class({
         this.minimap.scrollX = 150;
         this.minimap.scrollY = 130;*/
 
-        this.blankMap = this.add.sprite(310, 270, "blankMap").setScrollFactor(0);
+        this.blankMap = this.add.sprite(310, 250, "blankMap").setScrollFactor(0);
         this.blankMap.setScale(.10);
-        this.blankMap.clearAlpha();
+        this.blankMap.alpha = 1;
         this._randomMap();
 
         console.log("GamePlay");
@@ -219,18 +219,18 @@ var gamePlayState = new Phaser.Class({
     },
 
     _randomMap: function(){
-        this.topLeft = this.add.sprite(310, 270, "topLeft").setScrollFactor(0);
+        this.topLeft = this.add.sprite(310, 250, "topLeft").setScrollFactor(0);
         this.topLeft.setScale(.10);
-        this.topLeft.clearAlpha();
-        this.topRight = this.add.sprite(320, 270, "topRight").setScrollFactor(0);
+        this.topLeft.alpha = 1;
+        this.topRight = this.add.sprite(320, 250, "topRight").setScrollFactor(0);
         this.topRight.setScale(.10);
-        this.topRight.clearAlpha();
-        this.bottomLeft = this.add.sprite(320, 280, "bottomLeft").setScrollFactor(0);
+        this.topRight.alpha = 1;
+        this.bottomLeft = this.add.sprite(310, 260, "bottomLeft").setScrollFactor(0);
         this.bottomLeft.setScale(.10);
-        this.bottomLeft.clearAlpha();
-        this.bottomRight = this.add.sprite(330, 280, "bottomRight").setScrollFactor(0);
+        this.bottomLeft.alpha = 1;
+        this.bottomRight = this.add.sprite(320, 260, "bottomRight").setScrollFactor(0);
         this.bottomRight.setScale(.10);
-        this.bottomRight.clearAlpha();
+        this.bottomRight.alpha = 1;
         /*if(Math.random() > .5){ //top left
             
         }
