@@ -41,7 +41,7 @@ var gamePlayState = new Phaser.Class({
         this.minimap.scrollY = 130;*/
 
         this.blankMap = this.add.sprite(0, 0, "blankMap").setScrollFactor(0);
-        this.legend.setScale(.10);
+        this.blankMap.setScale(.10);
         randomMap();
 
         console.log("GamePlay");
