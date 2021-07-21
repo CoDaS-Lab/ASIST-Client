@@ -44,10 +44,10 @@ var gamePlayState = new Phaser.Class({
         this.minimap.scrollX = 150;
         this.minimap.scrollY = 130;*/
 
-        this.add.rectangle(310,250, Math.floor(755/3),  Math.floor(625/3), 0xffffff).setScrollFactor(0);
-        this.blankMap = this.add.sprite(310, 250, "blankMap").setScrollFactor(0);
+        this.add.rectangle(310,250, Math.floor(755/3), Math.floor(625/3), 0xffffff).setScrollFactor(0);
+        /*this.blankMap = this.add.sprite(310, 250, "blankMap").setScrollFactor(0);
         this.blankMap.setScale(.10);
-        this.blankMap.alpha = 1;
+        this.blankMap.alpha = 1;*/
         this._randomMap();
 
         console.log("GamePlay");
@@ -220,30 +220,26 @@ var gamePlayState = new Phaser.Class({
     },
 
     _randomMap: function(){
-        this.topLeft = this.add.sprite(310, 250, "topLeft").setScrollFactor(0);
-        this.topLeft.setScale(.10);
-        this.topLeft.alpha = 1;
-        this.topRight = this.add.sprite(320, 250, "topRight").setScrollFactor(0);
-        this.topRight.setScale(.10);
-        this.topRight.alpha = 1;
-        this.bottomLeft = this.add.sprite(310, 260, "bottomLeft").setScrollFactor(0);
-        this.bottomLeft.setScale(.10);
-        this.bottomLeft.alpha = 1;
-        this.bottomRight = this.add.sprite(320, 260, "bottomRight").setScrollFactor(0);
-        this.bottomRight.setScale(.10);
-        this.bottomRight.alpha = 1;
-        /*if(Math.random() > .5){ //top left
-            
+        if(Math.random() < .5){ //top left
+            this.topLeft = this.add.sprite(310, 250, "topLeft").setScrollFactor(0);
+            this.topLeft.setScale(.10);
+            this.topLeft.alpha = 1;
         }
-        if(Math.random() > .5){
-            
+        if(Math.random() < .5){
+            this.topRight = this.add.sprite(320, 250, "topRight").setScrollFactor(0);
+            this.topRight.setScale(.10);
+            this.topRight.alpha = 1;
         }
-        if(Math.random() > .5){
-            
+        if(Math.random() < .5){
+            this.bottomLeft = this.add.sprite(310, 260, "bottomLeft").setScrollFactor(0);
+            this.bottomLeft.setScale(.10);
+            this.bottomLeft.alpha = 1;
         }
-        if(Math.random() > .5){
-            
-        }*/
+        if(Math.random() < .5){
+            this.bottomRight = this.add.sprite(320, 260, "bottomRight").setScrollFactor(0);
+            this.bottomRight.setScale(.10);
+            this.bottomRight.alpha = 1;
+        }
     },
 });
 
