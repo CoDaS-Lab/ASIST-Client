@@ -234,12 +234,12 @@ var gamePlayState = new Phaser.Class({
             //this.topRight.alpha = 1;
         }
         if(Math.random() < .5){
-            this.bottomLeft = this.add.sprite(300, 255, "bottomLeft").setScrollFactor(0);
+            this.bottomLeft = this.add.sprite(300, 260, "bottomLeft").setScrollFactor(0);
             this.bottomLeft.setScale(.10);
             //this.bottomLeft.alpha = 1;
         }
         if(Math.random() < .5){
-            this.bottomRight = this.add.sprite(320, 255, "bottomRight").setScrollFactor(0);
+            this.bottomRight = this.add.sprite(320, 260, "bottomRight").setScrollFactor(0);
             this.bottomRight.setScale(.10);
             //this.bottomRight.alpha = 1;
         }
