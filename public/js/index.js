@@ -42,7 +42,7 @@ var gamePlayState = new Phaser.Class({
 
         this.blankMap = this.add.sprite(0, 0, "blankMap").setScrollFactor(0);
         this.blankMap.setScale(.10);
-        randomMap();
+        this._randomMap();
 
         console.log("GamePlay");
         this.gameState = new GameState(this.mapConfig)
