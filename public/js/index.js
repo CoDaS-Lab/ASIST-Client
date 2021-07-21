@@ -25,6 +25,7 @@ var gamePlayState = new Phaser.Class({
         this.load.spritesheet("dude","/assets/dude.png",
             {frameWidth: 32, frameHeight: 48});
         this.load.image("legend", "/assets/legend.png");
+        this.load.image("blankMap", "/assets/blankMiniMap.png");
 
     },
     create: function() {
@@ -33,10 +34,15 @@ var gamePlayState = new Phaser.Class({
         this.cameras.main.setZoom(4);
         
         // add a minimap camera
+        /*
         this.minimap = this.cameras.add(-50, -50, Math.floor(755/3), Math.floor(625/3)).setZoom(0.24).setName('minimap');
         this.minimap.setBackgroundColor(0xffffff);
         this.minimap.scrollX = 150;
-        this.minimap.scrollY = 130;
+        this.minimap.scrollY = 130;*/
+
+        this.blankMap.this.add.sprite(0, 0, "blankMap").setScrollFactor(0);
+        this.legend.setScale(.10);
+        randomMap();
 
         console.log("GamePlay");
         this.gameState = new GameState(this.mapConfig)
@@ -74,7 +80,7 @@ var gamePlayState = new Phaser.Class({
         this.cameras.main.setLerp(0.2);
 
         // hide grid lines in minimap
-        this.minimap.ignore(this.gameState.graphics);
+        //this.minimap.ignore(this.gameState.graphics);
     },
 
 
@@ -205,6 +211,10 @@ var gamePlayState = new Phaser.Class({
         this.add.rectangle(360,370, this.gameState.cw/2, this.gameState.ch/2, 0x9dd1ed, 0.3).setScrollFactor(0);
         this.add.text(300,380, "Saved Victim", {color: '0x000000', fontSize: '4px'}).setScrollFactor(0);
         this.add.rectangle(340,380, this.gameState.cw/2, this.gameState.ch/2, 0xf6fa78).setScrollFactor(0);
+    },
+
+    _randomMap: function(){
+
     },
 });
 
