@@ -219,36 +219,45 @@ var gamePlayState = new Phaser.Class({
     },
 
     _randomMap: function(){
+        //no knowledge condition
+        this.topLeft = this.add.sprite(344, 353, "blankTopLeft").setScrollFactor(0);
+        this.topLeft.setScale(.03);
+        this.topRight = this.add.sprite(365, 353, "blankTopRight").setScrollFactor(0);
+        this.topRight.setScale(.03);
+        this.bottomLeft = this.add.sprite(344, 377, "blankBottomLeft").setScrollFactor(0);
+        this.bottomLeft.setScale(.03);
+        this.bottomRight = this.add.sprite(365, 377, "blankBottomRight").setScrollFactor(0);
+        this.bottomRight.setScale(.03);
 
-        /*if(Math.random() < .3){ // first randomization
+        if(Math.random() < .3){ // first randomization
             if (Math.random() < .5){ // post accident*/
-                this.topLeft = this.add.sprite(345, 351, "rubbleTopLeft").setScrollFactor(0);
+                this.topLeft = this.add.sprite(344, 353, "rubbleTopLeft").setScrollFactor(0);
                 this.topLeft.setScale(.03);
-                this.topRight = this.add.sprite(366, 351, "rubbleTopRight").setScrollFactor(0);
+                this.topRight = this.add.sprite(365, 353, "rubbleTopRight").setScrollFactor(0);
                 this.topRight.setScale(.03);
-                this.bottomLeft = this.add.sprite(345, 375, "rubbleBottomLeft").setScrollFactor(0);
+                this.bottomLeft = this.add.sprite(344, 377, "rubbleBottomLeft").setScrollFactor(0);
                 this.bottomLeft.setScale(.03);
-                this.bottomRight = this.add.sprite(366, 375, "rubbleBottomRight").setScrollFactor(0);
+                this.bottomRight = this.add.sprite(365, 377, "rubbleBottomRight").setScrollFactor(0);
                 this.bottomRight.setScale(.03);
-           /* }
+            }
         }else{ // second randomization
             if(Math.random() < .5){ 
-                this.topLeft = this.add.sprite(340, 380, "rubbleTopLeft").setScrollFactor(0);
-                this.topLeft.setScale(.5);
+                this.topLeft = this.add.sprite(344, 353, "rubbleTopLeft").setScrollFactor(0);
+                this.topLeft.setScale(.03);
             }
             if(Math.random() < .5){
-                this.topRight = this.add.sprite(360, 380, "rubbleTopRight").setScrollFactor(0);
-                this.topRight.setScale(.5);
+                this.topRight = this.add.sprite(365, 353, "rubbleTopRight").setScrollFactor(0);
+                this.topRight.setScale(.03);
             }
             if(Math.random() < .5){
-                this.bottomLeft = this.add.sprite(300, 260, "rubbleBottomLeft").setScrollFactor(0);
-                this.bottomLeft.setScale(.5);
+                this.bottomLeft = this.add.sprite(344, 377, "rubbleBottomLeft").setScrollFactor(0);
+                this.bottomLeft.setScale(.03);
             }
             if(Math.random() < .5){
-                this.bottomRight = this.add.sprite(320, 260, "rubbleBottomRight").setScrollFactor(0);
-                this.bottomRight.setScale(.5);
+                this.bottomRight = this.add.sprite(365, 377, "rubbleBottomRight").setScrollFactor(0);
+                this.bottomRight.setScale(.03);
             }
-        }*/
+        }
     },
 });
 
