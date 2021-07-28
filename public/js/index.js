@@ -220,35 +220,35 @@ var gamePlayState = new Phaser.Class({
 
     _randomMap: function(){
 
-        if(Math.random() < .3){ // first randomization
-            if (Math.random() < .5){ // post accident
+        /*if(Math.random() < .3){ // first randomization
+            if (Math.random() < .5){ // post accident*/
                 this.topLeft = this.add.sprite(340, 380, "rubbleTopLeft").setScrollFactor(0);
-                this.topLeft.setScale(.10);
+                this.topLeft.setScale(.5);
                 this.topRight = this.add.sprite(360, 380, "rubbleTopRight").setScrollFactor(0);
-                this.topRight.setScale(.10);
+                this.topRight.setScale(.5);
                 this.bottomLeft = this.add.sprite(300, 260, "rubbleBottomLeft").setScrollFactor(0);
-                this.bottomLeft.setScale(.10);
+                this.bottomLeft.setScale(.5);
                 this.bottomRight = this.add.sprite(320, 260, "rubbleBottomRight").setScrollFactor(0);
-                this.bottomRight.setScale(.10);
-            }
+                this.bottomRight.setScale(.5);
+           /* }
         }else{ // second randomization
             if(Math.random() < .5){ 
                 this.topLeft = this.add.sprite(340, 380, "rubbleTopLeft").setScrollFactor(0);
-                this.topLeft.setScale(.10);
+                this.topLeft.setScale(.5);
             }
             if(Math.random() < .5){
                 this.topRight = this.add.sprite(360, 380, "rubbleTopRight").setScrollFactor(0);
-                this.topRight.setScale(.10);
+                this.topRight.setScale(.5);
             }
             if(Math.random() < .5){
                 this.bottomLeft = this.add.sprite(300, 260, "rubbleBottomLeft").setScrollFactor(0);
-                this.bottomLeft.setScale(.10);
+                this.bottomLeft.setScale(.5);
             }
             if(Math.random() < .5){
                 this.bottomRight = this.add.sprite(320, 260, "rubbleBottomRight").setScrollFactor(0);
-                this.bottomRight.setScale(.10);
+                this.bottomRight.setScale(.5);
             }
-        }
+        }*/
     },
 });
 
