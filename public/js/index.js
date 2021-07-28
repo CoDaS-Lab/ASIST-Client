@@ -222,13 +222,13 @@ var gamePlayState = new Phaser.Class({
 
         /*if(Math.random() < .3){ // first randomization
             if (Math.random() < .5){ // post accident*/
-                this.topLeft = this.add.sprite(345, 365, "rubbleTopLeft").setScrollFactor(0);
+                this.topLeft = this.add.sprite(345, 355, "rubbleTopLeft").setScrollFactor(0);
                 this.topLeft.setScale(.03);
-                this.topRight = this.add.sprite(365, 365, "rubbleTopRight").setScrollFactor(0);
+                this.topRight = this.add.sprite(365, 355, "rubbleTopRight").setScrollFactor(0);
                 this.topRight.setScale(.03);
-                this.bottomLeft = this.add.sprite(345, 380, "rubbleBottomLeft").setScrollFactor(0);
+                this.bottomLeft = this.add.sprite(345, 375, "rubbleBottomLeft").setScrollFactor(0);
                 this.bottomLeft.setScale(.03);
-                this.bottomRight = this.add.sprite(365, 380, "rubbleBottomRight").setScrollFactor(0);
+                this.bottomRight = this.add.sprite(365, 375, "rubbleBottomRight").setScrollFactor(0);
                 this.bottomRight.setScale(.03);
            /* }
         }else{ // second randomization
