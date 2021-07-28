@@ -25,12 +25,14 @@ var gamePlayState = new Phaser.Class({
         this.load.spritesheet("dude","/assets/dude.png",
             {frameWidth: 32, frameHeight: 48});
         this.load.image("legend", "/assets/legend.png");
-        this.load.image("blankMap", "/assets/blankMiniMap.png");
-        this.load.image("topLeft", "assets/rubbleTopLeft.png");
-        this.load.image("topRight", "assets/rubbleTopRight.png");
-        this.load.image("bottomLeft", "assets/rubbleBottomLeft.png");
-        this.load.image("bottomRight", "assets/rubbleBottomRight.png");
-        this.load.image("mapBackground", "assets/whiteBackground.png");
+        this.load.image("blankTopLeft", "assets/blankTopLeft.png");
+        this.load.image("blankTopRight", "assets/blankTopRight.png");
+        this.load.image("blankBottomLeft", "assets/blankBottomLeft.png");
+        this.load.image("blankBottomRight", "assets/blankBottomRight.png");
+        this.load.image("rubbleTopLeft", "assets/rubbleTopLeft.png");
+        this.load.image("rubbleTopRight", "assets/rubbleTopRight.png");
+        this.load.image("rubbleBottomLeft", "assets/rubbleBottomLeft.png");
+        this.load.image("rubbleBottomRight", "assets/rubbleBottomRight.png");
 
     },
     create: function() {
@@ -44,9 +46,6 @@ var gamePlayState = new Phaser.Class({
         this.minimap.setBackgroundColor(0xffffff);
         this.minimap.scrollX = 150;
         this.minimap.scrollY = 130;*/
-
-        //this.add.rectangle(310,250, Math.floor(755/3), Math.floor(625/3), 0xffffff).setScrollFactor(0);
-        //this.mapBackground = this.add.image(310, 250, "mapBackground").setScrollFactor(0);
 
         console.log("GamePlay");
         this.gameState = new GameState(this.mapConfig)
@@ -63,8 +62,6 @@ var gamePlayState = new Phaser.Class({
 
         this.player_list = [this.playerDude, this.leaderDude];
 
-        /*this.blankMap = this.add.sprite(310, 250, "blankMap").setScrollFactor(0);
-        this.blankMap.setScale(.10);*/
         this._randomMap();
 
         this.legend = this.add.sprite(310, 380, "legend").setScrollFactor(0);
@@ -222,32 +219,33 @@ var gamePlayState = new Phaser.Class({
     },
 
     _randomMap: function(){
+
         if(Math.random() < .3){ // first randomization
             if (Math.random() < .5){ // post accident
-                this.topLeft = this.add.sprite(300, 245, "topLeft").setScrollFactor(0);
+                this.topLeft = this.add.sprite(340, 380, "rubbleTopLeft").setScrollFactor(0);
                 this.topLeft.setScale(.10);
-                this.topRight = this.add.sprite(320, 245, "topRight").setScrollFactor(0);
+                this.topRight = this.add.sprite(360, 380, "rubbleTopRight").setScrollFactor(0);
                 this.topRight.setScale(.10);
-                this.bottomLeft = this.add.sprite(300, 260, "bottomLeft").setScrollFactor(0);
+                this.bottomLeft = this.add.sprite(300, 260, "rubbleBottomLeft").setScrollFactor(0);
                 this.bottomLeft.setScale(.10);
-                this.bottomRight = this.add.sprite(320, 260, "bottomRight").setScrollFactor(0);
+                this.bottomRight = this.add.sprite(320, 260, "rubbleBottomRight").setScrollFactor(0);
                 this.bottomRight.setScale(.10);
             }
         }else{ // second randomization
             if(Math.random() < .5){ 
-                this.topLeft = this.add.sprite(300, 245, "topLeft").setScrollFactor(0);
+                this.topLeft = this.add.sprite(340, 380, "rubbleTopLeft").setScrollFactor(0);
                 this.topLeft.setScale(.10);
             }
             if(Math.random() < .5){
-                this.topRight = this.add.sprite(320, 245, "topRight").setScrollFactor(0);
+                this.topRight = this.add.sprite(360, 380, "rubbleTopRight").setScrollFactor(0);
                 this.topRight.setScale(.10);
             }
             if(Math.random() < .5){
-                this.bottomLeft = this.add.sprite(300, 260, "bottomLeft").setScrollFactor(0);
+                this.bottomLeft = this.add.sprite(300, 260, "rubbleBottomLeft").setScrollFactor(0);
                 this.bottomLeft.setScale(.10);
             }
             if(Math.random() < .5){
-                this.bottomRight = this.add.sprite(320, 260, "bottomRight").setScrollFactor(0);
+                this.bottomRight = this.add.sprite(320, 260, "rubbleBottomRight").setScrollFactor(0);
                 this.bottomRight.setScale(.10);
             }
         }
