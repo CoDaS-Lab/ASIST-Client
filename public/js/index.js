@@ -162,9 +162,9 @@ var gamePlayState = new Phaser.Class({
             socket.emit("rescue_attempt", {'x': this.player_list[playerId].x, 'y': this.player_list[playerId].y,
             "key":"r", 'rm_id':room_id, 'idx': playerId, "victims_alive": Array.from(this.gameState.set_victims), 
             "k_time":new Date().toISOString()})
-            for(const rescueIndex of rescueIndexes/*this.mapConfig.victimIndexes*/){
+            for(const victimIndex of rescueIndexes/*this.mapConfig.victimIndexes*/){
                 //if (rescueIndexes.includes(victimIndex)){                 
-                    if (this.gameState.set_victims.has(rescueIndex)){
+                    if (this.gameState.set_victims.has(victimIndex)){
                         socket.emit("rescue_success", {'x': this.player_list[playerId].x, 'y': this.player_list[playerId].y,
                         "key":"rs", 'rm_id':room_id, 'idx': playerId, "victims_alive": Array.from(this.gameState.set_victims), 
                         "victim":victimIndex, "k_time":new Date().toISOString()})            
