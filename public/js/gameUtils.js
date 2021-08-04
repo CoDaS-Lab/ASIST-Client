@@ -195,7 +195,6 @@ class GameState {
             this.placeAtIndex(victimIndex, rect);
             this.roomVictimObj[roomIndex].push(rect);
             this.victimObj[victimIndex] = rect;
-            }
         }
     }
 
