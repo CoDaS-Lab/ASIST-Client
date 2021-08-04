@@ -182,14 +182,14 @@ class GameState {
     _drawRandomVictims(roomFloorMapping, colorHex, alpha){
         this.roomVictimObj = new Object(); // all victims in a a room identified by door key 
         this.victimObj = new Object(); //all victims identified by key
-        for (let roomIndex in locIndexesObj){
+        for (let roomIndex in roomFloorMapping){
             console.log("room index: " + roomIndex);
             this.roomVictimObj[roomIndex] = new Array();
-            let length = locIndexesObj[roomIndex].length;
+            let length = roomFloorMapping[roomIndex].length;
             console.log("array lenght: " + length);
             let randomVictim = Math.floor(Math.random()*length);
             console.log("random victim index: " + randomVictim);
-            let victimIndex = locIndexesObj[roomIndex][randomVictim];
+            let victimIndex = roomFloorMapping[roomIndex][randomVictim];
             console.log("victim location: " + victimIndex);
             let rect = this.scene.add.rectangle(20,20, this.cw, this.ch, colorHex, alpha);
             this.placeAtIndex(victimIndex, rect);
