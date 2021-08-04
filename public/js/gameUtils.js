@@ -80,7 +80,8 @@ class GameState {
         //this._drawText();
         //this._showNumbers();
 
-        this._drawVictims(this.config.roomVictimMapping, 0x9754e3, 0)
+        //this._drawVictims(this.config.roomVictimMapping, 0x9754e3, 0)
+        this._drawRandomVictims(this.config.roomFloorMapping, 0x9754e3, 0);
         //this._blockRoomView(this.config.roomViewBlocksMapping, 0x8a8786, 0.8)
     }
     _storeMapVariablesFromConfig(config){
@@ -174,6 +175,26 @@ class GameState {
                 this.placeAtIndex(victimIndex, rect);
                 this.roomVictimObj[roomIndex].push(rect);
                 this.victimObj[victimIndex] = rect;
+            }
+        }
+    }
+
+    _drawRandomVictims(roomFloorMapping, colorHex, alpha){
+        this.roomVictimObj = new Object(); // all victims in a a room identified by door key 
+        this.victimObj = new Object(); //all victims identified by key
+        for (let roomIndex in locIndexesObj){
+            console.log("room index: " + roomIndex);
+            this.roomVictimObj[roomIndex] = new Array();
+            let length = locIndexesObj[roomIndex].length;
+            console.log("array lenght: " + length);
+            let randomVictim = Math.floor(Math.random()*length);
+            console.log("random victim index: " + randomVictim);
+            let victimIndex = locIndexesObj[roomIndex][randomVictim];
+            console.log("victim location: " + victimIndex);
+            let rect = this.scene.add.rectangle(20,20, this.cw, this.ch, colorHex, alpha);
+            this.placeAtIndex(victimIndex, rect);
+            this.roomVictimObj[roomIndex].push(rect);
+            this.victimObj[victimIndex] = rect;
             }
         }
     }
