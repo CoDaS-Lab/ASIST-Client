@@ -95,7 +95,7 @@ class GameState {
     _generateMapVariables(){
         this.noRoadIndex = this._generateNoRoadIndexes(this.config.hallwayBoundaryIndexes, this.config.victimIndexes, this.config.rubbleIndexes);
         // this.config.roomWallIndexes was originally also in the above line
-        this.set_victims = new Set(this.config.victimIndexes);
+        //this.set_victims = new Set(this.config.victimIndexes);
         this.set_rubble = new Set(this.config.rubbleIndexes);
 
     }
@@ -182,6 +182,7 @@ class GameState {
     _drawRandomVictims(roomFloorMapping, colorHex, alpha){
         this.roomVictimObj = new Object(); // all victims in a a room identified by door key 
         this.victimObj = new Object(); //all victims identified by key
+        this.set_victims = new Set();
         for (let roomIndex in roomFloorMapping){
             console.log("room index: " + roomIndex);
             this.roomVictimObj[roomIndex] = new Array();
@@ -190,6 +191,7 @@ class GameState {
             let randomVictim = Math.floor(Math.random()*length);
             console.log("random victim index: " + randomVictim);
             let victimIndex = roomFloorMapping[roomIndex][randomVictim];
+            this.set_victims.add(victimIndex);
             console.log("victim location: " + victimIndex);
             let rect = this.scene.add.rectangle(20,20, this.cw, this.ch, colorHex, alpha);
             this.placeAtIndex(victimIndex, rect);
