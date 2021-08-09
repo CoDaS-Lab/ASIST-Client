@@ -39,13 +39,6 @@ var gamePlayState = new Phaser.Class({
         // should be bound by the edge of map
         this.cameras.main.setBounds(0, 0, 775, 625).setName('main');
         this.cameras.main.setZoom(4);
-        
-        // add a minimap camera
-        /*
-        this.minimap = this.cameras.add(-50, -50, Math.floor(755/3), Math.floor(625/3)).setZoom(0.24).setName('minimap');
-        this.minimap.setBackgroundColor(0xffffff);
-        this.minimap.scrollX = 150;
-        this.minimap.scrollY = 130;*/
 
         console.log("GamePlay");
         this.gameState = new GameState(this.mapConfig)
@@ -57,17 +50,15 @@ var gamePlayState = new Phaser.Class({
         this.playerDude = new PlayerDisplay(this, {"x": this.gameConfig.playerX, "y":this.gameConfig.playerY, "name":"dude"});
         this.playersCurrentLoc.push((this.playerDude.y*this.mapConfig.cols)+ this.playerDude.x);
     
-        this.leaderDude = new PlayerDisplay(this, {"x": this.gameConfig.leaderX, "y":this.gameConfig.leaderY, "name":"chirag"});
-        this.playersCurrentLoc.push((this.leaderDude.y*this.mapConfig.cols)+ this.leaderDude.x);
+        //this.leaderDude = new PlayerDisplay(this, {"x": this.gameConfig.leaderX, "y":this.gameConfig.leaderY, "name":"chirag"});
+        //this.playersCurrentLoc.push((this.leaderDude.y*this.mapConfig.cols)+ this.leaderDude.x);
 
-        this.player_list = [this.playerDude, this.leaderDude];
+        this.player_list = [this.playerDude, /*this.leaderDude*/];
 
         this._randomMap();
 
         this.legend = this.add.sprite(310, 380, "legend").setScrollFactor(0);
         this.legend.setScale(.10);
-        //uncomment this line to see legend
-        //this._drawGameInfo();
 
         this.keys = this.input.keyboard.addKeys('W, S, A, D, R, UP, DOWN, LEFT, RIGHT');
         this.leaderGuidance = true;
@@ -83,9 +74,6 @@ var gamePlayState = new Phaser.Class({
         
         this.cameras.main.startFollow(this.playerDude.physicsObj);
         this.cameras.main.setLerp(0.2);
-
-        // hide grid lines in minimap
-        //this.minimap.ignore(this.gameState.graphics);
     },
 
 
@@ -100,9 +88,6 @@ var gamePlayState = new Phaser.Class({
                         "key":"left", 'rm_id':room_id, 'idx': playerId, "k_time":new Date().toISOString(),
                         "event": "player_move", "dTime": this.gameConfig.dTime
                     })
-                    //if ((x-1) in mapData.hallwayBoundaryIndexes){
-                    //    game.camera.x -= 4;
-                    //}
                 }
             }
             if (Phaser.Input.Keyboard.JustDown(this.keys.RIGHT)){
@@ -113,10 +98,7 @@ var gamePlayState = new Phaser.Class({
                     socket.emit("player_move", {'x': this.player_list[playerId].x, 'y': this.player_list[playerId].y,
                         "key":"right", 'rm_id':room_id, 'idx': playerId, "k_time":new Date().toISOString(),
                         "event": "player_move", "dTime": this.gameConfig.dTime
-                    })
-                    //if ((x+1) in mapData.hallwayBoundaryIndexes){
-                    //    game.camera.x += 4;
-                    //}         
+                    })       
                 }
             }
             if (Phaser.Input.Keyboard.JustDown(this.keys.UP)){
@@ -128,9 +110,6 @@ var gamePlayState = new Phaser.Class({
                         "key":"up", 'rm_id':room_id, 'idx': playerId, "k_time":new Date().toISOString(),
                         "event": "player_move", "dTime": this.gameConfig.dTime
                     })
-                    //if ((y-1) in mapData.hallwayBoundaryIndexes){
-                    //    game.camera.y -= 4;
-                    //}
                 }
             }
             if (Phaser.Input.Keyboard.JustDown(this.keys.DOWN)){             
@@ -142,9 +121,6 @@ var gamePlayState = new Phaser.Class({
                         "key":"down", 'rm_id':room_id, 'idx': playerId, "k_time":new Date().toISOString(),
                         "event": "player_move", "dTime": this.gameConfig.dTime
                     })
-                    //if ((y+1) in mapData.hallwayBoundaryIndexes){
-                    //    game.camera.y += 4;
-                    //}
                 }
             }
         }
@@ -162,8 +138,7 @@ var gamePlayState = new Phaser.Class({
             socket.emit("rescue_attempt", {'x': this.player_list[playerId].x, 'y': this.player_list[playerId].y,
             "key":"r", 'rm_id':room_id, 'idx': playerId, "victims_alive": Array.from(this.gameState.set_victims), 
             "k_time":new Date().toISOString()})
-            for(const victimIndex of rescueIndexes/*this.mapConfig.victimIndexes*/){
-                //if (rescueIndexes.includes(victimIndex)){                 
+            for(const victimIndex of rescueIndexes){                
                     if (this.gameState.set_victims.has(victimIndex)){
                         socket.emit("rescue_success", {'x': this.player_list[playerId].x, 'y': this.player_list[playerId].y,
                         "key":"rs", 'rm_id':room_id, 'idx': playerId, "victims_alive": Array.from(this.gameState.set_victims), 
@@ -180,8 +155,6 @@ var gamePlayState = new Phaser.Class({
                             socket.emit('end_game', {"key": "go_victim", "k_time": new Date().toISOString(), "d_time": this.gameConfig.dTime})
                         }
                     }
-                    
-                //}
             }
         }
     },
