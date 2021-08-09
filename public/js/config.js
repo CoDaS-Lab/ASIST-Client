@@ -177,9 +177,9 @@ var mapData = {'cols': 50,'rows': 92, 'victimIndexes': [2802, 3666],
 
 var gameSetUpData = {"roundCount":100, "playerX":5, "playerY":77, "leaderX":3, "leaderY":75, "gameTime":2, dTime: new Date().toISOString(),
 //fix leaderMovementIndexes
-"leaderMovementIndexes": [[3, 75, "right"], [4, 75, "right"], [5, 75, "right"], [6, 75, "right"], [7, 75, "right"], [8, 75, "right"], 
+"leaderMovementIndexes": [] /*[[3, 75, "right"], [4, 75, "right"], [5, 75, "right"], [6, 75, "right"], [7, 75, "right"], [8, 75, "right"], 
 [8, 74, "up"], [9, 74, "right"], [10, 74, "right"], [10, 73, "up"], [10, 72, "up"], [9, 72, "left"],
-[9, 73, "down"]]
+[9, 73, "down"]]*/
 }
 
 
