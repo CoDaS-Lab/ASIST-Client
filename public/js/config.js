@@ -175,9 +175,9 @@ var mapData = {'cols': 50,'rows': 92, 'victimIndexes': [2802, 3666],
     4551,	4552,	4553,	4554,	4555,	4556,	4557,	4558,	4559,	4560,	4561,	4562,	4563,	4564,	4565,	4566,	4567,	4568,	4569,	4570,	4571,	4572,	4573,	4574,	4575,	4576,	4577,	4578,	4579,	4580,	4581,	4582,	4583,	4584,	4585],
 }
 
-var gameSetUpData = {"roundCount":100, "playerX":5, "playerY":77, "leaderX":3, "leaderY":75, "gameTime":2, dTime: new Date().toISOString(),
+var gameSetUpData = {"roundCount":100, "playerX":5, "playerY":77, /*"leaderX":3, "leaderY":75,*/ "gameTime":2, dTime: new Date().toISOString(),
 //fix leaderMovementIndexes
-"leaderMovementIndexes": [] /*[[3, 75, "right"], [4, 75, "right"], [5, 75, "right"], [6, 75, "right"], [7, 75, "right"], [8, 75, "right"], 
+/*"leaderMovementIndexes": [] /*[[3, 75, "right"], [4, 75, "right"], [5, 75, "right"], [6, 75, "right"], [7, 75, "right"], [8, 75, "right"], 
 [8, 74, "up"], [9, 74, "right"], [10, 74, "right"], [10, 73, "up"], [10, 72, "up"], [9, 72, "left"],
 [9, 73, "down"]]*/
 }

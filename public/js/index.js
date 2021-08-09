@@ -60,8 +60,8 @@ var gamePlayState = new Phaser.Class({
         this.legend = this.add.sprite(310, 380, "legend").setScrollFactor(0);
         this.legend.setScale(.10);
 
-        /*this.keys = this.input.keyboard.addKeys('W, S, A, D, R, UP, DOWN, LEFT, RIGHT');
-        this.leaderGuidance = true;
+        this.keys = this.input.keyboard.addKeys('W, S, A, D, R, UP, DOWN, LEFT, RIGHT');
+        /*this.leaderGuidance = true;
         this.leaderTimer = this.time.addEvent({
             delay: 500,
             callback: this._leaderAnimation,
@@ -78,7 +78,7 @@ var gamePlayState = new Phaser.Class({
 
 
     update: function() {
-        if ((this.gameConfig.roundCount>0) && (this.leaderGuidance)){
+        if ((this.gameConfig.roundCount>0) /*&& (this.leaderGuidance)*/){
             if (Phaser.Input.Keyboard.JustDown(this.keys.LEFT)){
                 let newIdx = (this.player_list[playerId].y*this.mapConfig.cols)+ this.player_list[playerId].x - 1;
                 if (!(this.gameState.noRoadIndex.has(newIdx)) && !(this.playersCurrentLoc.includes(newIdx))){
