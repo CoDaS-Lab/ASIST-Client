@@ -60,8 +60,8 @@ var gamePlayState = new Phaser.Class({
         this.legend = this.add.sprite(310, 380, "legend").setScrollFactor(0);
         this.legend.setScale(.10);
 
-        this.keys = this.input.keyboard.addKeys('W, S, A, D, R, UP, DOWN, LEFT, RIGHT');
-        /*this.leaderGuidance = true;
+        /*this.keys = this.input.keyboard.addKeys('W, S, A, D, R, UP, DOWN, LEFT, RIGHT');
+        this.leaderGuidance = true;
         this.leaderTimer = this.time.addEvent({
             delay: 500,
             callback: this._leaderAnimation,
@@ -161,14 +161,14 @@ var gamePlayState = new Phaser.Class({
 
 
     _leaderAnimation: function(){
-        let currentLeaderloc = this.gameConfig.leaderMovementIndexes.length - (this.leaderTimer.getRepeatCount()+1)
+        /*let currentLeaderloc = this.gameConfig.leaderMovementIndexes.length - (this.leaderTimer.getRepeatCount()+1)
         console.log(currentLeaderloc, this.gameConfig.leaderMovementIndexes[currentLeaderloc]);
         this.player_list[1].move(this.gameConfig.leaderMovementIndexes[currentLeaderloc][0], this.gameConfig.leaderMovementIndexes[currentLeaderloc][1],
             this.player_list[1].name+this.gameConfig.leaderMovementIndexes[currentLeaderloc][2])
         this.playersCurrentLoc[1] = (this.player_list[1].y*this.mapConfig.cols)+ this.player_list[1].x;
         if (this.leaderTimer.getRepeatCount()===0){
             console.log(this.playersCurrentLoc);
-        }
+        }*/
     },
 
 
