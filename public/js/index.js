@@ -61,14 +61,14 @@ var gamePlayState = new Phaser.Class({
         this.legend.setScale(.10);
 
         this.keys = this.input.keyboard.addKeys('W, S, A, D, R, UP, DOWN, LEFT, RIGHT');
-        this.leaderGuidance = true;
+        /*this.leaderGuidance = true;
         this.leaderTimer = this.time.addEvent({
             delay: 500,
             callback: this._leaderAnimation,
             args: [],
             callbackScope: this,
             repeat: this.gameConfig.leaderMovementIndexes.length -1
-        });
+        });*/
 
         socket.on('player_move', (message)=>{this.gameState.playerMove(message, playerId)});
         
