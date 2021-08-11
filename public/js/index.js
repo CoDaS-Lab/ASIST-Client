@@ -63,8 +63,7 @@ var gamePlayState = new Phaser.Class({
 
         victimCount = 24;
         this.victimCountText = this.add.text(378, 385, "Victims: 24", {color: '0x9754e3', fontSize: '4px'}).setScrollFactor(0).setResolution(10);
-        this.victimCountText.addColor('0x9754e3');
-        
+
         this.keys = this.input.keyboard.addKeys('W, S, A, D, R, UP, DOWN, LEFT, RIGHT');
         /*this.leaderGuidance = true;
         this.leaderTimer = this.time.addEvent({
