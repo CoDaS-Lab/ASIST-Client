@@ -82,7 +82,7 @@ class GameState {
 
         //this._drawVictims(this.config.roomVictimMapping, 0x9754e3, 0)
         this._drawRandomVictims(this.config.roomFloorMapping, 0x9754e3, 0);
-        //this._blockRoomView(this.config.roomViewBlocksMapping, 0x8a8786, 0.8)
+        this._blockRoomView(this.config.roomFloorMapping, 0x8a8786, 0.8)
     }
     _storeMapVariablesFromConfig(config){
         this.config = config;
@@ -200,17 +200,17 @@ class GameState {
         }
     }
 
-   // _blockRoomView(locIndexesObj, colorHex, alpha){
-   //     this.roomViewObj = new Object();
-   //     for (let roomIndex in locIndexesObj){
-   //         this.roomViewObj[roomIndex] = new Array();
-   //         for (let viewIndex of locIndexesObj[roomIndex]){
-   //             let rect = this.scene.add.rectangle(20,20, this.cw, this.ch, colorHex, alpha);
-   //            this.placeAtIndex(viewIndex, rect);
-   //             this.roomViewObj[roomIndex].push(rect);
-   //         }
-   //     }        
-   // }
+    _blockRoomView(locIndexesObj, colorHex, alpha){
+        this.roomViewObj = new Object();
+        for (let roomIndex in locIndexesObj){
+            this.roomViewObj[roomIndex] = new Array();
+            for (let viewIndex of locIndexesObj[roomIndex]){
+                let rect = this.scene.add.rectangle(20,20, this.cw, this.ch, colorHex, alpha);
+               this.placeAtIndex(viewIndex, rect);
+                this.roomViewObj[roomIndex].push(rect);
+            }
+        }        
+    }
     makeVictimsVisible(victimObjArray){
         for (let i=0; i<victimObjArray.length; i++) {
             victimObjArray[i].fillAlpha = 1;
