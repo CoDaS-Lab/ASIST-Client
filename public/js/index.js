@@ -5,6 +5,7 @@ import {phaserConfig, mapData, gameSetUpData, socketURL} from "/js/config.js"
 var room_id = "temp_room";
 var playerId = "temp_id";
 var gameTimer = new Timer();
+var victimCount;
 //var controls;
 const socket = io(socketURL, {transports: ['websocket']})
 
@@ -59,6 +60,9 @@ var gamePlayState = new Phaser.Class({
 
         this.legend = this.add.sprite(310, 380, "legend").setScrollFactor(0);
         this.legend.setScale(.10);
+
+        victimCount = 24;
+        this.victimCountText = this.add.text(375, 377, "Victims: 24", {color: '0x9754e3', fontSize: '4px'}).setScrollFactor(0);
 
         this.keys = this.input.keyboard.addKeys('W, S, A, D, R, UP, DOWN, LEFT, RIGHT');
         /*this.leaderGuidance = true;
@@ -145,6 +149,8 @@ var gamePlayState = new Phaser.Class({
                         "victim":victimIndex, "k_time":new Date().toISOString()})            
                         this.gameState.victimObj[String(victimIndex)].fillColor = "0xf6fa78";
                         this.gameState.set_victims.delete(victimIndex);
+                        victimCount--;
+                        this.victimCountText.setText("Victims: " + victimCount);
                         if (this.gameState.set_victims.size === 0){
                             console.log("SUCCESS")
                             this.gameConfig.roundCount = -1
