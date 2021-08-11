@@ -184,15 +184,11 @@ class GameState {
         this.victimObj = new Object(); //all victims identified by key
         this.set_victims = new Set();
         for (let roomIndex in roomFloorMapping){
-            console.log("room index: " + roomIndex);
             this.roomVictimObj[roomIndex] = new Array();
             let length = roomFloorMapping[roomIndex].length;
-            console.log("array lenght: " + length);
             let randomVictim = Math.floor(Math.random()*length);
-            console.log("random victim index: " + randomVictim);
             let victimIndex = roomFloorMapping[roomIndex][randomVictim];
             this.set_victims.add(victimIndex);
-            console.log("victim location: " + victimIndex);
             let rect = this.scene.add.rectangle(20,20, this.cw, this.ch, colorHex, alpha);
             this.placeAtIndex(victimIndex, rect);
             this.roomVictimObj[roomIndex].push(rect);
@@ -276,14 +272,14 @@ class GameState {
             this.scene.gameConfig.roundCount -= 1;
             this.scene.roundDisplay.text = "Round ".concat(String(this.scene.gameConfig.roundCount));
             if (this.scene.mapConfig.doorIndexes.includes(newIdx)){
-                console.log("found door");
+                console.log("Entered room " + newIdx + " through door");
                 this.scene.gameState.makeVictimsVisible(this.scene.gameState.roomVictimObj[String(newIdx)]);
                 this.scene.gameState.makeRoomVisible(this.scene.gameState.roomViewObj[String(newIdx)]);
             }else if (this.scene.mapConfig.gapIndexes.includes(newIdx)){
-                console.log("found gap");
                 for (let roomIndex in this.scene.mapConfig.roomGapMapping){
                     if(this.scene.mapConfig.roomGapMapping[roomIndex].includes(newIdx)){
-                        console.log("found door for gap: " + roomIndex + " new Idx " + newIdx );
+                        console.log("Entered room " + roomIndex 
+                        + " through gap");
                         this.scene.gameState.makeVictimsVisible(this.scene.gameState.roomVictimObj[roomIndex]);
                         this.scene.gameState.makeRoomVisible(this.scene.gameState.roomViewObj[roomIndex]);
                     }
