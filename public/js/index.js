@@ -129,13 +129,13 @@ var gamePlayState = new Phaser.Class({
             }
         }
 
-        else if (this.gameConfig.roundCount==0){
+        /*else if (this.gameConfig.roundCount==0){
             gameTimer.stop()
             $("#phaser-game").hide();
             $("#game-over").show();
             game.scene.stop("GamePlay");
             socket.emit('end_game', {"key": "go_round", "k_time": new Date().toISOString(), "d_time": this.gameConfig.dTime})
-        }
+        }*/
 
         if (Phaser.Input.Keyboard.JustDown(this.keys.R)){
             let rescueIndexes = this.gameState.getVictimRescueIndexes(this.player_list[playerId].y, this.player_list[playerId].x);
