@@ -82,7 +82,7 @@ var gamePlayState = new Phaser.Class({
 
 
     update: function() {
-        if ((this.gameConfig.roundCount>0) /*&& (this.leaderGuidance)*/){
+        //if ((this.gameConfig.roundCount>0) /*&& (this.leaderGuidance)*/){
             if (Phaser.Input.Keyboard.JustDown(this.keys.LEFT)){
                 let newIdx = (this.player_list[playerId].y*this.mapConfig.cols)+ this.player_list[playerId].x - 1;
                 if (!(this.gameState.noRoadIndex.has(newIdx)) && !(this.playersCurrentLoc.includes(newIdx))){
@@ -127,7 +127,7 @@ var gamePlayState = new Phaser.Class({
                     })
                 }
             }
-        }
+        //}
 
         /*else if (this.gameConfig.roundCount==0){
             gameTimer.stop()
