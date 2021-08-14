@@ -4,7 +4,7 @@ import {phaserConfig, mapData, gameSetUpData, socketURL} from "/js/config.js"
 
 var room_id = "temp_room";
 var playerId = "temp_id";
-var gameTimer = new Timer();
+//var gameTimer = new Timer();
 var victimCount;
 //var controls;
 const socket = io(socketURL, {transports: ['websocket']})
@@ -155,7 +155,7 @@ var gamePlayState = new Phaser.Class({
                         if (/*this.gameState.set_victims.size*/ victimCount === 0){
                             console.log("SUCCESS")
                             this.gameConfig.roundCount = -1
-                            gameTimer.stop();
+                            //gameTimer.stop();
                             $("#phaser-game").hide();
                             $("#game-over").show();
                             game.scene.stop("GamePlay");
@@ -267,12 +267,12 @@ $(document).ready(function() {
     $('#join-room').click(dsplyGame);
 });
 
-gameTimer.addEventListener('targetAchieved', function(){
+/*gameTimer.addEventListener('targetAchieved', function(){
     $('#phaser-game').hide();
     $("#game-over").show();
     game.scene.stop("GamePlay");
     socket.emit('end_game', {"key": "go_time", "k_time": new Date().toISOString()})
-});
+});*/
 
 socket.on('wait_data', (message)=>{
     gameSetUpData.dTime = new Date().toISOString();
@@ -287,16 +287,16 @@ socket.on('start_game', (message)=>{
     console.log(message, "Start Game")
     socket.emit('start_game', {"key": "sg", "k_time": new Date().toISOString(), "d_time": gameSetUpData.dTime})
     game.scene.start("GamePlay");
-    gameTimer.start({precision: 'secondTenths', countdown: true, startValues: {minutes: gameSetUpData.gameTime}})
+    //gameTimer.start({precision: 'secondTenths', countdown: true, startValues: {minutes: gameSetUpData.gameTime}})
     
 });
 
 
-gameTimer.addEventListener('secondTenthsUpdated', function() {
+/*gameTimer.addEventListener('secondTenthsUpdated', function() {
       $('#timerTime').text(" "+ gameTimer.getTimeValues().toString());
   });
 
 
 gameTimer.addEventListener('started', function () {
     $('#timerTime').text(" 00:"+String(gameSetUpData.gameTime)+":00");
-});
+});*/
