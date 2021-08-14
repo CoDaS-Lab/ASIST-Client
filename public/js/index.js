@@ -138,6 +138,7 @@ var gamePlayState = new Phaser.Class({
         }*/
 
         if (Phaser.Input.Keyboard.JustDown(this.keys.R)){
+            console.log("victim set size: " + this.gameState.set_victims.size);
             let rescueIndexes = this.gameState.getVictimRescueIndexes(this.player_list[playerId].y, this.player_list[playerId].x);
             socket.emit("rescue_attempt", {'x': this.player_list[playerId].x, 'y': this.player_list[playerId].y,
             "key":"r", 'rm_id':room_id, 'idx': playerId, "victims_alive": Array.from(this.gameState.set_victims), 
