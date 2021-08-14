@@ -152,7 +152,7 @@ var gamePlayState = new Phaser.Class({
                         this.gameState.set_victims.delete(victimIndex);
                         victimCount--;
                         this.victimCountText.setText("Victims: " + victimCount);
-                        if (this.gameState.set_victims.size === 0){
+                        if (/*this.gameState.set_victims.size*/ victimCount === 0){
                             console.log("SUCCESS")
                             this.gameConfig.roundCount = -1
                             gameTimer.stop();
