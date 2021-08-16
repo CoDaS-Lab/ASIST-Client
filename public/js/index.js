@@ -1,4 +1,4 @@
-import {actExpSmryBtn, dsplyExpSmry} from "/js/expNav.js";
+import {actExpSmryBtn, dsplyExpSmry, joinQuiz} from "/js/expNav.js";
 import {PlayerDisplay, GameState} from "/js/gameUtils.js"
 import {phaserConfig, mapData, gameSetUpData, socketURL} from "/js/config.js"
 
@@ -265,6 +265,14 @@ $(document).ready(function() {
     $("#agree").change(actExpSmryBtn);
     $("#cte").on("click", dsplyExpSmry);
     $('#join-room').click(dsplyGame);
+});
+
+$("#join-quiz").on("click", function(){
+    joinQuiz(socket);
+});
+
+$("#revise-intructions").on("click", function(){
+    changeDisplay(socket, "game_info", "#quiz-fail", "#mainInfo", {"event":"revise_instructions"})
 });
 
 /*gameTimer.addEventListener('targetAchieved', function(){

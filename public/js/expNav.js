@@ -1,3 +1,5 @@
+import {surveyJSON} from "/js/config.js";
+
 var actExpSmryBtn = function () {
 // Activates the button to visit experiment information page on clicking the box to agree on the experiment conditions
     if($(this).prop('checked') == true) {
@@ -16,6 +18,35 @@ var dsplyExpSmry = function () {
         alert('Please indicate that you have read and agree to the Terms and Conditions and Privacy Policy');
     }
 };
+
+var joinQuiz = function(socket){
+    const aJson = {"q1":"4", "q2":"1", "q3":"2", "q4":"1"}
+    changeDisplay(socket, "game_info", "#mainInfo", "#surveyContainer", {"event":"start_quiz"})
+    var sendDataToServer = function (survey) {
+        let quizResult = true;
+        var quizData;
+        for (var key in survey.data){
+            if (survey.data[key] != aJson[key]){
+                quizResult = false;
+                break
+            }
+        }
+        if (quizResult===true){
+            quizData = {"event":"quiz_passed", "quiz_data": survey.data}
+            changeDisplay(socket, "game_info", "#surveyContainer", "#quiz-success", quizData)
+        }else{
+            quizData = {"event":"quiz_failed", "quiz_data": survey.data}
+            changeDisplay(socket, "game_info", "#surveyContainer", "#quiz-fail", quizData)
+        }
+    }
+    console.log("Quiz load");
+    Survey.StylesManager.applyTheme("modern");
+    var survey = new Survey.Model(surveyJSON);
+    $("#surveyContainer").Survey({
+        model: survey,
+        onComplete: sendDataToServer
+    });    
+}
 
 var joinGame = function(socketObj, hideElement, showElement, keyMessage, gTime){
     $(hideElement).hide();
@@ -53,4 +84,4 @@ var startSession = function(gameObj, socketObj, sessionId, hideElement, showElem
     gameObj.scene.start("GamePlay");
 }
 
-export {actExpSmryBtn, dsplyExpSmry, endSession, startSession, joinGame};
+export {actExpSmryBtn, dsplyExpSmry, endSession, startSession, joinGame, joinQuiz};
