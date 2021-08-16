@@ -9,6 +9,13 @@ var actExpSmryBtn = function () {
     }
 };
 
+var changeDisplay = function(socketObj, handlerId, hideElement, showElement, keyData){
+    $(hideElement).hide();
+    keyData["time"]  = new Date().toISOString();
+    socketObj.emit(handlerId, keyData)
+    $(showElement).show();
+}
+
 var dsplyExpSmry = function () {
     //Display experiment information page
     if ($("#agree").prop('checked') == true) {
@@ -84,4 +91,4 @@ var startSession = function(gameObj, socketObj, sessionId, hideElement, showElem
     gameObj.scene.start("GamePlay");
 }
 
-export {actExpSmryBtn, dsplyExpSmry, endSession, startSession, joinGame, joinQuiz};
+export {actExpSmryBtn, dsplyExpSmry, endSession, startSession, joinGame, joinQuiz, changeDisplay};

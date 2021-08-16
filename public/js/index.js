@@ -1,4 +1,4 @@
-import {actExpSmryBtn, dsplyExpSmry, joinQuiz} from "/js/expNav.js";
+import {actExpSmryBtn, dsplyExpSmry, joinQuiz, changeDisplay} from "/js/expNav.js";
 import {PlayerDisplay, GameState} from "/js/gameUtils.js"
 import {phaserConfig, mapData, gameSetUpData, socketURL} from "/js/config.js"
 
