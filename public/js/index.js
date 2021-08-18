@@ -44,9 +44,8 @@ var gamePlayState = new Phaser.Class({
         console.log("GamePlay");
         this.gameState = new GameState(this.mapConfig)
 
-        this.roundDisplay = this.add.text(0,0, "Round ".concat(String(this.gameConfig.roundCount)), {color: '0x000000', 
-                            fontSize: '20px'}); 
-        this.gameState.placeAtIndex(32, this.roundDisplay);
+        //this.roundDisplay = this.add.text(0,0, "Round ".concat(String(this.gameConfig.roundCount)), {color: '0x000000', fontSize: '20px'}); 
+        //this.gameState.placeAtIndex(32, this.roundDisplay);
         
         this.playerDude = new PlayerDisplay(this, {"x": this.gameConfig.playerX, "y":this.gameConfig.playerY, "name":"dude"});
         this.playersCurrentLoc.push((this.playerDude.y*this.mapConfig.cols)+ this.playerDude.x);
