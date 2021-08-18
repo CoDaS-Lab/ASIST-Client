@@ -270,7 +270,7 @@ class GameState {
         let newIdx = (message["y"]*this.scene.mapConfig.cols)+ message["x"]
         if (message["idx"] == playerId){
             this.scene.gameConfig.roundCount -= 1;
-            this.scene.roundDisplay.text = "Round ".concat(String(this.scene.gameConfig.roundCount));
+            //this.scene.roundDisplay.text = "Round ".concat(String(this.scene.gameConfig.roundCount));
             if (this.scene.mapConfig.doorIndexes.includes(newIdx)){
                 console.log("Entered room " + newIdx + " through door");
                 this.scene.gameState.makeVictimsVisible(this.scene.gameState.roomVictimObj[String(newIdx)]);
