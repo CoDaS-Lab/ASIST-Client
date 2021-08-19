@@ -1,5 +1,3 @@
-import { socketURL } from "./config"
-
 class PlayerDisplay {
     constructor(gameScene, Config){
         this.gameScene= gameScene
