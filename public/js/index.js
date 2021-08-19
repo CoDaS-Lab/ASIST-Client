@@ -44,6 +44,8 @@ var gamePlayState = new Phaser.Class({
         console.log("GamePlay");
         this.gameState = new GameState(this.mapConfig)
 
+        socket.emit('random_victims', {'victim_locations': this.gameState.set_victims.toISOString()})
+
         //this.roundDisplay = this.add.text(0,0, "Round ".concat(String(this.gameConfig.roundCount)), {color: '0x000000', fontSize: '20px'}); 
         //this.gameState.placeAtIndex(32, this.roundDisplay);
         
@@ -208,6 +210,11 @@ var gamePlayState = new Phaser.Class({
         this.bottomRight = this.add.sprite(365, 377, "blankBottomRight").setScrollFactor(0);
         this.bottomRight.setScale(.04);
 
+        this.tl = "No knowledge";
+        this.tr = "No knowledge";
+        this.bl = "No knowledge";
+        this.br = "No knowledge";
+
         if(Math.random() < .3){ // first randomization
             if (Math.random() < .5){ // post accident*/
                 this.topLeft = this.add.sprite(344, 353, "rubbleTopLeft").setScrollFactor(0);
@@ -218,25 +225,36 @@ var gamePlayState = new Phaser.Class({
                 this.bottomLeft.setScale(.03);
                 this.bottomRight = this.add.sprite(365, 377, "rubbleBottomRight").setScrollFactor(0);
                 this.bottomRight.setScale(.03);
+                this.tl = "Knowledge";
+                this.tr = "Knowledge";
+                this.bl = "Knowledge";
+                this.br = "Knowledge";
             }
         }else{ // second randomization
             if(Math.random() < .5){ 
                 this.topLeft = this.add.sprite(344, 353, "rubbleTopLeft").setScrollFactor(0);
                 this.topLeft.setScale(.03);
+                this.tl = "Knowledge";
+                
             }
             if(Math.random() < .5){
                 this.topRight = this.add.sprite(365, 353, "rubbleTopRight").setScrollFactor(0);
                 this.topRight.setScale(.03);
+                this.tr = "Knowledge";
             }
             if(Math.random() < .5){
                 this.bottomLeft = this.add.sprite(344, 377, "rubbleBottomLeft").setScrollFactor(0);
                 this.bottomLeft.setScale(.03);
+                this.bl = "Knowledge";
             }
             if(Math.random() < .5){
                 this.bottomRight = this.add.sprite(365, 377, "rubbleBottomRight").setScrollFactor(0);
                 this.bottomRight.setScale(.03);
+                this.br = "Knowledge";
             }
         }
+        socket.emit('random_map', {"top_left": this.tl, "top_right": this.tr, "bottom_left": this.bl, "bottom_right": this.br})
+        
     },
 });
 
