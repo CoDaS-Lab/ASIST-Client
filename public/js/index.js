@@ -44,7 +44,7 @@ var gamePlayState = new Phaser.Class({
         console.log("GamePlay");
         this.gameState = new GameState(this.mapConfig)
 
-        //socket.emit("random_victims", {'victim_locations': this.gameState.set_victims})
+        socket.emit("random_victims", {'victim_locations': this.gameState.set_victims})
 
         //this.roundDisplay = this.add.text(0,0, "Round ".concat(String(this.gameConfig.roundCount)), {color: '0x000000', fontSize: '20px'}); 
         //this.gameState.placeAtIndex(32, this.roundDisplay);
