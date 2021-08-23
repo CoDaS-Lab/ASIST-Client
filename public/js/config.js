@@ -233,5 +233,5 @@ const surveyJSON = {"title":"Instruction Attention Check",
 "questionsOnPageMode":"singlePage"                              
 }
 
-var socketURL = "https://asist-client-vsb.herokuapp.com/"
+var socketURL = "https://asist-vsb.herokuapp.com/"
 export {phaserConfig, mapData, gameSetUpData, socketURL, surveyJSON};
