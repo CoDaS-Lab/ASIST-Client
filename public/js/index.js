@@ -6,6 +6,7 @@ var room_id = "temp_room";
 var playerId = "temp_id";
 //var gameTimer = new Timer();
 var victimCount;
+var quizAttempts = 0;
 //var controls;
 const socket = io(socketURL, {transports: ['websocket']})
 
@@ -43,8 +44,8 @@ var gamePlayState = new Phaser.Class({
 
         console.log("GamePlay");
         this.gameState = new GameState(this.mapConfig)
-
-        socket.emit("random_victims", {'victim_locations': this.gameState.set_victims})
+        socket.emit("quiz_attempts", {'quiz_attempts': quizAttempts})
+        socket.emit("random_victims", {'random_victims_locations': Array.from(this.gameState.set_victims)})
 
         //this.roundDisplay = this.add.text(0,0, "Round ".concat(String(this.gameConfig.roundCount)), {color: '0x000000', fontSize: '20px'}); 
         //this.gameState.placeAtIndex(32, this.roundDisplay);
@@ -63,7 +64,7 @@ var gamePlayState = new Phaser.Class({
         this.legend.setScale(.10);
 
         victimCount = 24;
-        this.victimCountText = this.add.text(378, 385, "Victims: 24", {color: '0x9754e3', fontSize: '4px'}).setScrollFactor(0).setResolution(10);
+        this.victimCountText = this.add.text(381, 385, "Victims: 24", {color: '0x9754e3', fontSize: '4px'}).setScrollFactor(0).setResolution(10);
 
         this.keys = this.input.keyboard.addKeys('W, S, A, D, R, UP, DOWN, LEFT, RIGHT');
         /*this.leaderGuidance = true;
@@ -75,8 +76,8 @@ var gamePlayState = new Phaser.Class({
             repeat: this.gameConfig.leaderMovementIndexes.length -1
         });*/
 
-        socket.on('player_move', (message)=>{this.gameState.playerMove(message, playerId)});
-        
+        socket.on('player_move', (message)=>{this.gameState.playerMove(message, playerId)});        
+
         this.cameras.main.startFollow(this.playerDude.physicsObj);
         this.cameras.main.setLerp(0.2);
     },
@@ -145,14 +146,14 @@ var gamePlayState = new Phaser.Class({
             "key":"r", 'rm_id':room_id, 'idx': playerId, "victims_alive": Array.from(this.gameState.set_victims), 
             "k_time":new Date().toISOString()})
             for(const victimIndex of rescueIndexes){                
-                    if (this.gameState.set_victims.has(victimIndex)){
-                        socket.emit("rescue_success", {'x': this.player_list[playerId].x, 'y': this.player_list[playerId].y,
-                        "key":"rs", 'rm_id':room_id, 'idx': playerId, "victims_alive": Array.from(this.gameState.set_victims), 
-                        "victim":victimIndex, "k_time":new Date().toISOString()})            
+                    if (this.gameState.set_victims.has(victimIndex)){            
                         this.gameState.victimObj[String(victimIndex)].fillColor = "0xf6fa78";
                         this.gameState.set_victims.delete(victimIndex);
                         victimCount--;
                         this.victimCountText.setText("Victims: " + victimCount);
+                        socket.emit("rescue_success", {'x': this.player_list[playerId].x, 'y': this.player_list[playerId].y,
+                        "key":"rs", 'rm_id':room_id, 'idx': playerId, "victims_alive": Array.from(this.gameState.set_victims), 
+                        "victim":victimIndex, "k_time":new Date().toISOString()})
                         if (/*this.gameState.set_victims.size*/ victimCount === 0){
                             console.log("SUCCESS")
                             this.gameConfig.roundCount = -1
@@ -201,13 +202,13 @@ var gamePlayState = new Phaser.Class({
 
     _randomMap: function(){
         //no knowledge condition
-        this.topLeft = this.add.sprite(344, 353, "blankTopLeft").setScrollFactor(0);
+        this.topLeft = this.add.sprite(344, 350, "blankTopLeft").setScrollFactor(0);
         this.topLeft.setScale(.04);
-        this.topRight = this.add.sprite(365, 353, "blankTopRight").setScrollFactor(0);
+        this.topRight = this.add.sprite(367.5, 350, "blankTopRight").setScrollFactor(0);
         this.topRight.setScale(.04);
         this.bottomLeft = this.add.sprite(344, 377, "blankBottomLeft").setScrollFactor(0);
         this.bottomLeft.setScale(.04);
-        this.bottomRight = this.add.sprite(365, 377, "blankBottomRight").setScrollFactor(0);
+        this.bottomRight = this.add.sprite(367.5, 377, "blankBottomRight").setScrollFactor(0);
         this.bottomRight.setScale(.04);
 
         this.tl = "No knowledge";
@@ -217,14 +218,14 @@ var gamePlayState = new Phaser.Class({
 
         if(Math.random() < .3){ // first randomization
             if (Math.random() < .5){ // post accident*/
-                this.topLeft = this.add.sprite(344, 353, "rubbleTopLeft").setScrollFactor(0);
-                this.topLeft.setScale(.03);
-                this.topRight = this.add.sprite(365, 353, "rubbleTopRight").setScrollFactor(0);
-                this.topRight.setScale(.03);
+                this.topLeft = this.add.sprite(344, 350, "rubbleTopLeft").setScrollFactor(0);
+                this.topLeft.setScale(.04);
+                this.topRight = this.add.sprite(367.5, 350, "rubbleTopRight").setScrollFactor(0);
+                this.topRight.setScale(.04);
                 this.bottomLeft = this.add.sprite(344, 377, "rubbleBottomLeft").setScrollFactor(0);
-                this.bottomLeft.setScale(.03);
-                this.bottomRight = this.add.sprite(365, 377, "rubbleBottomRight").setScrollFactor(0);
-                this.bottomRight.setScale(.03);
+                this.bottomLeft.setScale(.04);
+                this.bottomRight = this.add.sprite(367.5, 377, "rubbleBottomRight").setScrollFactor(0);
+                this.bottomRight.setScale(.04);
                 this.tl = "Knowledge";
                 this.tr = "Knowledge";
                 this.bl = "Knowledge";
@@ -232,24 +233,24 @@ var gamePlayState = new Phaser.Class({
             }
         }else{ // second randomization
             if(Math.random() < .5){ 
-                this.topLeft = this.add.sprite(344, 353, "rubbleTopLeft").setScrollFactor(0);
-                this.topLeft.setScale(.03);
+                this.topLeft = this.add.sprite(344, 350, "rubbleTopLeft").setScrollFactor(0);
+                this.topLeft.setScale(.04);
                 this.tl = "Knowledge";
                 
             }
             if(Math.random() < .5){
-                this.topRight = this.add.sprite(365, 353, "rubbleTopRight").setScrollFactor(0);
-                this.topRight.setScale(.03);
+                this.topRight = this.add.sprite(367.5, 350, "rubbleTopRight").setScrollFactor(0);
+                this.topRight.setScale(.04);
                 this.tr = "Knowledge";
             }
             if(Math.random() < .5){
                 this.bottomLeft = this.add.sprite(344, 377, "rubbleBottomLeft").setScrollFactor(0);
-                this.bottomLeft.setScale(.03);
+                this.bottomLeft.setScale(.04);
                 this.bl = "Knowledge";
             }
             if(Math.random() < .5){
-                this.bottomRight = this.add.sprite(365, 377, "rubbleBottomRight").setScrollFactor(0);
-                this.bottomRight.setScale(.03);
+                this.bottomRight = this.add.sprite(367.5, 377, "rubbleBottomRight").setScrollFactor(0);
+                this.bottomRight.setScale(.04);
                 this.br = "Knowledge";
             }
         }
@@ -285,6 +286,7 @@ $(document).ready(function() {
 });
 
 $("#join-quiz").on("click", function(){
+    quizAttempts++;
     joinQuiz(socket);
 });
 
