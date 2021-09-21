@@ -12,10 +12,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
   <script src="/js/lib/easytimer.min.js"></script>
   <script src="/js/lib/phaser.min.js"></script>
+  <script src="/js/lib/mmturkey.js"></script>
   <script type="module" src="/js/index.js"></script>
-  <!-- <script type="module" src="/js/gameUtils.js"></script> -->
-  <!-- <script type="module" src="/js/expNav.js"></script> -->
-  <!-- <script type="module" src="/js/config.js"></script> -->
 </head>
 
 <body>
@@ -98,9 +96,14 @@
        <span id="sessionTitle">Game No: </span><span id='sessionId'></span><span id="timerTitle">  GAME TIMER:</span><span id='timerTime'></span>
     </div> --> 
   </div>
-  <div style='display: flex; justify-content: center;'>
-  <h1 class="font-weight-bold" style='display:none; margin:20%; text-align:center; color:darkslategray;' id='wait-room'>Waiting for other players to join</h1>
-  <h1 class="font-weight-bold" style='display:none; margin:20%; text-align:center; color:darkslategray;' id='game-over'>Game Over!!</h1>
-</div>
+  <h1 class="font-weight-bold" style='display:none; margin:20%;  text-align:center; color:darkslategray;' id='wait-room'>Waiting for other players to join</h1>
+  <h1 class="font-weight-bold" style='display:none; margin:20%;  text-align:center; color:darkslategray;' id='game-over'>Game Over!!</h1>
+  <div style='display: none;' class="container" id="session-over">
+    <h1 class="font-weight-bold" style='text-align:center; margin:10%; color:darkslategray;' id='session-message'>Session Completed</h1>
+    <h2 class="font-weight-bold" style='text-align:center; margin:10%; color:chocolate;' id='session-completed'></h2>
+    <a class="btn btn-primary btn-lg btn-block" id="start-session">
+      Click to Start Next Game
+    </a>
+  </div>
 </body>
 </html>

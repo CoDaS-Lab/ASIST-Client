@@ -82,53 +82,6 @@ var gamePlayState = new Phaser.Class({
         this.cameras.main.setLerp(0.2);
     },
 
-    update: function() {
-        if ((this.gameConfig.roundCount>0) && (this.leaderGuidance)){
-            if (Phaser.Input.Keyboard.JustDown(this.keys.LEFT)){
-                let newIdx = (this.player_list[playerId].y*this.mapConfig.cols)+ this.player_list[playerId].x - 1;
-                if (!(this.gameState.noRoadIndex.has(newIdx)) && !(this.playersCurrentLoc.includes(newIdx))){
-                    console.log("Move Left");
-                    this.player_list[playerId].x -= 1;
-                    socket.emit("player_move", {'x': this.player_list[playerId].x, 'y': this.player_list[playerId].y,
-                        "key":"left", 'rm_id':room_id, 'idx': playerId, "k_time":new Date().toISOString(),
-                        "event": "player_move", "dTime": this.gameConfig.dTime
-                    })
-                }
-            }
-            if (Phaser.Input.Keyboard.JustDown(this.keys.RIGHT)){
-                let newIdx = (this.player_list[playerId].y*this.mapConfig.cols)+ (this.player_list[playerId].x + 1);
-                if (!(this.gameState.noRoadIndex.has(newIdx)) && !(this.playersCurrentLoc.includes(newIdx))){
-                    console.log("Move Right");
-                    this.player_list[playerId].x += 1;
-                    socket.emit("player_move", {'x': this.player_list[playerId].x, 'y': this.player_list[playerId].y,
-                        "key":"right", 'rm_id':room_id, 'idx': playerId, "k_time":new Date().toISOString(),
-                        "event": "player_move", "dTime": this.gameConfig.dTime
-                    })        
-                }
-            }
-            if (Phaser.Input.Keyboard.JustDown(this.keys.UP)){
-                let newIdx = ((this.player_list[playerId].y-1)*this.mapConfig.cols)+ this.player_list[playerId].x;
-                if (!(this.gameState.noRoadIndex.has(newIdx)) && !(this.playersCurrentLoc.includes(newIdx))){
-                    console.log("Move Up");
-                    this.player_list[playerId].y -= 1
-                    socket.emit("player_move", {'x': this.player_list[playerId].x, 'y': this.player_list[playerId].y,
-                        "key":"up", 'rm_id':room_id, 'idx': playerId, "k_time":new Date().toISOString(),
-                        "event": "player_move", "dTime": this.gameConfig.dTime
-                    })
-                }
-            }
-            if (Phaser.Input.Keyboard.JustDown(this.keys.DOWN)){             
-                let newIdx = ((this.player_list[playerId].y+1)*this.mapConfig.cols)+ this.player_list[playerId].x;
-                if (!(this.gameState.noRoadIndex.has(newIdx)) && !(this.playersCurrentLoc.includes(newIdx))){
-                    console.log("Move Down");
-                    this.player_list[playerId].y += 1
-                    socket.emit("player_move", {'x': this.player_list[playerId].x, 'y': this.player_list[playerId].y,
-                        "key":"down", 'rm_id':room_id, 'idx': playerId, "k_time":new Date().toISOString(),
-                        "event": "player_move", "dTime": this.gameConfig.dTime
-                    })
-                }
-            }
-        }
 
     update: function() {
         //if ((this.gameConfig.roundCount>0) /*&& (this.leaderGuidance)*/){
@@ -369,8 +322,6 @@ socket.on('start_game', (message)=>{
 /*gameTimer.addEventListener('secondTenthsUpdated', function() {
       $('#timerTime').text(" "+ gameTimer.getTimeValues().toString());
   });
-
-
 gameTimer.addEventListener('started', function () {
     $('#timerTime').text(" 00:"+String(gameSetUpData.gameTime)+":00");
 });*/
