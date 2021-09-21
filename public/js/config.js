@@ -91,5 +91,5 @@ const surveyJSON = {"title":"Instruction Attention Check",
 "questionsOnPageMode":"singlePage"                              
 }
 
-var socketURL = "http://localhost:5000" //"https://asist-vsb.herokuapp.com/"
+var socketURL = "https://erin-game-deployment-client.herokuapp.com/" //"https://asist-vsb.herokuapp.com/" //http://localhost:5000
 export {phaserConfig, mapData, gameSetUpData, socketURL, surveyJSON};
