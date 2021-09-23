@@ -294,6 +294,10 @@ $("#revise-intructions").on("click", function(){
     changeDisplay(socket, "game_info", "#quiz-fail", "#mainInfo", {"event":"revise_instructions"})
 });
 
+$("#continue-instructions").on("click", function(){
+    changeDisplay(socket, "game_info", "#mainInfo", "#mainInfo2", {"event":"continue-instructions"})
+});
+
 /*gameTimer.addEventListener('targetAchieved', function(){
     $('#phaser-game').hide();
     $("#game-over").show();
