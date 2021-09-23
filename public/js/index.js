@@ -4,7 +4,7 @@ import {phaserConfig, mapData, gameSetUpData, socketURL} from "/js/config.js"
 
 var room_id = "temp_room";
 var playerId = "temp_id";
-//var gameTimer = new Timer();
+var gameTimer = new Timer();
 var victimCount;
 var quizAttempts = 0;
 //var controls;
@@ -157,7 +157,7 @@ var gamePlayState = new Phaser.Class({
                         if (/*this.gameState.set_victims.size*/ victimCount === 0){
                             console.log("SUCCESS")
                             this.gameConfig.roundCount = -1
-                            //gameTimer.stop();
+                            gameTimer.stop();
                             $("#phaser-game").hide();
                             $("#game-over").show();
                             game.scene.stop("GamePlay");
@@ -319,14 +319,13 @@ socket.on('start_game', (message)=>{
     console.log(message, "Start Game")
     socket.emit('start_game', {"key": "sg", "k_time": new Date().toISOString(), "d_time": gameSetUpData.dTime})
     game.scene.start("GamePlay");
-    //gameTimer.start({precision: 'secondTenths', countdown: true, startValues: {minutes: gameSetUpData.gameTime}})
-    
+    gameTimer.start()
 });
 
 
-/*gameTimer.addEventListener('secondTenthsUpdated', function() {
-      $('#timerTime').text(" "+ gameTimer.getTimeValues().toString());
-  });
-gameTimer.addEventListener('started', function () {
+gameTimer.addEventListener('secondsUpdated', function() {
+    $('#timerTime').text(" "+ gameTimer.getTimeValues().toString());
+});
+/*gameTimer.addEventListener('started', function () {
     $('#timerTime').text(" 00:"+String(gameSetUpData.gameTime)+":00");
 });*/
