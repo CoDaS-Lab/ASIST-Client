@@ -28,7 +28,7 @@ var dsplyExpSmry = function () {
 
 var joinQuiz = function(socket){
     const aJson = {"q1":"4", "q2":"1", "q3":"2", "q4":"1"}
-    changeDisplay(socket, "game_info", "#mainInfo", "#surveyContainer", {"event":"start_quiz"})
+    changeDisplay(socket, "game_info", "#mainInfo2", "#surveyContainer", {"event":"start_quiz"})
     var sendDataToServer = function (survey) {
         let quizResult = true;
         var quizData;

@@ -275,6 +275,7 @@ var dsplyGame = function(){
     $("#mainInfo").hide();
     console.log("join room clicked")
     socket.emit('start_wait', {"key": "sw", "k_time": new Date().toISOString(), "d_time": gameSetUpData.dTime})
+    $("#quiz-success").hide();
     $("#join-room").hide();
     $('#wait-room').show();
 }
@@ -292,6 +293,10 @@ $("#join-quiz").on("click", function(){
 
 $("#revise-intructions").on("click", function(){
     changeDisplay(socket, "game_info", "#quiz-fail", "#mainInfo", {"event":"revise_instructions"})
+});
+
+$("#continue-instructions").on("click", function(){
+    changeDisplay(socket, "game_info", "#mainInfo", "#mainInfo2", {"event":"continue-instructions"})
 });
 
 /*gameTimer.addEventListener('targetAchieved', function(){
@@ -322,8 +327,6 @@ socket.on('start_game', (message)=>{
 /*gameTimer.addEventListener('secondTenthsUpdated', function() {
       $('#timerTime').text(" "+ gameTimer.getTimeValues().toString());
   });
-
-
 gameTimer.addEventListener('started', function () {
     $('#timerTime').text(" 00:"+String(gameSetUpData.gameTime)+":00");
 });*/

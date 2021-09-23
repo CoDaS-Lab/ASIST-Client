@@ -9,10 +9,10 @@
     font-weight: 800;
   }
 
-#timerTitle, #sessionTitle{
+#timerTitle{
     color: #3f3e42f1
 }
 
-#timerTime, #sessionId{
+#timerTime{
     color: #a33c22f1
 }

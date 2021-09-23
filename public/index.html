@@ -67,29 +67,40 @@
         <div class="row">
           <div class="col">
             <h2>
-              INSTRUCTIONS.
+              INSTRUCTIONS PAGE 1.
             </h2>
             <h3> Please pay attention to these task instructions, you will be asked questions to test your comprehension, and you won’t be able to start the task until you answer them accurately.</h3>
             <p>
-              You are a medic arriving at an office building after an earthquake. Your task is to save all of the people still in the building as quickly as possible. Unsaved victims are indicated by yellow blocks, which turn green once you have successfully saved them. You save victims by pressing the “R”  key while standing next to them. You know that there is one victim in each room, but you don’t know where in the room the victim will be. The earthquake has caused structural damage to the building, so some paths that were previously traversable are now blocked, and some walls have collapsed to create new openings. You have access to the blueprints of the building prior to the earthquake. You have also used x-ray technology that helps you identify how the architecture has changed, but the earthquake has also interfered with your internet access so you might not have been able to download the full updated blueprint.
-            </p>
-            <p>To help you navigate the building, the blueprint will appear at the bottom of your screen as a minimap. This minimap will not show where the victims are but may help you to plan your path through the building so you can find and save all the victims more quickly. The sections of the minimap that are based on the pre-earthquake blueprint (that may be unreliable) has a white background, whereas the sections that are based on the accurate post-earthquake blueprints have a grey background. Entry ways into rooms are highlighted in blue, whereas rubble from the earthquake is highlighted in red. What section of the map uses what blue-print is randomised, so you might see a minimap with an entirely white background or an entirely grey background, or with different regions with different background colors. It is important that you pay attention so that you know how reliable the map is, and can plan accordingly.
-            </p>
-            <p>
-              There are X victims to save in total. You will see how many victims are left to save at the top of the screen. Good luck!
+              You are a medic arriving at an office building after an earthquake. Your task is to save all of the people still in the building as quickly as possible. Unsaved victims are indicated by purple blocks, which turn yellow once you have successfully saved them. You save victims by pressing the “R”  key while standing next to them. You know that there is one victim in each room, but you don’t know where in the room the victim will be. The earthquake has caused structural damage to the building, so some paths that were previously traversable are now blocked, and some walls have collapsed to create new openings. You have access to the blueprints of the building prior to the earthquake. You have also used x-ray technology that helps you identify how the architecture has changed, but the earthquake has also interfered with your internet access so you might not have been able to download the full updated blueprint.
             </p>
             <div>
-              <a class="btn btn-primary btn-md" id="join-quiz">
-                Click to Start Quiz
+              <a class="btn btn-primary btn-md" id="continue-instructions">
+                Continue Instructions
               </a>
             </div>
           </div>
-          <div class="col">
-            <!-- <h3 style="text-align:center;">GAME VIEW IMAGE</h3> -->
-            <img src="/assets/gameMap.png" class="image-responsive" style="width: 100%;">
-          </div>
         </div>
   </div> 
+  <div id="mainInfo2" style="display: none; margin-top: 5%; margin-left: 5%; margin-bottom: 20%; margin-right:5%;">
+    <div class="row">
+      <div class="col">
+        <h2>
+          INSTRUCTIONS PAGE 2.
+        </h2>
+        <h3> Please pay attention to these task instructions, you will be asked questions to test your comprehension, and you won’t be able to start the task until you answer them accurately.</h3>
+        <p>To help you navigate the building, the blueprint will appear at the bottom of your screen as a minimap. This minimap will not show where the victims are but may help you to plan your path through the building so you can find and save all the victims more quickly. The sections of the minimap that are based on the pre-earthquake blueprint (that may be unreliable) has a white background, whereas the sections that are based on the accurate post-earthquake blueprints have a grey background. Entryways into rooms are highlighted in blue, whereas rubble from the earthquake is highlighted in red. What section of the map uses what blueprint is randomised, so you might see a minimap with an entirely white background or an entirely grey background, or with different regions with different background colors. It is important that you pay attention so that you know how reliable the map is, and can plan accordingly.
+        </p>
+        <p>
+          There are 24 victims to save in total. You will see how many victims are left to save at the top of the screen. Good luck!
+        </p>
+        <div>
+          <a class="btn btn-primary btn-md" id="join-quiz">
+            Click to Start Quiz
+          </a>
+        </div>
+      </div>
+    </div>
+</div> 
   <div style="display: none;" id="surveyContainer"></div>
   <div style='display: none; justify-content: center; margin-top: 5%; margin' id='phaser-game'>
     <!-- div id="game-time">
@@ -97,7 +108,7 @@
     </div> --> 
   </div>
   <h1 class="font-weight-bold" style='display:none; margin:20%;  text-align:center; color:darkslategray;' id='wait-room'>Waiting for other players to join</h1>
-  <h1 class="font-weight-bold" style='display:none; margin:20%;  text-align:center; color:darkslategray;' id='game-over'>Game Over!!</h1>
+  <h1 class="font-weight-bold" style='display:none; margin:20%;  text-align:center; color:darkslategray;' id='game-over'>Congratulations, you saved all the victims!</h1>
   <div style='display: none;' class="container" id="session-over">
     <h1 class="font-weight-bold" style='text-align:center; margin:10%; color:darkslategray;' id='session-message'>Session Completed</h1>
     <h2 class="font-weight-bold" style='text-align:center; margin:10%; color:chocolate;' id='session-completed'></h2>
