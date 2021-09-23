@@ -8,6 +8,9 @@ var gameTimer = new Timer();
 var victimCount;
 var quizAttempts = 0;
 //var controls;
+var victimCount = 24
+
+
 const socket = io(socketURL, {transports: ['websocket']})
 
 var gamePlayState = new Phaser.Class({
@@ -58,13 +61,13 @@ var gamePlayState = new Phaser.Class({
 
         this.player_list = [this.playerDude, /*this.leaderDude*/];
 
-        this._randomMap();
+        // this._randomMap();
 
-        this.legend = this.add.sprite(310, 380, "legend").setScrollFactor(0);
-        this.legend.setScale(.10);
+        // this.legend = this.add.sprite(310, 380, "legend").setScrollFactor(0);
+        // this.legend.setScale(.10);
 
-        victimCount = 24;
-        this.victimCountText = this.add.text(381, 385, "Victims: 24", {color: '0x9754e3', fontSize: '4px'}).setScrollFactor(0).setResolution(10);
+        // victimCount = 24;
+        // this.victimCountText = this.add.text(381, 385, "Victims: 24", {color: '0x9754e3', fontSize: '4px'}).setScrollFactor(0).setResolution(10);
 
         this.keys = this.input.keyboard.addKeys('W, S, A, D, R, UP, DOWN, LEFT, RIGHT');
         /*this.leaderGuidance = true;
@@ -150,7 +153,7 @@ var gamePlayState = new Phaser.Class({
                         this.gameState.victimObj[String(victimIndex)].fillColor = "0xf6fa78";
                         this.gameState.set_victims.delete(victimIndex);
                         victimCount--;
-                        this.victimCountText.setText("Victims: " + victimCount);
+                        // this.victimCountText.setText("Victims: " + victimCount);
                         socket.emit("rescue_success", {'x': this.player_list[playerId].x, 'y': this.player_list[playerId].y,
                         "key":"rs", 'rm_id':room_id, 'idx': playerId, "victims_alive": Array.from(this.gameState.set_victims), 
                         "victim":victimIndex, "k_time":new Date().toISOString()})
@@ -265,6 +268,108 @@ var game = new Phaser.Game(phaserConfig); //Instantiate the game
 game.scene.add("Gameplay", gamePlayState);
 
 
+var gameInfoState = new Phaser.Class({
+    Extends: Phaser.Scene,
+    initialize: function(){
+        Phaser.Scene.call(this, {key: 'GameInfo'});
+    },
+
+    preload: function() {
+
+        this.load.image("legend", "/assets/legend.png");
+        this.load.image("blankTopLeft", "assets/blankTopLeft.png");
+        this.load.image("blankTopRight", "assets/blankTopRight.png");
+        this.load.image("blankBottomLeft", "assets/blankBottomLeft.png");
+        this.load.image("blankBottomRight", "assets/blankBottomRight.png");
+        this.load.image("rubbleTopLeft", "assets/rubbleTopLeft.png");
+        this.load.image("rubbleTopRight", "assets/rubbleTopRight.png");
+        this.load.image("rubbleBottomLeft", "assets/rubbleBottomLeft.png");
+        this.load.image("rubbleBottomRight", "assets/rubbleBottomRight.png");
+
+    },
+    create: function() {
+
+        this._randomMap();
+        this.legend = this.add.sprite(130, 500, "legend")
+        this.legend.setScale(0.5)
+        this.victimCountText = this.add.text(40, 410, "Victims: 24", {color: '0x9754e3', fontSize: '15px'}).setResolution(10);
+    },
+
+
+    update: function() {
+        this.victimCountText.setText("Victims: " + victimCount);
+    },
+
+    _randomMap: function(){
+        //no knowledge condition
+        this.topLeft = this.add.sprite(123.5, 100, "blankTopLeft")
+        this.topRight = this.add.sprite(300, 100, "blankTopRight")
+        this.bottomRight = this.add.sprite(300, 303, "blankBottomRight")
+        this.bottomLeft = this.add.sprite(123.5, 303, "blankBottomLeft")
+
+        this.topLeft.setScale(0.3)
+        this.topRight.setScale(0.3)
+        this.bottomRight.setScale(0.3)
+        this.bottomLeft.setScale(0.3)
+
+        this.tl = "No knowledge";
+        this.tr = "No knowledge";
+        this.bl = "No knowledge";
+        this.br = "No knowledge";
+
+        if(Math.random() < .3){ // first randomization
+            if (Math.random() < .5){ // post accident*/
+                this.topLeft = this.add.sprite(123.5, 100, "rubbleTopLeft")
+                this.topRight = this.add.sprite(300, 100, "rubbleTopRight")
+                this.bottomRight = this.add.sprite(300, 303, "rubbleBottomRight")
+                this.bottomLeft = this.add.sprite(123.5, 303, "rubbleBottomLeft")
+                this.tl = "Knowledge";
+                this.tr = "Knowledge";
+                this.bl = "Knowledge";
+                this.br = "Knowledge";
+            }
+        }else{ // second randomization
+            if(Math.random() < .5){ 
+                this.topLeft = this.add.sprite(123.5, 100, "rubbleTopLeft")
+                this.tl = "Knowledge";
+            }
+            if(Math.random() < .5){
+                this.topRight = this.add.sprite(300, 100, "rubbleTopRight")
+                this.tr = "Knowledge";
+            }
+            if(Math.random() < .5){
+                this.bottomLeft = this.add.sprite(123.5, 303, "rubbleBottomLeft")
+                this.bl = "Knowledge";
+            }
+            if(Math.random() < .5){
+                this.bottomRight = this.add.sprite(300, 303, "rubbleBottomRight")
+                this.br = "Knowledge";
+            }
+        }
+        this.topLeft.setScale(0.3)
+        this.topRight.setScale(0.3)
+        this.bottomRight.setScale(0.3)
+        this.bottomLeft.setScale(0.3)
+        socket.emit("random_map", {'top_left': this.tl, 'top_right': this.tr, 'bottom_left': this.bl, 'bottom_right': this.br});
+    },
+});
+
+var gameInformation = new Phaser.Game({
+    type: Phaser.AUTO,
+    backgroundColor:0xffffff,
+    scale: {
+        _mode: Phaser.Scale.FIT,
+        parent: 'phaser-game-info',
+        width: 400,
+        height: 600,
+    },
+    dom: {
+        createContainer: true
+    },
+});
+
+gameInformation.scene.add("GameInfo", gameInfoState);
+
 socket.on('connect',()=>{
     socket.on('welcome',(message)=>{
         console.log(message["data"])
@@ -315,10 +420,13 @@ socket.on('wait_data', (message)=>{
 
 socket.on('start_game', (message)=>{
     $("#wait-room").hide();
-    $("#phaser-game").css("display", "flex");
+    // $("#phaser-game").css("display", "flex");
+    $("#grid-organise").show();
+    $("#game-time").show();
     console.log(message, "Start Game")
     socket.emit('start_game', {"key": "sg", "k_time": new Date().toISOString(), "d_time": gameSetUpData.dTime})
     game.scene.start("GamePlay");
+    gameInformation.scene.start("GameInfo");
     gameTimer.start()
 });
 

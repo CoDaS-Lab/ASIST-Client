@@ -1,18 +1,28 @@
-#game-time{
+#game-time {
     position: absolute;
     width: 100%;
     top: 2%;
     bottom: 3%;
     text-align: center;
-    justify-content: center; 
-    font-size: 25px;
+    justify-content: center;
+    font-size: 30px;
     font-weight: 800;
-  }
+}
 
-#timerTitle{
+#timerTitle {
     color: #3f3e42f1
 }
 
-#timerTime{
+#timerTime {
     color: #a33c22f1
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    /* grid-gap: 0px; */
+    /* column-gap: 0px; */
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    margin: 15%;
 }
