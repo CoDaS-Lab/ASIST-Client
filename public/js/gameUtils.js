@@ -7,7 +7,7 @@ class PlayerDisplay {
         this.name = Config.name
         this.physicsObj = gameScene.add.sprite(32, 32, Config.name);
         this.gameScene.gameState.placeAt(this.x, this.y, this.physicsObj);
-        this.physicsObj.displayHeight = (this.gameScene.sys.game.scale.gameSize._height/this.gameScene.mapConfig.rows)+3;
+        this.physicsObj.displayHeight = (this.gameScene.sys.game.scale.gameSize._height/this.gameScene.mapConfig.rows);
         this.physicsObj.scaleX = this.physicsObj.scaleY;
         this.gameScene.gameConfig.dTime = new Date().toISOString();
         
