@@ -275,6 +275,7 @@ var dsplyGame = function(){
     $("#mainInfo").hide();
     console.log("join room clicked")
     socket.emit('start_wait', {"key": "sw", "k_time": new Date().toISOString(), "d_time": gameSetUpData.dTime})
+    $("#quiz-success").hide();
     $("#join-room").hide();
     $('#wait-room').show();
 }
