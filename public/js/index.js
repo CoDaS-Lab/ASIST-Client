@@ -372,6 +372,7 @@ gameInformation.scene.add("GameInfo", gameInfoState);
 
 socket.on('connect',()=>{
     socket.on('welcome',(message)=>{
+        socket.emit("game_info", {"event": "start_t&c", "time": new Date().toISOString()});
         console.log(message["data"])
     });
 })
