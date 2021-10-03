@@ -27,7 +27,7 @@ var gamePlayState = new Phaser.Class({
         gameTimer.addEventListener('secondTenthsUpdated', function() {
             $('#timerTime').text(" "+ gameTimer.getTimeValues().toString());
         });
-      
+
         gameTimer.addEventListener('started', function () {
                 $('#timerTime').text(" 00:"+String(gameTime)+":00");
         });
@@ -44,7 +44,7 @@ var gamePlayState = new Phaser.Class({
         this.gameConfig["leaderMovementIndexes"] = randomSelectionValues[1]
         this.mapConfig["roomVictimMapping"] = randomSelectionValues[2]
         this.mapConfig["victimIndexes"] = randomSelectionValues[3]
-        
+
         var initializedgGameData = {"event":"game_created", "map_config": this.mapConfig, "game_config":this.gameConfig, globalVariable:{"rm_id":roomIdx, "p_id":playerId,
                         "rd_idx": selectIdx, "game_time":gameTime, "session_id":sessionId, "session_limit":sessionLimit,
                         "leader_delay": leaderDelay}}
@@ -58,19 +58,19 @@ var gamePlayState = new Phaser.Class({
     create: function() {
         console.log("GamePlay create");
         this.gameState = new GameState(this.mapConfig, this)
-        this.roundDisplay = this.add.text(0,0, "Round ".concat(String(this.gameConfig.roundCount)), {color: '0x000000', 
-                            fontSize: '20px'}); 
+        this.roundDisplay = this.add.text(0,0, "Round ".concat(String(this.gameConfig.roundCount)), {color: '0x000000',
+                            fontSize: '20px'});
         this.roundDisplay.x = 10
-        this.roundDisplay.y = 5;                           
+        this.roundDisplay.y = 5;
         // this.gameState.placeAtIndex(32, this.roundDisplay);
         this.roundDisplay.text = "Round ".concat(String(this.gameConfig.roundCount))
-        
+
         this.playerDude = new PlayerDisplay(this, {"x": this.gameConfig.playerX, "y":this.gameConfig.playerY, "name":"dude"});
         this.playersCurrentLoc.push((this.playerDude.y*this.mapConfig.cols)+ this.playerDude.x);
-    
+
         this.leaderDude = new PlayerDisplay(this, {"x": this.gameConfig.leaderX, "y":this.gameConfig.leaderY, "name":"chirag"});
         this.playersCurrentLoc.push((this.leaderDude.y*this.mapConfig.cols)+ this.leaderDude.x);
-        
+
         this.playerList = Array();
         this.playerList.push(this.playerDude);
         this.playerList.push(this.leaderDude);
@@ -105,11 +105,11 @@ var gamePlayState = new Phaser.Class({
             if (this.mapConfig.doorIndexes.includes(newIdx)){
                 this.gameState.makeVictimsVisible(this.gameState.roomVictimObj[String(newIdx)]);
                 this.gameState.makeRoomVisible(this.gameState.roomViewObj[String(newIdx)]);
-            }                
+            }
         }
         this.playersCurrentLoc[message["p_id"]] = newIdx
         this.playerList[message["p_id"]].move(message["x"], message["y"], message["event"])
-        
+
         message["display_p_id"] = playerId;
         message["time"] = new Date().toISOString();
         socket.emit("player_move_displayed", message);
@@ -158,11 +158,11 @@ var gamePlayState = new Phaser.Class({
         socket.emit("rescue_attempt", {'x': this.playerList[playerId].x, 'y': this.playerList[playerId].y,"event":"r", 'rm_id':roomIdx,
         'p_id': playerId, "victims_alive": Array.from(this.gameState.set_victims), "time":new Date().toISOString()})
         for(const victimIndex of this.mapConfig.victimIndexes){
-            if (rescueIndexes.includes(victimIndex)){                 
+            if (rescueIndexes.includes(victimIndex)){
                 if (this.gameState.set_victims.has(victimIndex)){
                     socket.emit("rescue_success", {'x': this.playerList[playerId].x, 'y': this.playerList[playerId].y,
-                    "event":"rs", 'rm_id':roomIdx, 'p_id': playerId, "victims_alive": Array.from(this.gameState.set_victims), 
-                    "victim":victimIndex, "time":new Date().toISOString()})            
+                    "event":"rs", 'rm_id':roomIdx, 'p_id': playerId, "victims_alive": Array.from(this.gameState.set_victims),
+                    "victim":victimIndex, "time":new Date().toISOString()})
                     this.gameState.victimObj[String(victimIndex)].fillColor = "0xf6fa78";
                     this.gameState.set_victims.delete(victimIndex);
                     if (this.gameState.set_victims.size === 0){
@@ -170,12 +170,13 @@ var gamePlayState = new Phaser.Class({
                         this.input.keyboard.removeAllKeys()
                         sessionId = endSession(game, socket, gameTimer, playerId, roomIdx, sessionId, selectIdx, "go_victim", sessionLimit, "Victim Saved")
                     }
-                }  
+                }
             }
         }
     },
 
     _playerMove: function(x, y, direction){
+        console.log(x,y, direction);
         let newIdx = (y*this.mapConfig.cols)+ x;
         if (!(this.gameState.noRoadIndex.has(newIdx)) && !(this.playersCurrentLoc.includes(newIdx)) && (this.gameConfig.roundCount>0)){
             socket.emit("player_move", {'x': x, 'y': y, "s_id":sessionId, "rd_idx":selectIdx,
@@ -196,7 +197,7 @@ socket.on('connect',()=>{
     socket.on('welcome',(message)=>{
         console.log(message["data"]);
         socketId = message["socket_id"];
-    });    
+    });
 })
 
 $(document).ready(function() {
@@ -222,7 +223,7 @@ $(document).ready(function() {
     });
 
     $('#start-session').on("click", function(){
-        startSession(game, socket, "#session-over", "#phaser-game", "#sessionId", {"event":"start_game", "s_id": sessionId, 'rm_id':roomIdx, 
+        startSession(game, socket, "#session-over", "#phaser-game", "#sessionId", {"event":"start_game", "s_id": sessionId, 'rm_id':roomIdx,
         'p_id': playerId,});
     });
 
@@ -230,14 +231,14 @@ $(document).ready(function() {
     $("textarea").on("keyup", function () {
         feedback_str = $(this).val();
     });
-    
+
 
     $("#feedbackSbmt").on("click", function(){
         turk.submit({"p_id":playerId, "rm_id":roomIdx});
-        socket.emit('feedback', {"event": "feedback", "comment":feedback_str, "s_id":sessionId, "rd_idx":selectIdx, 'rm_id':roomIdx, 
+        socket.emit('feedback', {"event": "feedback", "comment":feedback_str, "s_id":sessionId, "rd_idx":selectIdx, 'rm_id':roomIdx,
         'p_id': playerId, "time": new Date().toISOString()})
         $("#exp-close").hide();
-        $("#game-over").show();      
+        $("#game-over").show();
 
     });
 });
@@ -245,7 +246,6 @@ $(document).ready(function() {
 socket.on('wait_data', (message)=>{
     console.log(message)
     roomIdx = message["rm_id"];
-    roomIdx = new TextDecoder().decode(message["rm_id"]);
     playerId = message["p_id"]
 });
 
