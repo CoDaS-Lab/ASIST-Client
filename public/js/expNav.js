@@ -17,13 +17,12 @@ var changeDisplay = function(socketObj, handlerId, hideElement, showElement, key
 }
 
 var joinQuiz = function(socket){
-    const aJson = {"q1":"1", "q2":"2", "q3":"4"}
     changeDisplay(socket, "game_info", "#mainInfo", "#surveyContainer", {"event":"start_quiz"})
     var sendDataToServer = function (survey) {
         let quizResult = true;
         var quizData;
         for (var key in survey.data){
-            if (survey.data[key] != aJson[key]){
+            if (survey.data[key] != "correct"){
                 quizResult = false;
                 break
             }
