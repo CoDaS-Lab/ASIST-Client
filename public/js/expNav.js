@@ -62,13 +62,14 @@ var endSession = function(gameObj, socketObj, timerObj, playerId, roomIdx, sessi
     return sessionId
 }
 
-var startSession = function(gameObj, socketObj, hideElement, showElement, timerElement, keyData){
+var startSession = function(gameObj, socketObj, gameInfoObj, hideElement, showElement, timerElement, keyData){
     $(hideElement).hide();
     $(showElement).show();
     $(timerElement).text(keyData["s_id"]);
     keyData["time"]  = new Date().toISOString();
     socketObj.emit('start_game', keyData)
     gameObj.scene.start("GamePlay");
+    gameInfoObj.scene.start("GameInfo");
 }
 
 export {actExpSmryBtn, endSession, startSession, joinQuiz, changeDisplay};

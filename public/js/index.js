@@ -44,7 +44,7 @@ var gamePlayState = new Phaser.Class({
         }
         victimCount = this.mapConfig["victimIndexes"].length;
         var initializedGameData = {"event":"game_created", "map_config": this.mapConfig, "game_config":this.gameConfig, 
-            globalVariable:{"rm_id":roomIdx, "p_id":playerId, "session_id":sessionId, "session_limit":sessionLimit}}
+            globalVariable:{"rm_id":roomIdx, "p_id":playerId, "socket_id": socketId, "session_id":sessionId, "session_limit":sessionLimit}}
         socket.emit("game_config", initializedGameData);
 
         if (this.gameConfig["leaderName"]!=null){
@@ -65,8 +65,6 @@ var gamePlayState = new Phaser.Class({
         this.playerDude = new PlayerDisplay(this, {"x": this.gameConfig.playerX, "y":this.gameConfig.playerY, "name":this.gameConfig["playerName"]});
         this.playersCurrentLoc.push((this.playerDude.y*this.mapConfig.cols)+ this.playerDude.x);
         this.playerList.push(this.playerDude);
-
-        // this._drawGameInfo();
 
         gameTimer.start(this.gameConfig["gameTimeArg"])
 
@@ -122,6 +120,7 @@ var gamePlayState = new Phaser.Class({
 
         message["display_p_id"] = playerId;
         message["time"] = new Date().toISOString();
+        message["socket_id"] = socketId;
         socket.emit("player_move_displayed", message);
         if (this.gameConfig.roundLimit - this.gameConfig.roundCount <= 0){
             this.input.keyboard.removeAllKeys()
@@ -132,7 +131,7 @@ var gamePlayState = new Phaser.Class({
     _leaderAnimation: function(){
         let currentLeaderloc = this.gameConfig.leaderMovementIndexes.length - (this.leaderTimer.getRepeatCount()+1)
         socket.emit("player_move", {'x': this.gameConfig.leaderMovementIndexes[currentLeaderloc][0], 'y': this.gameConfig.leaderMovementIndexes[currentLeaderloc][1],
-        "s_id":sessionId, "event":this.gameConfig.leaderMovementIndexes[currentLeaderloc][2], 'rm_id':roomIdx,
+        "s_id":sessionId, "socket_id":socketId, "event":this.gameConfig.leaderMovementIndexes[currentLeaderloc][2], 'rm_id':roomIdx,
         'p_id': 1, "input_time":new Date().toISOString()
     })
         if (this.leaderTimer.getRepeatCount()===0){
@@ -140,44 +139,15 @@ var gamePlayState = new Phaser.Class({
         }
     },
 
-    // _drawGameInfo: function(){
-    //     const playerInGameInfo = new PlayerDisplay(this, {"x": 16, "y":23, "name":"dude"});
-    //     playerInGameInfo.physicsObj.x = 105;
-    //     playerInGameInfo.physicsObj.y = 36;
-
-    //     const leaderInGameInfo = new PlayerDisplay(this, {"x": 15, "y":23, "name":"chirag"});
-    //     leaderInGameInfo.physicsObj.x = 210;
-    //     leaderInGameInfo.physicsObj.y = 36;
-
-    //     this.add.text(10,30, "Player", {color: '0x000000', fontSize: '17px'});
-    //     this.add.text(135,30, "Agent", {color: '0x000000', fontSize: '17px'});
-    //     this.add.text(10,59, "Victim", {color: '0x000000', fontSize: '17px'});
-    //     this.add.rectangle(110,69, this.gameState.cw, this.gameState.ch, 0x9754e3);
-    //     this.add.text(135,59, "Door", {color: '0x000000', fontSize: '17px'});
-    //     this.add.rectangle(210,69, this.gameState.cw, this.gameState.ch, 0x9dd1ed, 0.3);
-
-    //     this.add.text(10,85, "Movement: \nKey", {color: '0x000000', fontSize: '17px'});
-    //     this.add.text(122, 87, "right, left, \nup, down", {color: '0x000000', fontSize: '15px'})
-
-    //     this.add.text(10,130, "Rescue: \nKey", {color: '0x000000', fontSize: '17px'});
-    //     this.add.text(122, 132, "r", {color: '0x000000', fontSize: '15px'})
-
-    //     this.roundDisplay = this.add.text(0,0, "Round ".concat(String(this.gameConfig.roundCount)), {color: '0x000000',
-    //     fontSize: '20px'});
-    //     this.roundDisplay.x = 10
-    //     this.roundDisplay.y = 5;
-    //     this.roundDisplay.text = "Round ".concat(String(this.gameConfig.roundCount))
-    // },
-
     _victimSave(){
         let rescueIndexes = this.gameState.getVictimRescueIndexes(this.playerList[playerId].y, this.playerList[playerId].x);
         socket.emit("rescue_attempt", {'x': this.playerList[playerId].x, 'y': this.playerList[playerId].y,"event":"r", 'rm_id':roomIdx,
-        'p_id': playerId, "victims_alive": Array.from(this.gameState.set_victims), "time":new Date().toISOString()})
+        'p_id': playerId, "socket_id":socketId, "victims_alive": Array.from(this.gameState.set_victims), "time":new Date().toISOString()})
         for(const victimIndex of this.gameState.set_victims){
             if (rescueIndexes.includes(victimIndex)){
                 if (this.gameState.set_victims.has(victimIndex)){
                     socket.emit("rescue_success", {'x': this.playerList[playerId].x, 'y': this.playerList[playerId].y,
-                    "event":"rs", 'rm_id':roomIdx, 'p_id': playerId, "victims_alive": Array.from(this.gameState.set_victims),
+                    "event":"rs", 'rm_id':roomIdx, "socket_id":socketId, 'p_id': playerId, "victims_alive": Array.from(this.gameState.set_victims),
                     "victim":victimIndex, "time":new Date().toISOString()})
                     this.gameState.victimObj[String(victimIndex)].fillColor = "0xf6fa78";
                     this.gameState.set_victims.delete(victimIndex);
@@ -196,7 +166,7 @@ var gamePlayState = new Phaser.Class({
         console.log(x,y, direction);
         let newIdx = (y*this.mapConfig.cols)+ x;
         if (!(this.gameState.noRoadIndex.has(newIdx)) && !(this.playersCurrentLoc.includes(newIdx)) && (this.gameConfig.roundLimit - this.gameConfig.roundCount >0)){
-            socket.emit("player_move", {'x': x, 'y': y, "s_id":sessionId,
+            socket.emit("player_move", {'x': x, 'y': y, "s_id":sessionId, "socket_id":socketId,
                 "event":direction, 'rm_id':roomIdx, 'p_id': playerId, "input_time":new Date().toISOString(),
                 "r": this.gameConfig.roundCount + 1
             });
@@ -273,7 +243,7 @@ var gameInfoState = new Phaser.Class({
                 this.br = "Knowledge";
             }
         }else{ // second randomization
-            if(Math.random() < .5){ 
+            if(Math.random() < .5){
                 this.topLeft = this.add.sprite(123.5, 100, "rubbleTopLeft")
                 this.tl = "Knowledge";
             }
@@ -294,7 +264,8 @@ var gameInfoState = new Phaser.Class({
         this.topRight.setScale(0.3)
         this.bottomRight.setScale(0.3)
         this.bottomLeft.setScale(0.3)
-        socket.emit("random_map", {'top_left': this.tl, 'top_right': this.tr, 'bottom_left': this.bl, 'bottom_right': this.br});
+        socket.emit("game_info", {"socket_id":socketId, 'rm_id':roomIdx, 'p_id': playerId, "input_time":new Date().toISOString(), 
+        'top_left': this.tl, 'top_right': this.tr, 'bottom_left': this.bl, 'bottom_right': this.br});
     },
 });
 
@@ -313,14 +284,14 @@ const gameInformation = new Phaser.Game({
 });
 
 gameInformation.scene.add("GameInfo", gameInfoState);
-gameInformation.scene.start("GameInfo");
+// gameInformation.scene.start("GameInfo");
 
 socket.on('connect',()=>{
-    socket.emit("game_info", {"event": "start_t&c", "time": new Date().toISOString()});
     socket.on('welcome',(message)=>{
-        console.log(message["data"]);
+        console.log(message);
         socketId = message["socket_id"];
     });
+    socket.emit("game_info", {"event": "start_t&c", "socket_id": socketId, "time": new Date().toISOString()});
 })
 
 $(document).ready(function() {
@@ -362,7 +333,7 @@ $(document).ready(function() {
 
     $("#feedbackSbmt").on("click", function(){
         turk.submit({"p_id":playerId, "rm_id":roomIdx});
-        socket.emit('feedback', {"event": "feedback", "comment":feedback_str, "s_id":sessionId, 'rm_id':roomIdx,
+        socket.emit('feedback', {"event": "feedback", "comment":feedback_str, "socket_id": socketId, "s_id":sessionId, 'rm_id':roomIdx,
         'p_id': playerId, "time": new Date().toISOString()})
         $("#exp-close").hide();
         $("#game-over").show();
@@ -376,6 +347,8 @@ socket.on('wait_data', (message)=>{
     playerId = message["p_id"]
 });
 
-socket.on('start_game', ()=>{
-    startSession(game, socket, "#wait-room", "#game-screen", "#sessionId", {"event":"start_game", "s_id": sessionId});
+socket.on('start_game', (message)=>{
+    message["event"] = "start_game"
+    message["s_id"] = sessionId
+    startSession(game, socket, gameInformation, "#wait-room", "#game-screen", "#sessionId", message);
 });
