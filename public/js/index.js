@@ -287,12 +287,14 @@ gameInformation.scene.add("GameInfo", gameInfoState);
 // gameInformation.scene.start("GameInfo");
 
 socket.on('connect',()=>{
-    socket.on('welcome',(message)=>{
-        console.log(message);
-        socketId = message["socket_id"];
-    });
     socket.emit("game_info", {"event": "start_t&c", "socket_id": socketId, "time": new Date().toISOString()});
 })
+
+socket.on('welcome',(message)=>{
+    console.log(message);
+    socketId = message["socket_id"];
+    console.log(socketId);
+});
 
 $(document).ready(function() {
     $("#agree").change(actExpSmryBtn);
@@ -343,6 +345,7 @@ $(document).ready(function() {
 
 socket.on('wait_data', (message)=>{
     console.log(message)
+    console.log(socketId);
     roomIdx = message["rm_id"];
     playerId = message["p_id"]
 });
@@ -351,5 +354,6 @@ socket.on('start_game', (message)=>{
     message["event"] = "start_game"
     message["s_id"] = sessionId
     message["socket_id"] = socketId
+    console.log(message)
     startSession(game, socket, gameInformation, "#wait-room", "#game-screen", "#sessionId", message);
 });
