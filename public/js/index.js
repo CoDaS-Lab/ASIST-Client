@@ -21,7 +21,7 @@ var gamePlayState = new Phaser.Class({
 
         gameTimer.addEventListener('targetAchieved', ()=>{
             this.input.keyboard.removeAllKeys()
-            sessionId = endSession(game, socket, gameTimer, playerId, roomIdx, sessionId, "go_time", sessionLimit, "Game Time Over")
+            sessionId = endSession(game, socket, gameTimer, playerId, roomIdx, sessionId, socketId, "go_time", sessionLimit, "Game Time Over")
         });
 
         gameTimer.addEventListener('secondTenthsUpdated', function() {
@@ -124,7 +124,7 @@ var gamePlayState = new Phaser.Class({
         socket.emit("player_move_displayed", message);
         if (this.gameConfig.roundLimit - this.gameConfig.roundCount <= 0){
             this.input.keyboard.removeAllKeys()
-            sessionId = endSession(game, socket, gameTimer, playerId, roomIdx, sessionId, "go_round", sessionLimit, "All Rounds Used")
+            sessionId = endSession(game, socket, gameTimer, playerId, roomIdx, sessionId, socketId, "go_round", sessionLimit, "All Rounds Used")
         }
     },
 
@@ -155,7 +155,7 @@ var gamePlayState = new Phaser.Class({
                     if (this.gameState.set_victims.size === 0){
                         console.log("SUCCESS")
                         this.input.keyboard.removeAllKeys()
-                        sessionId = endSession(game, socket, gameTimer, playerId, roomIdx, sessionId, "go_victim", sessionLimit, "Victim Saved")
+                        sessionId = endSession(game, socket, gameTimer, playerId, roomIdx, sessionId, socketId, "go_victim", sessionLimit, "Victim Saved")
                     }
                 }
             }
@@ -298,31 +298,31 @@ $(document).ready(function() {
     $("#agree").change(actExpSmryBtn);
     $("#cte").on("click", function(){
         if ($("#agree").prop('checked') == true) {
-            changeDisplay(socket, "game_info" ,"#tmcn", "#mainInfo", {"event":"start_instructions"});
+            changeDisplay(socket, "game_info" ,"#tmcn", "#mainInfo", {"event":"start_instructions", "socket_id":socketId});
         } else {
             alert('Please indicate that you have read and agree to the Terms and Conditions and Privacy Policy');
         }
     });
 
     $("#join-room").on("click", function(){
-        changeDisplay(socket, "start_wait", "#quiz-success", "#wait-room", {"event":"start_wait"})
+        changeDisplay(socket, "start_wait", "#quiz-success", "#wait-room", {"event":"start_wait", "socket_id":socketId})
     });
 
     $("#join-quiz").on("click", function(){
-        joinQuiz(socket);
+        joinQuiz(socket, socketId);
     });
 
     $("#continue-instructions").on("click", function(){
-        changeDisplay(socket, "game_info", "#mainInfo", "#mainInfo2", {"event":"continue-instructions"})
+        changeDisplay(socket, "game_info", "#mainInfo", "#mainInfo2", {"event":"continue-instructions", "socket_id":socketId})
     });
 
     $("#revise-intructions").on("click", function(){
-        changeDisplay(socket, "game_info", "#quiz-fail", "#mainInfo", {"event":"revise_instructions"})
+        changeDisplay(socket, "game_info", "#quiz-fail", "#mainInfo", {"event":"revise_instructions", "socket_id":socketId})
     });
 
     $('#start-session').on("click", function(){
         startSession(game, socket, "#session-over", "#game-screen", "#sessionId", {"event":"start_game", "s_id": sessionId, 'rm_id':roomIdx,
-        'p_id': playerId,});
+        'p_id': playerId, "socket_id":socketId});
     });
 
 
@@ -350,5 +350,6 @@ socket.on('wait_data', (message)=>{
 socket.on('start_game', (message)=>{
     message["event"] = "start_game"
     message["s_id"] = sessionId
+    message["socket_id"] = socketId
     startSession(game, socket, gameInformation, "#wait-room", "#game-screen", "#sessionId", message);
 });
