@@ -1,5 +1,5 @@
 class PlayerDisplay {
-    
+
     constructor(gameScene, Config){
 
         this.gameScene= gameScene
@@ -11,9 +11,9 @@ class PlayerDisplay {
         this.direction = "down"
         this.physicsObj = gameScene.add.sprite(32, 32, Config.name);
         this.gameScene.gameState.placeAt(this.x, this.y, this.physicsObj);
-        this.physicsObj.displayHeight = (this.gameScene.sys.game.scale.gameSize._height/this.gameScene.mapConfig.rows)+3;
+        this.physicsObj.displayHeight = (this.gameScene.sys.game.scale.gameSize._height/this.gameScene.mapConfig.rows);
         this.physicsObj.scaleX = this.physicsObj.scaleY;
-        
+
         this.gameScene.anims.create(
             {
                 "key": this.name+"left",
@@ -48,9 +48,9 @@ class PlayerDisplay {
                     {"key":this.name, "frame":3}
                 ],
                 "repeat": -1
-            });   
+            });
 
-        this.physicsObj.anims.play(this.name+"down");              
+        this.physicsObj.anims.play(this.name+"down");
     };
 
 
@@ -63,7 +63,7 @@ class PlayerDisplay {
         this.gameScene.gameState.placeAt(this.x, this.y, this.physicsObj);
         this.physicsObj.anims.play(this.name+direction);
     }
- }
+}
 
 
 class GameState {
@@ -73,47 +73,42 @@ class GameState {
         this._generateMapVariables();
         this._drawInitiatSetUp();
         // this.map = new GameMap(mapConfig);
-
     }
 
-    
     _drawInitiatSetUp(){
         this._drawGrid();
         this._drawRectangleBlocks(this.config.hallwayBoundaryIndexes, 0x000000,1);
-        this._drawRectangleBlocks(this.config.roomWallIndexes, 0x000000,1);
         this._drawRectangleBlocks(this.config.doorIndexes, 0x9dd1ed, 0.3);
         this._drawRectangleBlocks(this.config.noGameBox, 0xffffff, 1);
-        this.scene.add.rectangle(100,150,100,150,0xffffff,1)
+        this._drawRectangleBlocks(this.config.rubbleIndexes, 0xff0000, 1);
+        // this.scene.add.rectangle(100,150,100,150,0xffffff,1)
         // this._drawText();
         // this._showNumbers();
         this._drawVictims(this.config.roomVictimMapping, 0x9754e3, 0)
-        this._blockRoomView(this.config.roomViewBlocksMapping, 0x8a8786, 0.8)
+        this._blockRoomView(this.config.roomFloorMapping, 0x8a8786, 0.8)
     }
 
-    
+
     _storeMapVariablesFromConfig(config, gameScene){
         this.config = config;
         this.scene = gameScene;
         this.game_width = gameScene.sys.game.scale.gameSize._width;
         this.game_height = gameScene.sys.game.scale.gameSize._height;
         this.cw = gameScene.sys.game.scale.gameSize._width / config.cols;
-        this.ch = gameScene.sys.game.scale.gameSize._height / config.rows;        
+        this.ch = gameScene.sys.game.scale.gameSize._height / config.rows;
     }
 
-    
+
     _generateMapVariables(){
-        this.noRoadIndex = this._generateNoRoadIndexes(this.config.hallwayBoundaryIndexes,
-            this.config.roomWallIndexes, this.config.victimIndexes);
+        this.noRoadIndex = this._generateNoRoadIndexes(this.config.hallwayBoundaryIndexes, this.config.rubbleIndexes);
 
         this.set_victims = new Set(this.config.victimIndexes);
 
     }
 
-    
-    _generateNoRoadIndexes(hallwayBoundaryIndexes,roomWallIndexes, victimIndexes){
+    _generateNoRoadIndexes(hallwayBoundaryIndexes, rubbleIndexes){
         let noRoadIndex = new Set(hallwayBoundaryIndexes);
-        victimIndexes.forEach(item => noRoadIndex.add(item));
-        roomWallIndexes.forEach(item => noRoadIndex.add(item));
+        rubbleIndexes.forEach(item => noRoadIndex.add(item));
         return noRoadIndex
     }
 
@@ -146,21 +141,20 @@ class GameState {
         this.placeAt(xx, yy, obj);
     }
 
+    _showNumbers() {
 
-    // _showNumbers() {
-
-    //     var count = 0;
-    //     for (var i = 0; i < this.config.rows; i++) {
-    //         for (var j = 0; j < this.config.cols; j++) {
-    //             var numText = this.scene.add.text(0, 0, count, {
-    //                 color: '#ff0000'
-    //             });
-    //             numText.setOrigin(0.5, 0.5);
-    //             this.placeAtIndex(count, numText);
-    //             count++;
-    //         }
-    //     }
-    // }
+        var count = 0;
+        for (var i = 0; i < this.config.rows; i++) {
+            for (var j = 0; j < this.config.cols; j++) {
+                var numText = this.scene.add.text(0, 0, count, {
+                    color: '#ff0000'
+                });
+                numText.setOrigin(0.5, 0.5);
+                this.placeAtIndex(count, numText);
+                count++;
+            }
+        }
+    }
 
 
     _drawRectangleBlocks(locIndexes, colorHex, alpha) {
@@ -182,7 +176,7 @@ class GameState {
 
 
     _drawVictims(locIndexesObj, colorHex, alpha){
-        this.roomVictimObj = new Object(); // all victims in a a room identified by door key 
+        this.roomVictimObj = new Object(); // all victims in a a room identified by door key
         this.victimObj = new Object(); //all victims identified by key
         for (let roomIndex in locIndexesObj){
             this.roomVictimObj[roomIndex] = new Array();
@@ -205,7 +199,7 @@ class GameState {
                 this.placeAtIndex(viewIndex, rect);
                 this.roomViewObj[roomIndex].push(rect);
             }
-        }        
+        }
     }
 
 
@@ -219,7 +213,7 @@ class GameState {
     makeRoomVisible(viewObjArray){
         for (let i=0; i<viewObjArray.length; i++) {
             viewObjArray[i].fillAlpha = 0;
-        }      
+        }
     }
 
 

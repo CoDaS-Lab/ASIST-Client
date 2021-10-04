@@ -1,18 +1,29 @@
-#game-time{
+#timerTitle,
+#sessionTitle {
+    color: #3f3e42f1
+}
+
+#timerTime,
+#sessionId {
+    color: #a33c22f1
+}
+
+#game-time {
     position: absolute;
     width: 100%;
     top: 2%;
     bottom: 3%;
     text-align: center;
-    justify-content: center; 
-    font-size: 25px;
+    justify-content: center;
+    font-size: 30px;
     font-weight: 800;
-  }
-
-#timerTitle, #sessionTitle{
-    color: #3f3e42f1
 }
 
-#timerTime, #sessionId{
-    color: #a33c22f1
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    margin: 15%;
 }

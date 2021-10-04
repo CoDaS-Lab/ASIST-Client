@@ -17,7 +17,7 @@ var changeDisplay = function(socketObj, handlerId, hideElement, showElement, key
 }
 
 var joinQuiz = function(socket){
-    changeDisplay(socket, "game_info", "#mainInfo", "#surveyContainer", {"event":"start_quiz"})
+    changeDisplay(socket, "game_info", "#mainInfo2", "#surveyContainer", {"event":"start_quiz"})
     var sendDataToServer = function (survey) {
         let quizResult = true;
         var quizData;
@@ -41,14 +41,14 @@ var joinQuiz = function(socket){
     $("#surveyContainer").Survey({
         model: survey,
         onComplete: sendDataToServer
-    });    
+    });
 }
 
-var endSession = function(gameObj, socketObj, timerObj, playerId, roomIdx, sessionId, selectIdx, keyMessage, sessionLimit, sessionMessage){
+var endSession = function(gameObj, socketObj, timerObj, playerId, roomIdx, sessionId, keyMessage, sessionLimit, sessionMessage){
     gameObj.scene.stop("GamePlay");
     timerObj.stop();
-    $("#phaser-game").hide();
-    socketObj.emit('end_game', {"event": keyMessage, "s_id":sessionId, "rd_idx":selectIdx, 'rm_id':roomIdx, 
+    $("#game-screen").hide();
+    socketObj.emit('end_game', {"event": keyMessage, "s_id":sessionId, 'rm_id':roomIdx,
     'p_id': playerId, "time": new Date().toISOString()})
     if (sessionId==sessionLimit){
         $("#exp-close").show();
@@ -64,7 +64,7 @@ var endSession = function(gameObj, socketObj, timerObj, playerId, roomIdx, sessi
 
 var startSession = function(gameObj, socketObj, hideElement, showElement, timerElement, keyData){
     $(hideElement).hide();
-    $(showElement).css("display", "flex");
+    $(showElement).show();
     $(timerElement).text(keyData["s_id"]);
     keyData["time"]  = new Date().toISOString();
     socketObj.emit('start_game', keyData)
