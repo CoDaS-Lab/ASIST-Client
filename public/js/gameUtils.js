@@ -1,7 +1,5 @@
 class PlayerDisplay {
-
     constructor(gameScene, Config){
-
         this.gameScene= gameScene
         this.Config = Config
         this.x = Config.x
@@ -11,7 +9,8 @@ class PlayerDisplay {
         this.gameScene.gameState.placeAt(this.x, this.y, this.physicsObj);
         this.physicsObj.displayHeight = (this.gameScene.sys.game.scale.gameSize._height/this.gameScene.mapConfig.rows);
         this.physicsObj.scaleX = this.physicsObj.scaleY;
-
+        this.gameScene.gameConfig.dTime = new Date().toISOString();
+        
         this.gameScene.anims.create(
             {
                 "key": this.name+"left",
@@ -20,7 +19,6 @@ class PlayerDisplay {
                 ],
                 "repeat": -1
             });
-
         this.gameScene.anims.create(
             {
                 "key": this.name+"down",
@@ -29,7 +27,6 @@ class PlayerDisplay {
                 ],
                 "repeat": -1
             });
-
         this.gameScene.anims.create(
             {
                 "key": this.name+"right",
@@ -38,7 +35,6 @@ class PlayerDisplay {
                 ],
                 "repeat": -1
             });
-
         this.gameScene.anims.create(
             {
                 "key": this.name+"up",
@@ -46,11 +42,10 @@ class PlayerDisplay {
                     {"key":this.name, "frame":3}
                 ],
                 "repeat": -1
-            });
+            });   
 
-        this.physicsObj.anims.play(this.name+"down");
+        this.physicsObj.anims.play(this.name+"down");              
     };
-
 
     move(x,y, direction){
         this.x = x;
@@ -60,7 +55,7 @@ class PlayerDisplay {
         this.gameScene.gameState.placeAt(this.x, this.y, this.physicsObj);
         this.physicsObj.anims.play(direction);
     }
-}
+ }
 
 
 class GameState {
@@ -69,45 +64,49 @@ class GameState {
         this._storeMapVariablesFromConfig(config);
         this._generateMapVariables();
         this._drawInitiatSetUp();
-        // this.map = new GameMap(mapConfig);
-    }
+        //this.map = new GameMap(mapConfig);
 
+    }
     _drawInitiatSetUp(){
+        
         this._drawGrid();
         this._drawRectangleBlocks(this.config.hallwayBoundaryIndexes, 0x000000,1);
+        //this._drawRectangleBlocks(this.config.roomWallIndexes, 0x000000,1);
         this._drawRectangleBlocks(this.config.doorIndexes, 0x9dd1ed, 0.3);
         this._drawRectangleBlocks(this.config.noGameBox, 0xffffff, 1);
-        this._drawRectangleBlocks(this.config.rubbleIndexes, 0xff0000, 1);
-        // this.scene.add.rectangle(100,150,100,150,0xffffff,1)
-        // this._drawText();
-        // this._showNumbers();
-        this._drawVictims(this.config.roomVictimMapping, 0x9754e3, 0)
+        this._drawRectangleBlocks(this.config.rubbleIndexes, 0x585656, 1);
+        //this rectangle used to frame legend 
+        //this.scene.add.rectangle(100,150,100,150,0xffffff,1)
+        //this._drawText();
+        //this._showNumbers();
+
+        //this._drawVictims(this.config.roomVictimMapping, 0x9754e3, 0)
+        this._drawRandomVictims(this.config.roomFloorMapping, 0x9754e3, 0);
         this._blockRoomView(this.config.roomFloorMapping, 0x8a8786, 0.8)
     }
-
-
-    _storeMapVariablesFromConfig(config, gameScene){
+    _storeMapVariablesFromConfig(config){
         this.config = config;
-        this.scene = gameScene;
-        this.game_width = gameScene.sys.game.scale.gameSize._width;
-        this.game_height = gameScene.sys.game.scale.gameSize._height;
-        this.cw = gameScene.sys.game.scale.gameSize._width / config.cols;
-        this.ch = gameScene.sys.game.scale.gameSize._height / config.rows;
-    }
-
-
+        this.scene = config.scene;
+        this.game_width = config.scene.sys.game.scale.gameSize._width;
+        this.game_height = config.scene.sys.game.scale.gameSize._height;
+        this.cw = config.scene.sys.game.scale.gameSize._width / config.cols;
+        this.ch = config.scene.sys.game.scale.gameSize._height / config.rows;        
+    } 
     _generateMapVariables(){
-        this.noRoadIndex = this._generateNoRoadIndexes(this.config.hallwayBoundaryIndexes, this.config.rubbleIndexes);
+        this.noRoadIndex = this._generateNoRoadIndexes(this.config.hallwayBoundaryIndexes, this.config.victimIndexes, this.config.rubbleIndexes);
+        // this.config.roomWallIndexes was originally also in the above line
+        //this.set_victims = new Set(this.config.victimIndexes);
+        this.set_rubble = new Set(this.config.rubbleIndexes);
 
     }
-
-    _generateNoRoadIndexes(hallwayBoundaryIndexes, rubbleIndexes){
+    _generateNoRoadIndexes(hallwayBoundaryIndexes, victimIndexes, rubbleIndexes){
+        //roomWallIndexes, was originally in the above line
         let noRoadIndex = new Set(hallwayBoundaryIndexes);
+        victimIndexes.forEach(item => noRoadIndex.add(item));
         rubbleIndexes.forEach(item => noRoadIndex.add(item));
+        //roomWallIndexes.forEach(item => noRoadIndex.add(item));
         return noRoadIndex
     }
-
-
     _drawGrid() {
         this.graphics = this.scene.add.graphics();
         this.graphics.lineStyle(0.5, 0x000000);
@@ -151,7 +150,6 @@ class GameState {
         }
     }
 
-
     _drawRectangleBlocks(locIndexes, colorHex, alpha) {
 
         for (const idx of locIndexes){
@@ -160,18 +158,15 @@ class GameState {
 
         }
     }
+    _drawText(){
 
-
-    // _drawText(){
-
-    //     this.placeAtIndex(311, this.scene.add.text(0,0, "Room A", {color: '0x000000', fontSize: '20px'}));
-    //     this.placeAtIndex(9, this.scene.add.text(0,0, "Room B", {color: '0x000000', fontSize: '20px'}));
-    //     this.placeAtIndex(337, this.scene.add.text(0,0, "Room C", {color: '0x000000', fontSize: '20px'}));
-    // }
-
+        this.placeAtIndex(311, this.scene.add.text(0,0, "Room A", {color: '0x000000', fontSize: '20px'}));
+        this.placeAtIndex(9, this.scene.add.text(0,0, "Room B", {color: '0x000000', fontSize: '20px'}));
+        this.placeAtIndex(337, this.scene.add.text(0,0, "Room C", {color: '0x000000', fontSize: '20px'}));
+    }
 
     _drawVictims(locIndexesObj, colorHex, alpha){
-        this.roomVictimObj = new Object(); // all victims in a a room identified by door key
+        this.roomVictimObj = new Object(); // all victims in a a room identified by door key 
         this.victimObj = new Object(); //all victims identified by key
         for (let roomIndex in locIndexesObj){
             this.roomVictimObj[roomIndex] = new Array();
@@ -184,6 +179,22 @@ class GameState {
         }
     }
 
+    _drawRandomVictims(roomFloorMapping, colorHex, alpha){
+        this.roomVictimObj = new Object(); // all victims in a a room identified by door key 
+        this.victimObj = new Object(); //all victims identified by key
+        this.set_victims = new Set();
+        for (let roomIndex in roomFloorMapping){
+            this.roomVictimObj[roomIndex] = new Array();
+            let length = roomFloorMapping[roomIndex].length;
+            let randomVictim = Math.floor(Math.random()*length);
+            let victimIndex = roomFloorMapping[roomIndex][randomVictim];
+            this.set_victims.add(victimIndex);
+            let rect = this.scene.add.rectangle(20,20, this.cw, this.ch, colorHex, alpha);
+            this.placeAtIndex(victimIndex, rect);
+            this.roomVictimObj[roomIndex].push(rect);
+            this.victimObj[victimIndex] = rect;
+        }
+    }
 
     _blockRoomView(locIndexesObj, colorHex, alpha){
         this.roomViewObj = new Object();
@@ -194,23 +205,19 @@ class GameState {
                this.placeAtIndex(viewIndex, rect);
                 this.roomViewObj[roomIndex].push(rect);
             }
-        }
+        }        
     }
-
-
     makeVictimsVisible(victimObjArray){
         for (let i=0; i<victimObjArray.length; i++) {
             victimObjArray[i].fillAlpha = 1;
         }
     }
 
-
     makeRoomVisible(viewObjArray){
         for (let i=0; i<viewObjArray.length; i++) {
             viewObjArray[i].fillAlpha = 0;
-        }
+        }      
     }
-
 
     getVictimRescueIndexes(x,y){
         let rescueIndexes = new Array();
@@ -220,6 +227,67 @@ class GameState {
             }
         }
         return rescueIndexes
+    }
+
+    makeVictimsVisible(victimObjArray){
+        for (let i=0; i<victimObjArray.length; i++) {
+            victimObjArray[i].fillAlpha = 1;
+        }
+    }
+
+    makeRoomVisible(viewObjArray){
+        for (let i=0; i<viewObjArray.length; i++) {
+            viewObjArray[i].fillAlpha = 0;
+        }      
+    }
+
+    getVictimRescueIndexes(x,y){
+        let rescueIndexes = new Array();
+        for(let i=x-1; i<=x+1; i++){
+            for(let j=y-1; j<=y+1; j++){
+                rescueIndexes.push((i*this.config.cols)+j);
+            }
+        }
+        return rescueIndexes
+    }
+
+    placeAt(xx, yy, obj) {
+        var x2 = this.cw * xx + this.cw / 2;
+        var y2 = this.ch * yy + this.ch / 2;
+        obj.x = x2;
+        obj.y = y2;
+    }
+
+    placeAtIndex(index, obj) {
+
+        var yy = Math.floor(index / this.config.cols);
+        var xx = index - (yy * this.config.cols);
+        this.placeAt(xx, yy, obj);
+    }
+
+    playerMove = function (message, playerId){
+        console.log(message["x"], message["y"], message["idx"], playerId)
+        let newIdx = (message["y"]*this.scene.mapConfig.cols)+ message["x"]
+        if (message["idx"] == playerId){
+            this.scene.gameConfig.roundCount -= 1;
+            //this.scene.roundDisplay.text = "Round ".concat(String(this.scene.gameConfig.roundCount));
+            if (this.scene.mapConfig.doorIndexes.includes(newIdx)){
+                console.log("Entered room " + newIdx + " through door");
+                this.scene.gameState.makeVictimsVisible(this.scene.gameState.roomVictimObj[String(newIdx)]);
+                this.scene.gameState.makeRoomVisible(this.scene.gameState.roomViewObj[String(newIdx)]);
+            }else if (this.scene.mapConfig.gapIndexes.includes(newIdx)){
+                for (let roomIndex in this.scene.mapConfig.roomGapMapping){
+                    if(this.scene.mapConfig.roomGapMapping[roomIndex].includes(newIdx)){
+                        console.log("Entered room " + roomIndex 
+                        + " through gap");
+                        this.scene.gameState.makeVictimsVisible(this.scene.gameState.roomVictimObj[roomIndex]);
+                        this.scene.gameState.makeRoomVisible(this.scene.gameState.roomViewObj[roomIndex]);
+                    }
+                }
+            }          
+        }
+        this.scene.playersCurrentLoc[message["idx"]] = newIdx
+        this.scene.player_list[message["idx"]].move(message["x"], message["y"], this.scene.player_list[message["idx"]].name+message["key"])
     }
 }
 
