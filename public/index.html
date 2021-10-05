@@ -5,11 +5,10 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href="/stylesheets/game.css">
   <link href="https://fonts.googleapis.com/css2?family=Lemonada:wght@600&display=swap" rel="stylesheet">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://unpkg.com/jquery"></script>
   <link href="https://surveyjs.azureedge.net/1.8.11/modern.css" type="text/css" rel="stylesheet" />
   <script src="https://surveyjs.azureedge.net/1.8.11/survey.jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.2.0/socket.io.js"></script>
   <script src="/js/lib/easytimer.min.js"></script>
   <script src="/js/lib/phaser.min.js"></script>
   <script src="/js/lib/mmturkey.js"></script>
@@ -26,16 +25,16 @@
                 </h2>
             </div>
         </div>
-        <p>
-          We allow one HIT per person, if you have recently completed a similar HIT please do not accept 
-          this one as you will not be paid for completing it again. By taking part in this experiment, you are 
-          participating in a study being performed by researchers in the Department of Mathmematics & Computer Science at 
-          Rutgers University. If you have questions about this research, please contact us at cocoscishafto@gmail.com. 
-          You must be at least 18 years old to participate. Your participation in this research is voluntary.
-          You may decline further participation, at any time, without adverse consequences. Your anonymity is assured; 
-          the researchers who have requested your participation will not receive any personal information about you. 
-          Please click Continue after you have read the instructions and are ready to begin the HIT.
-      </p>
+            <p>
+                We allow one HIT per person, if you have recently completed a similar HIT please do not accept 
+                this one as you will not be paid for completing it again. By taking part in this experiment, you are 
+                participating in a study being performed by researchers in the Department of Mathmematics & Computer Science at 
+                Rutgers University. If you have questions about this research, please contact us at cocoscishafto@gmail.com. 
+                You must be at least 18 years old to participate. Your participation in this research is voluntary.
+                You may decline further participation, at any time, without adverse consequences. Your anonymity is assured; 
+                the researchers who have requested your participation will not receive any personal information about you. 
+                Please click Continue after you have read the instructions and are ready to begin the HIT.
+            </p>
         <div class="form-check">
             <input type="checkbox" class="form-check-input" value="check" id="agree"/>
             <label class="form-check-label" for="agree">
@@ -80,15 +79,24 @@
             </div>
           </div>
         </div>
-  </div> 
+  </div>
   <div id="mainInfo2" style="display: none; margin-top: 5%; margin-left: 5%; margin-bottom: 20%; margin-right:5%;">
     <div class="row">
       <div class="col">
         <h2>
           INSTRUCTIONS PAGE 2.
         </h2>
-        <h3> Please pay attention to these task instructions, you will be asked questions to test your comprehension, and you won’t be able to start the task until you answer them accurately.</h3>
-        <p>To help you navigate the building, the blueprint will appear at the bottom of your screen as a minimap. This minimap will not show where the victims are but may help you to plan your path through the building so you can find and save all the victims more quickly. The sections of the minimap that are based on the pre-earthquake blueprint (that may be unreliable) has a white background, whereas the sections that are based on the accurate post-earthquake blueprints have a grey background. Entryways into rooms are highlighted in blue, whereas rubble from the earthquake is highlighted in red. What section of the map uses what blueprint is randomised, so you might see a minimap with an entirely white background or an entirely grey background, or with different regions with different background colors. It is important that you pay attention so that you know how reliable the map is, and can plan accordingly.
+        <h3> Please pay attention to these task instructions, you will be asked questions to test your comprehension, 
+        and you won’t be able to start the task until you answer them accurately.</h3>
+        <p>To help you navigate the building, the blueprint will appear at the bottom of your screen as a minimap. 
+        This minimap will not show where the victims are but may help you to plan your path through the building so 
+        you can find and save all the victims more quickly. The sections of the minimap that are based on the 
+        pre-earthquake blueprint (that may be unreliable) has a white background, whereas the sections that are 
+        based on the accurate post-earthquake blueprints have a grey background. Entryways into rooms are highlighted 
+        in blue, whereas rubble from the earthquake is highlighted in red. What section of the map uses what blueprint 
+        is randomised, so you might see a minimap with an entirely white background or an entirely grey background, or 
+        with different regions with different background colors. It is important that you pay attention so that you know 
+        how reliable the map is, and can plan accordingly.
         </p>
         <p>
           There are 24 victims to save in total. You will see how many victims are left to save at the top of the screen. Good luck!
@@ -100,24 +108,23 @@
         </div>
       </div>
     </div>
-</div>
-  <div style="display: none;" id="surveyContainer"></div>
-  <div style="display: none;" id="game-time">
-      </span><span id="timerTitle">  GAME TIMER:</span><span id='timerTime'>00:00:00</span>
   </div>
+  <div style="display: none;" id="surveyContainer"></div>
+<div id="game-screen" style='display: none;'>
+  <div id="game-time">
+    <span id="sessionTitle" style='display: none;'>Game No: </span><span id='sessionId' style='display: none;'></span><span id="timerTitle">  GAME TIMER:</span><span id='timerTime'></span>
+  </div>
+  <div class="grid-container">
+      <div class="grid-child" id='phaser-game-info'>
+      </div>
 
-
-<div style='display: none;' class="grid-container" id="grid-organise">
-
-    <div class="grid-child purple" id='phaser-game-info'>
-    </div>
-
-    <div class="grid-child green" id='phaser-game'>
-    </div>
+      <div class="grid-child" id='phaser-game'>
+      </div>
+  </div>
 </div>
 
   <h1 class="font-weight-bold" style='display:none; margin:20%;  text-align:center; color:darkslategray;' id='wait-room'>Waiting for other players to join</h1>
-  <h1 class="font-weight-bold" style='display:none; margin:20%;  text-align:center; color:darkslategray;' id='game-over'>Congratulations, you saved all the victims!</h1>
+  <h1 class="font-weight-bold" style='display:none; margin:20%;  text-align:center; color:darkslategray;' id='game-over'>Thank you! You can close this window</h1>
   <div style='display: none;' class="container" id="session-over">
     <h1 class="font-weight-bold" style='text-align:center; margin:10%; color:darkslategray;' id='session-message'>Session Completed</h1>
     <h2 class="font-weight-bold" style='text-align:center; margin:10%; color:chocolate;' id='session-completed'></h2>
@@ -125,6 +132,24 @@
       Click to Start Next Game
     </a>
   </div>
+  <div id='exp-close' style="display: none">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2>Thank you for participation. Please click the submit button to complete the experiment.</h2>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-lg-12">
+                <h3>Comments(Optional):</h3>
+                <textarea class="form-control float-center" id="ta" name="feedbackText" cols="12" rows="3"></textarea>
+                <button type="submit" class="btn btn-primary btn-lg" id="feedbackSbmt" style="margin-top:5px">Submit</button>
+                <span id="statusCntr"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 </body>
 </html>
-
