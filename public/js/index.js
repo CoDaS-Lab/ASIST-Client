@@ -1,6 +1,6 @@
 import {actExpSmryBtn, endSession, startSession, joinQuiz, changeDisplay} from "/js/expNav.js";
 import {PlayerDisplay, GameState} from "/js/gameUtils.js"
-import {phaserConfig, getMapData, getGameData, socketURL, getRandomConfig} from "/js/config.js"
+import {phaserConfig, mapData, gameSetUpData, socketURL} from "/js/config.js"
 
 
 var roomIdx = "na";
@@ -12,6 +12,7 @@ var sessionLimit = 1;
 var victimCount;
 var feedback_str = "No Feedback Given";
 const socket = io(socketURL, {transports: ['websocket']})
+
 var gamePlayState = new Phaser.Class({
     Extends: Phaser.Scene,
     initialize: function(){
@@ -128,6 +129,7 @@ var gamePlayState = new Phaser.Class({
         }
     },
 
+
     _leaderAnimation: function(){
         let currentLeaderloc = this.gameConfig.leaderMovementIndexes.length - (this.leaderTimer.getRepeatCount()+1)
         socket.emit("player_move", {'x': this.gameConfig.leaderMovementIndexes[currentLeaderloc][0], 'y': this.gameConfig.leaderMovementIndexes[currentLeaderloc][1],
@@ -136,7 +138,7 @@ var gamePlayState = new Phaser.Class({
     })
         if (this.leaderTimer.getRepeatCount()===0){
             console.log(this.playersCurrentLoc);
-        }
+        }*/
     },
 
     _victimSave(){
@@ -159,8 +161,33 @@ var gamePlayState = new Phaser.Class({
                     }
                 }
             }
+        }else{ // second randomization
+            if(Math.random() < .5){ 
+                this.topLeft = this.add.sprite(344, 350, "rubbleTopLeft").setScrollFactor(0);
+                this.topLeft.setScale(.04);
+                this.tl = "Knowledge";
+                
+            }
+            if(Math.random() < .5){
+                this.topRight = this.add.sprite(367.5, 350, "rubbleTopRight").setScrollFactor(0);
+                this.topRight.setScale(.04);
+                this.tr = "Knowledge";
+            }
+            if(Math.random() < .5){
+                this.bottomLeft = this.add.sprite(344, 377, "rubbleBottomLeft").setScrollFactor(0);
+                this.bottomLeft.setScale(.04);
+                this.bl = "Knowledge";
+            }
+            if(Math.random() < .5){
+                this.bottomRight = this.add.sprite(367.5, 377, "rubbleBottomRight").setScrollFactor(0);
+                this.bottomRight.setScale(.04);
+                this.br = "Knowledge";
+            }
         }
+        socket.emit("random_map", {'top_left': this.tl, 'top_right': this.tr, 'bottom_left': this.bl, 'bottom_right': this.br})
+        
     },
+});
 
     _playerMove: function(x, y, direction){
         console.log(x,y, direction);
@@ -178,10 +205,21 @@ var gamePlayState = new Phaser.Class({
     }
 });
 
-console.log("Game Object");
-const game = new Phaser.Game(phaserConfig); //Instantiate the game
-game.scene.add("Gameplay", gamePlayState);
+var gameInformation = new Phaser.Game({
+    type: Phaser.AUTO,
+    backgroundColor:0xffffff,
+    scale: {
+        _mode: Phaser.Scale.FIT,
+        parent: 'phaser-game-info',
+        width: 400,
+        height: 600,
+    },
+    dom: {
+        createContainer: true
+    },
+});
 
+gameInformation.scene.add("GameInfo", gameInfoState);
 
 var gameInfoState = new Phaser.Class({
     Extends: Phaser.Scene,
@@ -343,6 +381,26 @@ $(document).ready(function() {
     });
 });
 
+$("#join-quiz").on("click", function(){
+    quizAttempts++;
+    joinQuiz(socket);
+});
+
+$("#revise-intructions").on("click", function(){
+    changeDisplay(socket, "game_info", "#quiz-fail", "#mainInfo", {"event":"revise_instructions"})
+});
+
+$("#continue-instructions").on("click", function(){
+    changeDisplay(socket, "game_info", "#mainInfo", "#mainInfo2", {"event":"continue-instructions"})
+});
+
+/*gameTimer.addEventListener('targetAchieved', function(){
+    $('#phaser-game').hide();
+    $("#game-over").show();
+    game.scene.stop("GamePlay");
+    socket.emit('end_game', {"key": "go_time", "k_time": new Date().toISOString()})
+});*/
+
 socket.on('wait_data', (message)=>{
     console.log(message)
     console.log(socketId);
@@ -357,3 +415,11 @@ socket.on('start_game', (message)=>{
     console.log(message)
     startSession(game, socket, gameInformation, "#wait-room", "#game-screen", "#sessionId", message);
 });
+
+
+gameTimer.addEventListener('secondsUpdated', function() {
+    $('#timerTime').text(" "+ gameTimer.getTimeValues().toString());
+});
+/*gameTimer.addEventListener('started', function () {
+    $('#timerTime').text(" 00:"+String(gameSetUpData.gameTime)+":00");
+});*/

@@ -27,3 +27,13 @@
     grid-row-gap: 0px;
     margin: 10%;
 }
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    /* grid-gap: 0px; */
+    /* column-gap: 0px; */
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    margin: 15%;
+}

@@ -7,8 +7,6 @@ class PlayerDisplay {
         this.x = Config.x
         this.y = Config.y
         this.name = Config.name
-        this.updateTime = new Date().toISOString();
-        this.direction = "down"
         this.physicsObj = gameScene.add.sprite(32, 32, Config.name);
         this.gameScene.gameState.placeAt(this.x, this.y, this.physicsObj);
         this.physicsObj.displayHeight = (this.gameScene.sys.game.scale.gameSize._height/this.gameScene.mapConfig.rows);
@@ -57,19 +55,18 @@ class PlayerDisplay {
     move(x,y, direction){
         this.x = x;
         this.y = y;
-        this.direction = direction;
-        this.updateTime = new Date().toISOString();
-        console.log(this.name, this.x, this.y, direction);
+        this.gameScene.gameConfig.dTime = new Date().toISOString();
+        console.log(this.name, this.x, this.y, direction)
         this.gameScene.gameState.placeAt(this.x, this.y, this.physicsObj);
-        this.physicsObj.anims.play(this.name+direction);
+        this.physicsObj.anims.play(direction);
     }
 }
 
 
 class GameState {
 
-    constructor(config, gameScene){
-        this._storeMapVariablesFromConfig(config, gameScene);
+    constructor(config){
+        this._storeMapVariablesFromConfig(config);
         this._generateMapVariables();
         this._drawInitiatSetUp();
         // this.map = new GameMap(mapConfig);
@@ -101,8 +98,6 @@ class GameState {
 
     _generateMapVariables(){
         this.noRoadIndex = this._generateNoRoadIndexes(this.config.hallwayBoundaryIndexes, this.config.rubbleIndexes);
-
-        this.set_victims = new Set(this.config.victimIndexes);
 
     }
 
@@ -161,7 +156,7 @@ class GameState {
 
         for (const idx of locIndexes){
             let rect = this.scene.add.rectangle(20,20, this.cw, this.ch, colorHex, alpha);
-            this.placeAtIndex(idx, rect);
+            this.placeAtIndex(idx,rect);
 
         }
     }
@@ -196,7 +191,7 @@ class GameState {
             this.roomViewObj[roomIndex] = new Array();
             for (let viewIndex of locIndexesObj[roomIndex]){
                 let rect = this.scene.add.rectangle(20,20, this.cw, this.ch, colorHex, alpha);
-                this.placeAtIndex(viewIndex, rect);
+               this.placeAtIndex(viewIndex, rect);
                 this.roomViewObj[roomIndex].push(rect);
             }
         }
