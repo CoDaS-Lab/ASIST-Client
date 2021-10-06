@@ -16,8 +16,8 @@ var changeDisplay = function(socketObj, handlerId, hideElement, showElement, key
     $(showElement).show();
 }
 
-var joinQuiz = function(socket, socketId){
-    changeDisplay(socket, "game_info", "#mainInfo2", "#surveyContainer", {"event":"start_quiz", "socket_id":socketId})
+var joinQuiz = function(socket, socketId, awsID){
+    changeDisplay(socket, "game_info", "#mainInfo2", "#surveyContainer", {"event":"start_quiz", "aws_id": awsID, "socket_id":socketId})
     var sendDataToServer = function (survey) {
         let quizResult = true;
         var quizData;
@@ -28,10 +28,10 @@ var joinQuiz = function(socket, socketId){
             }
         }
         if (quizResult===true){
-            quizData = {"event":"quiz_passed", "quiz_data": survey.data, "socket_id":socketId}
+            quizData = {"event":"quiz_passed", "quiz_data": survey.data, "aws_id": awsID, "socket_id":socketId}
             changeDisplay(socket, "game_info", "#surveyContainer", "#quiz-success", quizData)
         }else{
-            quizData = {"event":"quiz_failed", "quiz_data": survey.data, "socket_id":socketId}
+            quizData = {"event":"quiz_failed", "quiz_data": survey.data, "aws_id": awsID, "socket_id":socketId}
             changeDisplay(socket, "game_info", "#surveyContainer", "#quiz-fail", quizData)
         }
     }
@@ -44,11 +44,11 @@ var joinQuiz = function(socket, socketId){
     });
 }
 
-var endSession = function(gameObj, socketObj, timerObj, playerId, roomIdx, sessionId, socketId, keyMessage, sessionLimit, sessionMessage){
+var endSession = function(gameObj, socketObj, timerObj, playerId, roomIdx, sessionId, awsID, socketId, keyMessage, sessionLimit, sessionMessage){
     gameObj.scene.stop("GamePlay");
     timerObj.stop();
     $("#game-screen").hide();
-    socketObj.emit('end_game', {"event": keyMessage, "s_id":sessionId, 'rm_id':roomIdx, "socket_id":socketId,
+    socketObj.emit('end_game', {"event": keyMessage, "s_id":sessionId, 'rm_id':roomIdx, "aws_id": awsID, "socket_id":socketId,
     'p_id': playerId, "time": new Date().toISOString()})
     if (sessionId==sessionLimit){
         $("#exp-close").show();

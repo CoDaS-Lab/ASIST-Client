@@ -380,6 +380,22 @@ const surveyJSON = {"title":"Instruction Attention Check",
 "questionsOnPageMode":"singlePage"
 }
 
-var socketURL = "https://asist-api.herokuapp.com/"
-// var socketURL  = "http://127.0.0.1:5000"
+var socketURL;
+$.ajax({
+    async: false,
+    type: "GET",
+    url: window.location.origin+"/data",
+    contentType: "application/json; charset=utf-8",
+    dataType: "json",
+    crossDomain: true,
+    success: function(data){
+        console.log(data);
+        socketURL = data["socketURL"]
+    },
+    failure: function(errMsg) {
+        console.log(errMsg);
+    }
+});
+
 export {phaserConfig, getMapData, getGameData, socketURL, getRandomConfig, surveyJSON};
+
