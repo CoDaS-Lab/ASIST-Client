@@ -21,7 +21,7 @@ var gamePlayState = new Phaser.Class({
 
         gameTimer.addEventListener('targetAchieved', ()=>{
             this.input.keyboard.removeAllKeys()
-            sessionId = endSession(game, socket, gameTimer, playerId, roomIdx, sessionId, window.location.pathname, socketId, "go_time", sessionLimit, "Game Time Over")
+            sessionId = endSession(game, socket, gameTimer, playerId, roomIdx, sessionId, turk.emit(), socketId, "go_time", sessionLimit, "Game Time Over")
         });
 
         gameTimer.addEventListener('secondTenthsUpdated', function() {
@@ -44,7 +44,7 @@ var gamePlayState = new Phaser.Class({
         }
         victimCount = this.mapConfig["victimIndexes"].length;
         var initializedGameData = {"event":"game_created", "map_config": this.mapConfig, "game_config":this.gameConfig, 
-            globalVariable:{"rm_id":roomIdx, "p_id":playerId, "aws_id": window.location.pathname,"socket_id": socketId, "session_id":sessionId, "session_limit":sessionLimit}}
+            globalVariable:{"rm_id":roomIdx, "p_id":playerId, "aws_id": turk.emit(),"socket_id": socketId, "session_id":sessionId, "session_limit":sessionLimit}}
         socket.emit("game_config", initializedGameData);
 
         if (this.gameConfig["leaderName"]!=null){
@@ -124,14 +124,14 @@ var gamePlayState = new Phaser.Class({
         socket.emit("player_move_displayed", message);
         if (this.gameConfig.roundLimit - this.gameConfig.roundCount <= 0){
             this.input.keyboard.removeAllKeys()
-            sessionId = endSession(game, socket, gameTimer, playerId, roomIdx, sessionId, window.location.pathname,  socketId, "go_round", sessionLimit, "All Rounds Used")
+            sessionId = endSession(game, socket, gameTimer, playerId, roomIdx, sessionId, turk.emit(),  socketId, "go_round", sessionLimit, "All Rounds Used")
         }
     },
 
     _leaderAnimation: function(){
         let currentLeaderloc = this.gameConfig.leaderMovementIndexes.length - (this.leaderTimer.getRepeatCount()+1)
         socket.emit("player_move", {'x': this.gameConfig.leaderMovementIndexes[currentLeaderloc][0], 'y': this.gameConfig.leaderMovementIndexes[currentLeaderloc][1],
-        "s_id":sessionId, "socket_id":socketId, "event":this.gameConfig.leaderMovementIndexes[currentLeaderloc][2], "aws_id": window.location.pathname,'rm_id':roomIdx,
+        "s_id":sessionId, "socket_id":socketId, "event":this.gameConfig.leaderMovementIndexes[currentLeaderloc][2], "aws_id": turk.emit(),'rm_id':roomIdx,
         'p_id': 1, "input_time":new Date().toISOString()
     })
         if (this.leaderTimer.getRepeatCount()===0){
@@ -141,13 +141,13 @@ var gamePlayState = new Phaser.Class({
 
     _victimSave(){
         let rescueIndexes = this.gameState.getVictimRescueIndexes(this.playerList[playerId].y, this.playerList[playerId].x);
-        socket.emit("rescue_attempt", {'x': this.playerList[playerId].x, 'y': this.playerList[playerId].y,"event":"r", "aws_id": window.location.pathname, 'rm_id':roomIdx,
+        socket.emit("rescue_attempt", {'x': this.playerList[playerId].x, 'y': this.playerList[playerId].y,"event":"r", "aws_id": turk.emit(), 'rm_id':roomIdx,
         'p_id': playerId, "socket_id":socketId, "victims_alive": Array.from(this.gameState.set_victims), "time":new Date().toISOString()})
         for(const victimIndex of this.gameState.set_victims){
             if (rescueIndexes.includes(victimIndex)){
                 if (this.gameState.set_victims.has(victimIndex)){
                     socket.emit("rescue_success", {'x': this.playerList[playerId].x, 'y': this.playerList[playerId].y,
-                    "event":"rs", "aws_id": window.location.pathname, 'rm_id':roomIdx, "socket_id":socketId, 'p_id': playerId, "victims_alive": Array.from(this.gameState.set_victims),
+                    "event":"rs", "aws_id": turk.emit(), 'rm_id':roomIdx, "socket_id":socketId, 'p_id': playerId, "victims_alive": Array.from(this.gameState.set_victims),
                     "victim":victimIndex, "time":new Date().toISOString()})
                     this.gameState.victimObj[String(victimIndex)].fillColor = "0xf6fa78";
                     this.gameState.set_victims.delete(victimIndex);
@@ -155,7 +155,7 @@ var gamePlayState = new Phaser.Class({
                     if (this.gameState.set_victims.size === 0){
                         console.log("SUCCESS")
                         this.input.keyboard.removeAllKeys()
-                        sessionId = endSession(game, socket, gameTimer, playerId, roomIdx, sessionId, window.location.pathname, socketId, "go_victim", sessionLimit, "Victim Saved")
+                        sessionId = endSession(game, socket, gameTimer, playerId, roomIdx, sessionId, turk.emit(), socketId, "go_victim", sessionLimit, "Victim Saved")
                     }
                 }
             }
@@ -167,7 +167,7 @@ var gamePlayState = new Phaser.Class({
         let newIdx = (y*this.mapConfig.cols)+ x;
         if (!(this.gameState.noRoadIndex.has(newIdx)) && !(this.playersCurrentLoc.includes(newIdx)) && (this.gameConfig.roundLimit - this.gameConfig.roundCount >0)){
             socket.emit("player_move", {'x': x, 'y': y, "s_id":sessionId, "socket_id":socketId,
-                "event":direction, "aws_id": window.location.pathname, 'rm_id':roomIdx, 'p_id': playerId, "input_time":new Date().toISOString(),
+                "event":direction, "aws_id": turk.emit(), 'rm_id':roomIdx, 'p_id': playerId, "input_time":new Date().toISOString(),
                 "r": this.gameConfig.roundCount + 1
             });
         }
@@ -264,7 +264,7 @@ var gameInfoState = new Phaser.Class({
         this.topRight.setScale(0.3)
         this.bottomRight.setScale(0.3)
         this.bottomLeft.setScale(0.3)
-        socket.emit("game_info", {"socket_id":socketId, "aws_id": window.location.pathname, 'rm_id':roomIdx, 'p_id': playerId, "input_time":new Date().toISOString(), 
+        socket.emit("game_info", {"event": "navigation_map", "socket_id":socketId, "aws_id": turk.emit(), 'rm_id':roomIdx, 'p_id': playerId, "input_time":new Date().toISOString(), 
         'top_left': this.tl, 'top_right': this.tr, 'bottom_left': this.bl, 'bottom_right': this.br});
     },
 });
@@ -287,7 +287,7 @@ gameInformation.scene.add("GameInfo", gameInfoState);
 // gameInformation.scene.start("GameInfo");
 
 socket.on('connect',()=>{
-    socket.emit("game_info", {"event": "start_t&c", "socket_id": socketId, "aws_id": window.location.pathname, "time": new Date().toISOString()});
+    socket.emit("game_info", {"event": "start_t&c", "socket_id": socketId, "aws_id": turk.emit(), "time": new Date().toISOString()});
 })
 
 socket.on('welcome',(message)=>{
@@ -300,30 +300,30 @@ $(document).ready(function() {
     $("#agree").change(actExpSmryBtn);
     $("#cte").on("click", function(){
         if ($("#agree").prop('checked') == true) {
-            changeDisplay(socket, "game_info" ,"#tmcn", "#mainInfo", {"event":"start_instructions", "aws_id": window.location.pathname, "socket_id":socketId});
+            changeDisplay(socket, "game_info" ,"#tmcn", "#mainInfo", {"event":"start_instructions", "aws_id": turk.emit(), "socket_id":socketId});
         } else {
             alert('Please indicate that you have read and agree to the Terms and Conditions and Privacy Policy');
         }
     });
 
     $("#join-room").on("click", function(){
-        changeDisplay(socket, "start_wait", "#quiz-success", "#wait-room", {"event":"start_wait", "aws_id": window.location.pathname, "socket_id":socketId})
+        changeDisplay(socket, "start_wait", "#quiz-success", "#wait-room", {"event":"start_wait", "aws_id": turk.emit(), "socket_id":socketId})
     });
 
     $("#join-quiz").on("click", function(){
-        joinQuiz(socket, socketId, window.location.pathname);
+        joinQuiz(socket, socketId, turk.emit());
     });
 
     $("#continue-instructions").on("click", function(){
-        changeDisplay(socket, "game_info", "#mainInfo", "#mainInfo2", {"event":"continue-instructions", "aws_id": window.location.pathname, "socket_id":socketId})
+        changeDisplay(socket, "game_info", "#mainInfo", "#mainInfo2", {"event":"continue-instructions", "aws_id": turk.emit(), "socket_id":socketId})
     });
 
     $("#revise-intructions").on("click", function(){
-        changeDisplay(socket, "game_info", "#quiz-fail", "#mainInfo", {"event":"revise_instructions", "aws_id": window.location.pathname, "socket_id":socketId})
+        changeDisplay(socket, "game_info", "#quiz-fail", "#mainInfo", {"event":"revise_instructions", "aws_id": turk.emit(), "socket_id":socketId})
     });
 
     $('#start-session').on("click", function(){
-        startSession(game, socket, "#session-over", "#game-screen", "#sessionId", {"event":"start_game", "s_id": sessionId, "aws_id": window.location.pathname, 'rm_id':roomIdx,
+        startSession(game, socket, "#session-over", "#game-screen", "#sessionId", {"event":"start_game", "s_id": sessionId, "aws_id": turk.emit(), 'rm_id':roomIdx,
         'p_id': playerId, "socket_id":socketId});
     });
 
@@ -335,7 +335,7 @@ $(document).ready(function() {
 
     $("#feedbackSbmt").on("click", function(){
         turk.submit({"p_id":playerId, "rm_id":roomIdx});
-        socket.emit('feedback', {"event": "feedback", "comment":feedback_str, "socket_id": socketId, "s_id":sessionId, "aws_id": window.location.pathname, 'rm_id':roomIdx,
+        socket.emit('feedback', {"event": "feedback", "comment":feedback_str, "socket_id": socketId, "s_id":sessionId, "aws_id": turk.emit(), 'rm_id':roomIdx,
         'p_id': playerId, "time": new Date().toISOString()})
         $("#exp-close").hide();
         $("#game-over").show();
@@ -354,7 +354,7 @@ socket.on('start_game', (message)=>{
     message["event"] = "start_game"
     message["s_id"] = sessionId
     message["socket_id"] = socketId
-    message["aws_id"] = window.location.pathname
+    message["aws_id"] = turk.emit()
     console.log(message)
     startSession(game, socket, gameInformation, "#wait-room", "#game-screen", "#sessionId", message);
 });

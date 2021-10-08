@@ -174,6 +174,9 @@ turk = turk || {};
 
   turk.previewMode = (turk.assignmentId == "ASSIGNMENT_ID_NOT_AVAILABLE");
 
+  turk.emit = function(){
+    return {"assignmentId": turk.assignmentId, "hitId": turk.hitId, "workerId": turk.workerId}
+  }
   // Submit a POST request to Turk
   turk.submit = function(data, unwrap) {
     var keys = getKeys(data);
