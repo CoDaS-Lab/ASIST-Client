@@ -43,7 +43,7 @@ var gamePlayState = new Phaser.Class({
             this._updateGameConfig(randomSelectionValues)
         }
         victimCount = this.mapConfig["victimIndexes"].length;
-        var initializedGameData = {"event":"game_created", "map_config": this.mapConfig, "game_config":this.gameConfig, 
+        var initializedGameData = {"event":"game_created", "map_config": this.mapConfig, "game_config":this.gameConfig, "time":new Date().toISOString(),
             globalVariable:{"rm_id":roomIdx, "p_id":playerId, "aws_id": turk.emit(),"socket_id": socketId, "session_id":sessionId, "session_limit":sessionLimit}}
         socket.emit("game_config", initializedGameData);
 
@@ -221,50 +221,45 @@ var gameInfoState = new Phaser.Class({
         this.bottomRight = this.add.sprite(300, 303, "blankBottomRight")
         this.bottomLeft = this.add.sprite(123.5, 303, "blankBottomLeft")
 
-        this.topLeft.setScale(0.3)
-        this.topRight.setScale(0.3)
-        this.bottomRight.setScale(0.3)
-        this.bottomLeft.setScale(0.3)
-
         this.tl = "No knowledge";
         this.tr = "No knowledge";
         this.bl = "No knowledge";
         this.br = "No knowledge";
 
-        if(Math.random() < .3){ // first randomization
-            if (Math.random() < .5){ // post accident*/
-                this.topLeft = this.add.sprite(123.5, 100, "rubbleTopLeft")
-                this.topRight = this.add.sprite(300, 100, "rubbleTopRight")
-                this.bottomRight = this.add.sprite(300, 303, "rubbleBottomRight")
-                this.bottomLeft = this.add.sprite(123.5, 303, "rubbleBottomLeft")
-                this.tl = "Knowledge";
-                this.tr = "Knowledge";
-                this.bl = "Knowledge";
-                this.br = "Knowledge";
-            }
-        }else{ // second randomization
-            if(Math.random() < .5){
-                this.topLeft = this.add.sprite(123.5, 100, "rubbleTopLeft")
-                this.tl = "Knowledge";
-            }
-            if(Math.random() < .5){
-                this.topRight = this.add.sprite(300, 100, "rubbleTopRight")
-                this.tr = "Knowledge";
-            }
-            if(Math.random() < .5){
-                this.bottomLeft = this.add.sprite(123.5, 303, "rubbleBottomLeft")
-                this.bl = "Knowledge";
-            }
-            if(Math.random() < .5){
-                this.bottomRight = this.add.sprite(300, 303, "rubbleBottomRight")
-                this.br = "Knowledge";
-            }
-        }
+        // if(Math.random() < .3){ // first randomization
+        //     if (Math.random() < .5){ // post accident*/
+        //         this.topLeft = this.add.sprite(123.5, 100, "rubbleTopLeft")
+        //         this.topRight = this.add.sprite(300, 100, "rubbleTopRight")
+        //         this.bottomRight = this.add.sprite(300, 303, "rubbleBottomRight")
+        //         this.bottomLeft = this.add.sprite(123.5, 303, "rubbleBottomLeft")
+        //         this.tl = "Knowledge";
+        //         this.tr = "Knowledge";
+        //         this.bl = "Knowledge";
+        //         this.br = "Knowledge";
+        //     }
+        // }else{ // second randomization
+        //     if(Math.random() < .5){
+        //         this.topLeft = this.add.sprite(123.5, 100, "rubbleTopLeft")
+        //         this.tl = "Knowledge";
+        //     }
+        //     if(Math.random() < .5){
+        //         this.topRight = this.add.sprite(300, 100, "rubbleTopRight")
+        //         this.tr = "Knowledge";
+        //     }
+        //     if(Math.random() < .5){
+        //         this.bottomLeft = this.add.sprite(123.5, 303, "rubbleBottomLeft")
+        //         this.bl = "Knowledge";
+        //     }
+        //     if(Math.random() < .5){
+        //         this.bottomRight = this.add.sprite(300, 303, "rubbleBottomRight")
+        //         this.br = "Knowledge";
+        //     }
+        // }
         this.topLeft.setScale(0.3)
         this.topRight.setScale(0.3)
         this.bottomRight.setScale(0.3)
         this.bottomLeft.setScale(0.3)
-        socket.emit("game_info", {"event": "navigation_map", "socket_id":socketId, "aws_id": turk.emit(), 'rm_id':roomIdx, 'p_id': playerId, "input_time":new Date().toISOString(), 
+        socket.emit("game_info", {"event": "navigation_map", "socket_id":socketId, "aws_id": turk.emit(), 'rm_id':roomIdx, 'p_id': playerId, "time":new Date().toISOString(),
         'top_left': this.tl, 'top_right': this.tr, 'bottom_left': this.bl, 'bottom_right': this.br});
     },
 });
