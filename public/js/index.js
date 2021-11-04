@@ -43,7 +43,7 @@ var gamePlayState = new Phaser.Class({
             this._updateGameConfig(randomSelectionValues)
         }
         victimCount = this.mapConfig["victimIndexes"].length;
-        var initializedGameData = {"event":"game_created", "map_config": this.mapConfig, "game_config":this.gameConfig, 
+        var initializedGameData = {"event":"game_created", "map_config": this.mapConfig, "game_config":this.gameConfig, "time":new Date().toISOString(),
             globalVariable:{"rm_id":roomIdx, "p_id":playerId, "aws_id": turk.emit(),"socket_id": socketId, "session_id":sessionId, "session_limit":sessionLimit}}
         socket.emit("game_config", initializedGameData);
 
@@ -264,7 +264,7 @@ var gameInfoState = new Phaser.Class({
         this.topRight.setScale(0.3)
         this.bottomRight.setScale(0.3)
         this.bottomLeft.setScale(0.3)
-        socket.emit("game_info", {"event": "navigation_map", "socket_id":socketId, "aws_id": turk.emit(), 'rm_id':roomIdx, 'p_id': playerId, "input_time":new Date().toISOString(), 
+        socket.emit("game_info", {"event": "navigation_map", "socket_id":socketId, "aws_id": turk.emit(), 'rm_id':roomIdx, 'p_id': playerId, "time":new Date().toISOString(),
         'top_left': this.tl, 'top_right': this.tr, 'bottom_left': this.bl, 'bottom_right': this.br});
     },
 });
