@@ -221,45 +221,40 @@ var gameInfoState = new Phaser.Class({
         this.bottomRight = this.add.sprite(300, 303, "blankBottomRight")
         this.bottomLeft = this.add.sprite(123.5, 303, "blankBottomLeft")
 
-        this.topLeft.setScale(0.3)
-        this.topRight.setScale(0.3)
-        this.bottomRight.setScale(0.3)
-        this.bottomLeft.setScale(0.3)
-
         this.tl = "No knowledge";
         this.tr = "No knowledge";
         this.bl = "No knowledge";
         this.br = "No knowledge";
 
-        if(Math.random() < .3){ // first randomization
-            if (Math.random() < .5){ // post accident*/
-                this.topLeft = this.add.sprite(123.5, 100, "rubbleTopLeft")
-                this.topRight = this.add.sprite(300, 100, "rubbleTopRight")
-                this.bottomRight = this.add.sprite(300, 303, "rubbleBottomRight")
-                this.bottomLeft = this.add.sprite(123.5, 303, "rubbleBottomLeft")
-                this.tl = "Knowledge";
-                this.tr = "Knowledge";
-                this.bl = "Knowledge";
-                this.br = "Knowledge";
-            }
-        }else{ // second randomization
-            if(Math.random() < .5){
-                this.topLeft = this.add.sprite(123.5, 100, "rubbleTopLeft")
-                this.tl = "Knowledge";
-            }
-            if(Math.random() < .5){
-                this.topRight = this.add.sprite(300, 100, "rubbleTopRight")
-                this.tr = "Knowledge";
-            }
-            if(Math.random() < .5){
-                this.bottomLeft = this.add.sprite(123.5, 303, "rubbleBottomLeft")
-                this.bl = "Knowledge";
-            }
-            if(Math.random() < .5){
-                this.bottomRight = this.add.sprite(300, 303, "rubbleBottomRight")
-                this.br = "Knowledge";
-            }
-        }
+        // if(Math.random() < .3){ // first randomization
+        //     if (Math.random() < .5){ // post accident*/
+        //         this.topLeft = this.add.sprite(123.5, 100, "rubbleTopLeft")
+        //         this.topRight = this.add.sprite(300, 100, "rubbleTopRight")
+        //         this.bottomRight = this.add.sprite(300, 303, "rubbleBottomRight")
+        //         this.bottomLeft = this.add.sprite(123.5, 303, "rubbleBottomLeft")
+        //         this.tl = "Knowledge";
+        //         this.tr = "Knowledge";
+        //         this.bl = "Knowledge";
+        //         this.br = "Knowledge";
+        //     }
+        // }else{ // second randomization
+        //     if(Math.random() < .5){
+        //         this.topLeft = this.add.sprite(123.5, 100, "rubbleTopLeft")
+        //         this.tl = "Knowledge";
+        //     }
+        //     if(Math.random() < .5){
+        //         this.topRight = this.add.sprite(300, 100, "rubbleTopRight")
+        //         this.tr = "Knowledge";
+        //     }
+        //     if(Math.random() < .5){
+        //         this.bottomLeft = this.add.sprite(123.5, 303, "rubbleBottomLeft")
+        //         this.bl = "Knowledge";
+        //     }
+        //     if(Math.random() < .5){
+        //         this.bottomRight = this.add.sprite(300, 303, "rubbleBottomRight")
+        //         this.br = "Knowledge";
+        //     }
+        // }
         this.topLeft.setScale(0.3)
         this.topRight.setScale(0.3)
         this.bottomRight.setScale(0.3)
