@@ -1,11 +1,18 @@
 # CODAS LAB EXPERIMENT
 
-This Client is in beta version and part of a game built for ASIST project using Phaser.js. The Client works with the API available at [ASIST-API](https://github.com/CoDaS-Lab/ASIST-API)
+This client is in beta version and part of a game built for ASIST project using Phaser.js. The client works with the API available at [ASIST-API](https://github.com/CoDaS-Lab/ASIST-API)
 
-## Requirements:
-- Node 12.8.3+ installed
+## Requirements
 
-## Running Locally
-- Install node modules using `npm install` from the current directory of the project
-- Set up the `socketURL`  variable located  in `/public/js/config.js` file.
-- Start node server using `node localServer.js` and it should be should be available at `http://localhost:880`
+- Node 16.9.1+
+
+## Running on localhost
+
+1. Install node modules from the current directory of the project
+     - `npm install`
+2. Set up environment variables
+   - `LOCAL_SOCKET_URL`: API server URL. for example: `https://api-asist.herokuapp.com/` or `http://127.0.0.1:5000/`
+   - `PORT="880"`
+   - `IP="0.0.0.0"`
+3. Start the node server and it should be should be available at `http://localhost:880`
+     - `node server.js`
