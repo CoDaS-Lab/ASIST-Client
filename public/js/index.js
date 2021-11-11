@@ -18,6 +18,7 @@ var gamePlayState = new Phaser.Class({
         console.log("GamePlay init");
         Phaser.Scene.call(this, {key: 'GamePlay'});
         socket.on('player_move_success', (message)=>{this._playersMovementDisplay(message)});
+        socket.on('rescue_success', (message)=>{this._rescueDisplay(message)});
 
         gameTimer.addEventListener('targetAchieved', ()=>{
             this.input.keyboard.removeAllKeys()
@@ -144,21 +145,31 @@ var gamePlayState = new Phaser.Class({
         for(const victimIndex of this.gameState.set_victims){
             if (rescueIndexes.includes(victimIndex)){
                 if (this.gameState.set_victims.has(victimIndex)){
-                    socket.emit("rescue_success", {'x': this.playerList[playerId].x, 'y': this.playerList[playerId].y,
+                    socket.emit("rescue", {'x': this.playerList[playerId].x, 'y': this.playerList[playerId].y,
                     "event":"rs", "aws_id": turk.emit(), 'rm_id':roomIdx, "socket_id":socketId, 'p_id': playerId, "victims_alive": Array.from(this.gameState.set_victims),
                     "victim":victimIndex, "time":new Date().toISOString()})
-                    this.gameState.victimObj[String(victimIndex)].fillColor = "0xf6fa78";
-                    this.gameState.set_victims.delete(victimIndex);
-                    victimCount = this.gameState.set_victims.size
-                    if (this.gameState.set_victims.size === 0){
-                        console.log("SUCCESS")
-                        this.input.keyboard.removeAllKeys()
-                        sessionId = endSession(game, socket, gameTimer, playerId, roomIdx, sessionId, turk.emit(), socketId, "go_victim", sessionLimit, "Victim Saved")
-                    }
                 }
             }
         }
     },
+
+    _rescueDisplay (message){
+        let victimIndex = message["victim"];
+        if (this.gameState.set_victims.has(victimIndex)){
+            socket.emit("rescue_displayed", {'x': this.playerList[playerId].x, 'y': this.playerList[playerId].y,
+            "event":"rs", "aws_id": turk.emit(), 'rm_id':roomIdx, "socket_id":socketId, 'p_id': playerId, "victims_alive": Array.from(this.gameState.set_victims),
+            "victim":victimIndex, "time":new Date().toISOString()})
+            this.gameState.victimObj[String(victimIndex)].fillColor = "0xf6fa78";
+            this.gameState.set_victims.delete(victimIndex);
+            victimCount = this.gameState.set_victims.size
+            if (this.gameState.set_victims.size === 0){
+                console.log("SUCCESS")
+                this.input.keyboard.removeAllKeys()
+                sessionId = endSession(game, socket, gameTimer, playerId, roomIdx, sessionId, turk.emit(), socketId, "go_victim", sessionLimit, "Victim Saved")
+            }
+        }
+    },
+
     _playerMove: function(x, y, direction){
         console.log(x,y, direction);
         let newIdx = (y*this.mapConfig.cols)+ x;
