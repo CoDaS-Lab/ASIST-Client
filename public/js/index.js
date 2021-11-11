@@ -37,7 +37,7 @@ var gamePlayState = new Phaser.Class({
         console.log("GamePlay preload");
         this.mapConfig = getMapData();
         this.gameConfig = getGameData();
-        let randomSelectionValues = getRandomConfig();
+        let randomSelectionValues = getRandomConfig(roomIdx);
         if (randomSelectionValues!=null){
             this._updateGameConfig(randomSelectionValues)
         }
@@ -51,8 +51,11 @@ var gamePlayState = new Phaser.Class({
             {frameWidth: this.gameConfig["playerFrameWidth"], frameHeight: this.gameConfig["playerFrameHeight"]});
         }
 
-        this.load.spritesheet(this.gameConfig["playerName"], "/assets/"+this.gameConfig["playerName"]+".png",
-        {frameWidth: this.gameConfig["playerFrameWidth"], frameHeight: this.gameConfig["playerFrameHeight"]});
+        for (let i = 0; i < this.gameConfig.players.length; ++i) {
+            let player = this.gameConfig.players[i];
+            this.load.spritesheet(player["playerName"], "/assets/"+player["playerName"]+".png",
+            {frameWidth: player["playerFrameWidth"], frameHeight: player["playerFrameHeight"]});
+        }
     },
     create: function() {
         console.log("GamePlay create");
@@ -60,9 +63,12 @@ var gamePlayState = new Phaser.Class({
 
         this.playerList = Array();
         this.playersCurrentLoc = Array();
-        this.playerDude = new PlayerDisplay(this, {"x": this.gameConfig.playerX, "y":this.gameConfig.playerY, "name":this.gameConfig["playerName"]});
-        this.playersCurrentLoc.push((this.playerDude.y*this.mapConfig.cols)+ this.playerDude.x);
-        this.playerList.push(this.playerDude);
+        for (let i = 0; i < this.gameConfig.players.length; ++i) {
+            let player = this.gameConfig.players[i];
+            let playerDude = new PlayerDisplay(this, {"x": player.playerX, "y":player.playerY, "name":player.playerName});
+            this.playersCurrentLoc.push((playerDude.y*this.mapConfig.cols)+ playerDude.x);
+            this.playerList.push(playerDude);
+        }
 
         gameTimer.start(this.gameConfig["gameTimeArg"])
 
@@ -81,7 +87,7 @@ var gamePlayState = new Phaser.Class({
 
         this.cameras.main.setBounds(0, 0, 775, 625).setName('main');
         this.cameras.main.setZoom(4);
-        this.cameras.main.startFollow(this.playerDude.physicsObj);
+        this.cameras.main.startFollow(this.playerList[playerId].physicsObj);
         this.cameras.main.setLerp(0.2);
 
         var keys = this.input.keyboard.addKeys('UP, DOWN, RIGHT, LEFT, R')
