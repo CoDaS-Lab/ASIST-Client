@@ -1,6 +1,6 @@
 import {actExpSmryBtn, endSession, startSession, joinQuiz, changeDisplay} from "/js/expNav.js";
 import {PlayerDisplay, GameState} from "/js/gameUtils.js"
-import {phaserConfig, getMapData, getGameData, socketURL, getRandomConfig} from "/js/config.js"
+import {phaserConfig, getMapData, getGameData, getSocketURL, getRandomConfig} from "/js/config.js"
 
 
 var roomIdx = "na";
@@ -11,7 +11,7 @@ var sessionId = 1;
 var sessionLimit = 1;
 var victimCount;
 var feedback_str = "No Feedback Given";
-const socket = io(socketURL, {transports: ['websocket']})
+const socket = io(getSocketURL(), {transports: ['websocket']})
 var gamePlayState = new Phaser.Class({
     Extends: Phaser.Scene,
     initialize: function(){
@@ -97,21 +97,19 @@ var gamePlayState = new Phaser.Class({
 
 
     _playersMovementDisplay (message){
-        console.log(message["x"], message["y"], message["p_id"])
         let newIdx = (message["y"]*this.mapConfig.cols)+ message["x"]
+        console.log(message["x"], message["y"], message["p_id"], newIdx)
         if (message["p_id"] == playerId){
             this.gameConfig.roundCount = message["r"];
             if (this.mapConfig.doorIndexes.includes(newIdx)){
-                this.gameState.makeVictimsVisible(this.gameState.roomVictimObj[String(newIdx)]);
-                this.gameState.makeRoomVisible(this.gameState.roomViewObj[String(newIdx)]);
+                for (let roomIndex of this.mapConfig.doorRoomMapping[newIdx]){
+                    this.gameState.makeVictimsVisible(this.gameState.roomVictimObj[String(roomIndex)], this.gameState.set_victims);
+                    this.gameState.makeRoomVisible(this.gameState.roomViewObj[roomIndex]);
+                }
             }else if (this.mapConfig.gapIndexes.includes(newIdx)){
-                for (let roomIndex in this.mapConfig.roomGapMapping){
-                    if(this.mapConfig.roomGapMapping[roomIndex].includes(newIdx)){
-                        console.log("Entered room " + roomIndex 
-                        + " through gap");
-                        this.gameState.makeVictimsVisible(this.gameState.roomVictimObj[roomIndex]);
-                        this.gameState.makeRoomVisible(this.gameState.roomViewObj[roomIndex]);
-                    }
+                for (let roomIndex of this.mapConfig.gapRoomMapping[newIdx]){
+                    this.gameState.makeVictimsVisible(this.gameState.roomVictimObj[String(roomIndex)], this.gameState.set_victims);
+                    this.gameState.makeRoomVisible(this.gameState.roomViewObj[String(roomIndex)]);
                 }
             }
         }
