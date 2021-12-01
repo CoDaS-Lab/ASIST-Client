@@ -1,6 +1,6 @@
 import {actExpSmryBtn, endSession, startSession, joinQuiz, changeDisplay} from "/js/expNav.js";
-import {PlayerDisplay, GameState} from "/js/gameUtils.js"
-import {phaserConfig, getMapData, getGameData, socketURL, getRandomConfig} from "/js/config.js"
+import {PlayerDisplay, GameState, NavigationMap} from "/js/gameUtils.js"
+import {phaserConfig, getMapData, getGameData, getSocketURL, getRandomConfig, getNavigationMapData} from "/js/config.js"
 
 
 var roomIdx = "na";
@@ -11,7 +11,7 @@ var sessionId = 1;
 var sessionLimit = 1;
 var victimCount;
 var feedback_str = "No Feedback Given";
-const socket = io(socketURL, {transports: ['websocket']})
+const socket = io(getSocketURL(), {transports: ['websocket']})
 var gamePlayState = new Phaser.Class({
     Extends: Phaser.Scene,
     initialize: function(){
@@ -33,7 +33,6 @@ var gamePlayState = new Phaser.Class({
         // });
 
     },
-
     preload: function() {
         console.log("GamePlay preload");
         this.mapConfig = getMapData();
@@ -55,7 +54,6 @@ var gamePlayState = new Phaser.Class({
         this.load.spritesheet(this.gameConfig["playerName"], "/assets/"+this.gameConfig["playerName"]+".png",
         {frameWidth: this.gameConfig["playerFrameWidth"], frameHeight: this.gameConfig["playerFrameHeight"]});
     },
-
     create: function() {
         console.log("GamePlay create");
         this.gameState = new GameState(this.mapConfig, this)
@@ -94,24 +92,20 @@ var gamePlayState = new Phaser.Class({
         keys.LEFT.on('down', ()=>{this._playerMove(this.playerList[playerId].x - 1, this.playerList[playerId].y, "left")});
         keys.R.on('down', ()=>{this._victimSave()});
     },
-
-
     _playersMovementDisplay (message){
-        console.log(message["x"], message["y"], message["p_id"])
         let newIdx = (message["y"]*this.mapConfig.cols)+ message["x"]
+        console.log(message["x"], message["y"], message["p_id"], newIdx)
         if (message["p_id"] == playerId){
             this.gameConfig.roundCount = message["r"];
             if (this.mapConfig.doorIndexes.includes(newIdx)){
-                this.gameState.makeVictimsVisible(this.gameState.roomVictimObj[String(newIdx)]);
-                this.gameState.makeRoomVisible(this.gameState.roomViewObj[String(newIdx)]);
+                for (let roomIndex of this.mapConfig.doorRoomMapping[newIdx]){
+                    this.gameState.makeVictimsVisible(this.gameState.roomVictimObj[String(roomIndex)], this.gameState.set_victims);
+                    this.gameState.makeRoomVisible(this.gameState.roomViewObj[roomIndex]);
+                }
             }else if (this.mapConfig.gapIndexes.includes(newIdx)){
-                for (let roomIndex in this.mapConfig.roomGapMapping){
-                    if(this.mapConfig.roomGapMapping[roomIndex].includes(newIdx)){
-                        console.log("Entered room " + roomIndex 
-                        + " through gap");
-                        this.gameState.makeVictimsVisible(this.gameState.roomVictimObj[roomIndex]);
-                        this.gameState.makeRoomVisible(this.gameState.roomViewObj[roomIndex]);
-                    }
+                for (let roomIndex of this.mapConfig.gapRoomMapping[newIdx]){
+                    this.gameState.makeVictimsVisible(this.gameState.roomVictimObj[String(roomIndex)], this.gameState.set_victims);
+                    this.gameState.makeRoomVisible(this.gameState.roomViewObj[String(roomIndex)]);
                 }
             }
         }
@@ -127,7 +121,6 @@ var gamePlayState = new Phaser.Class({
             sessionId = endSession(game, socket, gameTimer, playerId, roomIdx, sessionId, turk.emit(),  socketId, "go_round", sessionLimit, "All Rounds Used")
         }
     },
-
     _leaderAnimation: function(){
         let currentLeaderloc = this.gameConfig.leaderMovementIndexes.length - (this.leaderTimer.getRepeatCount()+1)
         socket.emit("player_move", {'x': this.gameConfig.leaderMovementIndexes[currentLeaderloc][0], 'y': this.gameConfig.leaderMovementIndexes[currentLeaderloc][1],
@@ -138,7 +131,6 @@ var gamePlayState = new Phaser.Class({
             console.log(this.playersCurrentLoc);
         }
     },
-
     _victimSave(){
         let rescueIndexes = this.gameState.getVictimRescueIndexes(this.playerList[playerId].y, this.playerList[playerId].x);
         socket.emit("rescue_attempt", {'x': this.playerList[playerId].x, 'y': this.playerList[playerId].y,"event":"r", "aws_id": turk.emit(), 'rm_id':roomIdx,
@@ -161,7 +153,6 @@ var gamePlayState = new Phaser.Class({
             }
         }
     },
-
     _playerMove: function(x, y, direction){
         console.log(x,y, direction);
         let newIdx = (y*this.mapConfig.cols)+ x;
@@ -188,77 +179,72 @@ var gameInfoState = new Phaser.Class({
     initialize: function(){
         Phaser.Scene.call(this, {key: 'GameInfo'});
     },
-
     preload: function() {
-        this.load.image("legend", "/assets/legend.png");
-        this.load.image("blankTopLeft", "assets/blankTopLeft.png");
-        this.load.image("blankTopRight", "assets/blankTopRight.png");
-        this.load.image("blankBottomLeft", "assets/blankBottomLeft.png");
-        this.load.image("blankBottomRight", "assets/blankBottomRight.png");
-        this.load.image("rubbleTopLeft", "assets/rubbleTopLeft.png");
-        this.load.image("rubbleTopRight", "assets/rubbleTopRight.png");
-        this.load.image("rubbleBottomLeft", "assets/rubbleBottomLeft.png");
-        this.load.image("rubbleBottomRight", "assets/rubbleBottomRight.png");
 
     },
     create: function() {
-
-        this._randomMap();
-        this.legend = this.add.sprite(130, 500, "legend")
-        this.legend.setScale(0.5)
-        this.victimCountText = this.add.text(40, 410, "Victims: 24", {color: '0x9754e3', fontSize: '15px'}).setResolution(10);
+        this._setNavigationMapCondition(["knowledgeCondition", "knowledgeCondition", "knowledgeCondition", "knowledgeCondition"]);
+        this.navigationMapData = getNavigationMapData()
+        this._createNavigationMapConfigData()
+        this.gameNavigationInfo = new NavigationMap(this.navigationMapConfig, this)
+        $('#victim-count').text(victimCount)
     },
-
-
     update: function() {
-        this.victimCountText.setText("Victims: " + victimCount);
+        $('#victim-count').text(victimCount)
     },
+    _getBlockIndexes: function (blockName){
+        var blockIndexes = new Array();
+        blockIndexes = blockIndexes.concat(this.navigationMapData["tl"][this.tl][blockName])
+        blockIndexes = blockIndexes.concat(this.navigationMapData["tr"][this.tr][blockName])
+        blockIndexes = blockIndexes.concat(this.navigationMapData["bl"][this.bl][blockName])
+        blockIndexes = blockIndexes.concat(this.navigationMapData["br"][this.br][blockName])
+        return blockIndexes
+    },
+    _createNavigationMapConfigData: function (){
+        this.navigationMapConfig = new Object();
+        this.navigationMapConfig['cols'] = this.navigationMapData.cols
+        this.navigationMapConfig['rows'] = this.navigationMapData.rows
+        this.navigationMapConfig.wallIndexes = this._getBlockIndexes("wallIndexes");
+        this.navigationMapConfig.doorIndexes = this._getBlockIndexes("doorIndexes");
+        this.navigationMapConfig.rubbleIndexes = this._getBlockIndexes("rubbleIndexes")
+        this.navigationMapConfig.gapIndexes = this._getBlockIndexes("gapIndexes")
+        this.navigationMapConfig.allIndexes = this._getBlockIndexes("allIndexes")
+        this.navigationMapConfig.noGameBoxIndexes = this._getBlockIndexes("noGameBoxIndexes")
+    },
+    _setNavigationMapCondition: function(condition_list = null){
 
-    _randomMap: function(){
-        //no knowledge condition
-        this.topLeft = this.add.sprite(123.5, 100, "blankTopLeft")
-        this.topRight = this.add.sprite(300, 100, "blankTopRight")
-        this.bottomRight = this.add.sprite(300, 303, "blankBottomRight")
-        this.bottomLeft = this.add.sprite(123.5, 303, "blankBottomLeft")
-
-        this.tl = "No knowledge";
-        this.tr = "No knowledge";
-        this.bl = "No knowledge";
-        this.br = "No knowledge";
-
-        // if(Math.random() < .3){ // first randomization
-        //     if (Math.random() < .5){ // post accident*/
-        //         this.topLeft = this.add.sprite(123.5, 100, "rubbleTopLeft")
-        //         this.topRight = this.add.sprite(300, 100, "rubbleTopRight")
-        //         this.bottomRight = this.add.sprite(300, 303, "rubbleBottomRight")
-        //         this.bottomLeft = this.add.sprite(123.5, 303, "rubbleBottomLeft")
-        //         this.tl = "Knowledge";
-        //         this.tr = "Knowledge";
-        //         this.bl = "Knowledge";
-        //         this.br = "Knowledge";
-        //     }
-        // }else{ // second randomization
-        //     if(Math.random() < .5){
-        //         this.topLeft = this.add.sprite(123.5, 100, "rubbleTopLeft")
-        //         this.tl = "Knowledge";
-        //     }
-        //     if(Math.random() < .5){
-        //         this.topRight = this.add.sprite(300, 100, "rubbleTopRight")
-        //         this.tr = "Knowledge";
-        //     }
-        //     if(Math.random() < .5){
-        //         this.bottomLeft = this.add.sprite(123.5, 303, "rubbleBottomLeft")
-        //         this.bl = "Knowledge";
-        //     }
-        //     if(Math.random() < .5){
-        //         this.bottomRight = this.add.sprite(300, 303, "rubbleBottomRight")
-        //         this.br = "Knowledge";
-        //     }
-        // }
-        this.topLeft.setScale(0.3)
-        this.topRight.setScale(0.3)
-        this.bottomRight.setScale(0.3)
-        this.bottomLeft.setScale(0.3)
+        if (condition_list!=null) {
+            this.tl = condition_list[0];
+            this.tr = condition_list[1];
+            this.bl = condition_list[2];
+            this.br = condition_list[3];
+        }else{
+            this.tl = "noKnowledgeCondition";
+            this.tr = "noKnowledgeCondition";
+            this.bl = "noKnowledgeCondition";
+            this.br = "noKnowledgeCondition";
+            if(Math.random() < .3){ // first randomization
+                if (Math.random() < .5){ // post accident*/
+                    this.tl = "knowledgeCondition";
+                    this.tr = "knowledgeCondition";
+                    this.bl = "knowledgeCondition";
+                    this.br = "knowledgeCondition";
+                }
+            }else{ // second randomization
+                if(Math.random() < .5){
+                    this.tl = "knowledgeCondition";
+                }
+                if(Math.random() < .5){
+                    this.tr = "knowledgeCondition";
+                }
+                if(Math.random() < .5){
+                    this.bl = "knowledgeCondition";
+                }
+                if(Math.random() < .5){
+                    this.br = "knowledgeCondition";
+                }
+            }
+        }
         socket.emit("game_info", {"event": "navigation_map", "socket_id":socketId, "aws_id": turk.emit(), 'rm_id':roomIdx, 'p_id': playerId, "time":new Date().toISOString(),
         'top_left': this.tl, 'top_right': this.tr, 'bottom_left': this.bl, 'bottom_right': this.br});
     },
@@ -270,8 +256,9 @@ const gameInformation = new Phaser.Game({
     scale: {
         _mode: Phaser.Scale.FIT,
         parent: 'phaser-game-info',
-        width: 400,
-        height: 600,
+        //set the width of legend.png img block same as this width
+        width: 540,
+        height: 540,
     },
     dom: {
         createContainer: true
@@ -279,7 +266,7 @@ const gameInformation = new Phaser.Game({
 });
 
 gameInformation.scene.add("GameInfo", gameInfoState);
-// gameInformation.scene.start("GameInfo");
+
 
 socket.on('connect',()=>{
     socket.emit("game_info", {"event": "start_t&c", "socket_id": socketId, "aws_id": turk.emit(), "time": new Date().toISOString()});

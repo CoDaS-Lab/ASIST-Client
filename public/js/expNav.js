@@ -1,4 +1,4 @@
-import {surveyJSON} from "/js/config.js";
+import {getSurveyJson} from "/js/config.js";
 
 var actExpSmryBtn = function () {
 // Activates the button to visit experiment information page on clicking the box to agree on the experiment conditions
@@ -37,6 +37,7 @@ var joinQuiz = function(socket, socketId, awsID){
     }
     console.log("Quiz load");
     Survey.StylesManager.applyTheme("modern");
+    const surveyJSON = getSurveyJson();
     var survey = new Survey.Model(surveyJSON);
     $("#surveyContainer").Survey({
         model: survey,

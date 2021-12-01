@@ -229,4 +229,62 @@ class GameState {
 }
 
 
-export {PlayerDisplay, GameState};
+class NavigationMap{
+    constructor(config, navigationMapScene) {
+        this._storeMapVariablesFromConfig(config, navigationMapScene);
+        this._drawInitiatSetUp();
+    }
+    _storeMapVariablesFromConfig(config, navigationMapScene){
+        this.config = config;
+        this.scene = navigationMapScene;
+        this.game_width = navigationMapScene.sys.game.scale.gameSize._width;
+        this.game_height = navigationMapScene.sys.game.scale.gameSize._height;
+        this.cw = navigationMapScene.sys.game.scale.gameSize._width / config.cols;
+        this.ch = navigationMapScene.sys.game.scale.gameSize._height / config.rows;
+    }
+    _drawInitiatSetUp(){
+        // this._drawGrid();
+        this._drawRectangleBlocks(this.config.allIndexes, 0x8a8786, 0.2)
+        this._drawRectangleBlocks(this.config.wallIndexes, 0x000000,1);
+        this._drawRectangleBlocks(this.config.doorIndexes, 0x9dd1ed, 1);
+        this._drawRectangleBlocks(this.config.gapIndexes, 0x9dd1ed, 1);
+        this._drawRectangleBlocks(this.config.rubbleIndexes, 0xff0000, 1);
+
+    }
+
+    _drawGrid(){
+        this.graphics = this.scene.add.graphics();
+        this.graphics.lineStyle(0.5, 0x000000);
+        for (var i = 0; i <= this.game_width; i += this.cw) {
+            this.graphics.moveTo(i, 0);
+            this.graphics.lineTo(i, this.game_height);
+        }
+        for (var i = 0; i <= this.game_height; i += this.ch) {
+            this.graphics.moveTo(0, i);
+            this.graphics.lineTo(this.game_width, i);
+        }
+        this.graphics.strokePath();
+    }
+
+    placeAt(xx, yy, obj) {
+        var x2 = this.cw * xx + this.cw / 2;
+        var y2 = this.ch * yy + this.ch / 2;
+        obj.x = x2;
+        obj.y = y2;
+    }
+    placeAtIndex(index, obj) {
+
+        var yy = Math.floor(index / this.config.cols);
+        var xx = index - (yy * this.config.cols);
+        this.placeAt(xx, yy, obj);
+    }
+    _drawRectangleBlocks(locIndexes, colorHex, alpha) {
+        for (const idx of locIndexes){
+            let rect = this.scene.add.rectangle(20,20, this.cw, this.ch, colorHex, alpha);
+            this.placeAtIndex(idx, rect);
+        }
+    }
+}
+
+
+export {PlayerDisplay, GameState, NavigationMap};
