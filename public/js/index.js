@@ -257,8 +257,8 @@ const gameInformation = new Phaser.Game({
         _mode: Phaser.Scale.FIT,
         parent: 'phaser-game-info',
         //set the width of legend.png img block same as this width
-        width: 540,
-        height: 540,
+        width: 450,
+        height: 450,
     },
     dom: {
         createContainer: true
