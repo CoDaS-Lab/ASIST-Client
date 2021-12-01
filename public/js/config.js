@@ -33,6 +33,25 @@ var getMapData = function(){
     return mapData
 }
 
+var getNavigationMapData = function(){
+    var navigationMapData;
+    $.ajax({
+    async: false,
+    type: "GET",
+    url: window.location.origin+"/navigation_config",
+    contentType: "application/json; charset=utf-8",
+    dataType: "json",
+    crossDomain: true,
+    success: function(data){
+        navigationMapData = data
+    },
+    failure: function(errMsg) {
+        console.log(errMsg);
+    }
+    });
+
+    return navigationMapData
+}
 
 var getGameData = function(){
     //game time '00' or minutes like '2'. If it was '2' that is timer with deadline, gameTimeArg would be {precision: 'secondTenths', countdown: true, startValues: {minutes: gameTime}}
@@ -101,5 +120,5 @@ var getSocketURL = function (){
 }
 
 
-export {phaserConfig, getMapData, getGameData, getSocketURL, getRandomConfig, getSurveyJson};
+export {phaserConfig, getMapData, getGameData, getSocketURL, getRandomConfig, getSurveyJson, getNavigationMapData};
 
