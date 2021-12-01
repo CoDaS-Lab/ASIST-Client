@@ -9,7 +9,7 @@
 }
 
 #game-time {
-    position: absolute;
+    display: block;
     width: 100%;
     top: 2%;
     bottom: 3%;
@@ -20,10 +20,19 @@
 }
 
 
-.grid-container {
+.grid-game-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-column-gap: 0px;
     grid-row-gap: 0px;
-    margin: 10%;
+    margin: 5%;
+}
+
+.grid-child-info{
+    justify-self: center;
+
+}
+
+.grid-child-game{
+    justify-self: left;
 }
