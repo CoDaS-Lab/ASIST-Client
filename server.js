@@ -9,6 +9,8 @@ console.log("MapCols:", game_config.cols + ' | MapRows:' + game_config.rows)
 
 const survey_config = require('./config/survey_v0.1.json');
 
+const navigation_config = require('./config/navigation-map_v0.1.json');
+
 app.get('/', function(req, res) {
     res.sendFile(path.join(public , 'index.html'));
 });
@@ -26,6 +28,11 @@ app.get('/game_config', function(req, res){
 app.get('/survey_config', function(req, res){
     console.log('survey_config route called');
     res.json(survey_config);
+});
+
+app.get('/navigation_config', function(req, res){
+    console.log('navigation_config route called');
+    res.json(navigation_config);
 });
 
 console.log("Server Address: "+ process.env.IP+ "/"+process.env.PORT)
