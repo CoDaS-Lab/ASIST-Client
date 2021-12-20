@@ -18,6 +18,7 @@ var gamePlayState = new Phaser.Class({
         console.log("GamePlay init");
         Phaser.Scene.call(this, {key: 'GamePlay'});
         socket.on('player_move_success', (message)=>{this._playersMovementDisplay(message)});
+        socket.on('rescue_success', (message)=>{this._rescueDisplay(message)});
 
         gameTimer.addEventListener('targetAchieved', ()=>{
             this.input.keyboard.removeAllKeys()
@@ -37,7 +38,7 @@ var gamePlayState = new Phaser.Class({
         console.log("GamePlay preload");
         this.mapConfig = getMapData();
         this.gameConfig = getGameData();
-        let randomSelectionValues = getRandomConfig();
+        let randomSelectionValues = getRandomConfig(roomIdx);
         if (randomSelectionValues!=null){
             this._updateGameConfig(randomSelectionValues)
         }
@@ -51,8 +52,11 @@ var gamePlayState = new Phaser.Class({
             {frameWidth: this.gameConfig["playerFrameWidth"], frameHeight: this.gameConfig["playerFrameHeight"]});
         }
 
-        this.load.spritesheet(this.gameConfig["playerName"], "/assets/"+this.gameConfig["playerName"]+".png",
-        {frameWidth: this.gameConfig["playerFrameWidth"], frameHeight: this.gameConfig["playerFrameHeight"]});
+        for (let i = 0; i < this.gameConfig.players.length; ++i) {
+            let player = this.gameConfig.players[i];
+            this.load.spritesheet(player["playerName"], "/assets/"+player["playerName"]+".png",
+            {frameWidth: player["playerFrameWidth"], frameHeight: player["playerFrameHeight"]});
+        }
     },
     create: function() {
         console.log("GamePlay create");
@@ -60,9 +64,12 @@ var gamePlayState = new Phaser.Class({
 
         this.playerList = Array();
         this.playersCurrentLoc = Array();
-        this.playerDude = new PlayerDisplay(this, {"x": this.gameConfig.playerX, "y":this.gameConfig.playerY, "name":this.gameConfig["playerName"]});
-        this.playersCurrentLoc.push((this.playerDude.y*this.mapConfig.cols)+ this.playerDude.x);
-        this.playerList.push(this.playerDude);
+        for (let i = 0; i < this.gameConfig.players.length; ++i) {
+            let player = this.gameConfig.players[i];
+            let playerDude = new PlayerDisplay(this, {"x": player.playerX, "y":player.playerY, "name":player.playerName});
+            this.playersCurrentLoc.push((playerDude.y*this.mapConfig.cols)+ playerDude.x);
+            this.playerList.push(playerDude);
+        }
 
         gameTimer.start(this.gameConfig["gameTimeArg"])
 
@@ -81,7 +88,7 @@ var gamePlayState = new Phaser.Class({
 
         this.cameras.main.setBounds(0, 0, 775, 625).setName('main');
         this.cameras.main.setZoom(4);
-        this.cameras.main.startFollow(this.playerDude.physicsObj);
+        this.cameras.main.startFollow(this.playerList[playerId].physicsObj);
         this.cameras.main.setLerp(0.2);
 
         var keys = this.input.keyboard.addKeys('UP, DOWN, RIGHT, LEFT, R')
@@ -138,21 +145,31 @@ var gamePlayState = new Phaser.Class({
         for(const victimIndex of this.gameState.set_victims){
             if (rescueIndexes.includes(victimIndex)){
                 if (this.gameState.set_victims.has(victimIndex)){
-                    socket.emit("rescue_success", {'x': this.playerList[playerId].x, 'y': this.playerList[playerId].y,
+                    socket.emit("rescue", {'x': this.playerList[playerId].x, 'y': this.playerList[playerId].y,
                     "event":"rs", "aws_id": turk.emit(), 'rm_id':roomIdx, "socket_id":socketId, 'p_id': playerId, "victims_alive": Array.from(this.gameState.set_victims),
                     "victim":victimIndex, "time":new Date().toISOString()})
-                    this.gameState.victimObj[String(victimIndex)].fillColor = "0xf6fa78";
-                    this.gameState.set_victims.delete(victimIndex);
-                    victimCount = this.gameState.set_victims.size
-                    if (this.gameState.set_victims.size === 0){
-                        console.log("SUCCESS")
-                        this.input.keyboard.removeAllKeys()
-                        sessionId = endSession(game, socket, gameTimer, playerId, roomIdx, sessionId, turk.emit(), socketId, "go_victim", sessionLimit, "Victim Saved")
-                    }
                 }
             }
         }
     },
+
+    _rescueDisplay (message){
+        let victimIndex = message["victim"];
+        if (this.gameState.set_victims.has(victimIndex)){
+            socket.emit("rescue_displayed", {'x': this.playerList[playerId].x, 'y': this.playerList[playerId].y,
+            "event":"rs", "aws_id": turk.emit(), 'rm_id':roomIdx, "socket_id":socketId, 'p_id': playerId, "victims_alive": Array.from(this.gameState.set_victims),
+            "victim":victimIndex, "time":new Date().toISOString()})
+            this.gameState.victimObj[String(victimIndex)].fillColor = "0xf6fa78";
+            this.gameState.set_victims.delete(victimIndex);
+            victimCount = this.gameState.set_victims.size
+            if (this.gameState.set_victims.size === 0){
+                console.log("SUCCESS")
+                this.input.keyboard.removeAllKeys()
+                sessionId = endSession(game, socket, gameTimer, playerId, roomIdx, sessionId, turk.emit(), socketId, "go_victim", sessionLimit, "Victim Saved")
+            }
+        }
+    },
+
     _playerMove: function(x, y, direction){
         console.log(x,y, direction);
         let newIdx = (y*this.mapConfig.cols)+ x;
@@ -183,7 +200,7 @@ var gameInfoState = new Phaser.Class({
 
     },
     create: function() {
-        this._setNavigationMapCondition(["noKnowledgeCondition", "noKnowledgeCondition", "noKnowledgeCondition", "noKnowledgeCondition"]);
+        this._setNavigationMapCondition();
         this.navigationMapData = getNavigationMapData()
         this._createNavigationMapConfigData()
         this.gameNavigationInfo = new NavigationMap(this.navigationMapConfig, this)
@@ -223,26 +240,11 @@ var gameInfoState = new Phaser.Class({
             this.tr = "noKnowledgeCondition";
             this.bl = "noKnowledgeCondition";
             this.br = "noKnowledgeCondition";
-            if(Math.random() < .3){ // first randomization
-                if (Math.random() < .5){ // post accident*/
-                    this.tl = "knowledgeCondition";
-                    this.tr = "knowledgeCondition";
-                    this.bl = "knowledgeCondition";
-                    this.br = "knowledgeCondition";
-                }
-            }else{ // second randomization
-                if(Math.random() < .5){
-                    this.tl = "knowledgeCondition";
-                }
-                if(Math.random() < .5){
-                    this.tr = "knowledgeCondition";
-                }
-                if(Math.random() < .5){
-                    this.bl = "knowledgeCondition";
-                }
-                if(Math.random() < .5){
-                    this.br = "knowledgeCondition";
-                }
+            if(Math.random() < .5){
+                this.tl = "knowledgeCondition";
+                this.tr = "knowledgeCondition";
+                this.bl = "knowledgeCondition";
+                this.br = "knowledgeCondition";
             }
         }
         socket.emit("game_info", {"event": "navigation_map", "socket_id":socketId, "aws_id": turk.emit(), 'rm_id':roomIdx, 'p_id': playerId, "time":new Date().toISOString(),

@@ -9,6 +9,7 @@
   <link href="https://surveyjs.azureedge.net/1.8.11/modern.css" type="text/css" rel="stylesheet" />
   <script src="https://surveyjs.azureedge.net/1.8.11/survey.jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.2.0/socket.io.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
   <script src="/js/lib/easytimer.min.js"></script>
   <script src="/js/lib/phaser.min.js"></script>
   <script src="/js/lib/mmturkey.js"></script>
@@ -49,7 +50,7 @@
     </div>
   </div>
   <div style='display: none;' class="container" id="quiz-success">
-    <h1 class="font-weight-bold" style='text-align:center; margin:10%; color:chocolate;'>Succeded Attention Check Screen.</h1>
+    <h1 class="font-weight-bold" style='text-align:center; margin:10%; color:chocolate;'>Succeeded Attention Check Screen.</h1>
     <h2 class="font-weight-bold" style='text-align:center; margin:10%; color:darkslategray;'>That is correct. You may now start the game. Good luck!</h2>
     <a class="btn btn-primary btn-lg btn-block" id="join-room">
       Click to Join Game Room
@@ -88,15 +89,7 @@
         </h2>
         <h3> Please pay attention to these task instructions, you will be asked questions to test your comprehension, 
         and you won’t be able to start the task until you answer them accurately.</h3>
-        <p>To help you navigate the building, the blueprint will appear at the left of your screen as a minimap.
-        This minimap will not show where the victims are but may help you to plan your path through the building so 
-        you can find and save all the victims more quickly. The sections of the minimap that are based on the 
-        pre-earthquake blueprint (that may be unreliable) has a white background, whereas the sections that are 
-        based on the accurate post-earthquake blueprints have a grey background. Entryways into rooms are highlighted 
-        in blue, whereas rubble from the earthquake is highlighted in red. What section of the map uses what blueprint 
-        is randomised, so you might see a minimap with an entirely white background or an entirely grey background, or 
-        with different regions with different background colors. It is important that you pay attention so that you know 
-        how reliable the map is, and can plan accordingly.
+        <p>To help you navigate the building, the blueprint will appear at the left of your screen as a minimap.This minimap will not show where the victims are but may help you to plan your path through the building so you can find and save all the victims more quickly. The minimap based on the pre-earthquake blueprint (that may be unreliable) has a white background, whereas the accurate post-earthquake minimap has a grey background. Entryways into rooms are highlighted in blue, whereas rubble from the earthquake is highlighted in red. You will not know what type of map you will see before the game starts. It is important that you pay attention so that you know how reliable the map is, and can plan accordingly.
         </p>
         <p>
           There are 24 victims to save in total. You will see how many victims are left to save at the top of the screen. Good luck!
