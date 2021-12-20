@@ -60,18 +60,19 @@ var getGameData = function(){
         "roundLimit":20000000,
         "players":[{
             "playerX":5,
-            "playerY":77,
+            "playerY":75,
             "playerName":"dude",
             "playerFrameWidth":32,
             "playerFrameHeight":48,
-        },
-        {
-            "playerX":6,
-            "playerY":77,
-            "playerName":"player1",
-            "playerFrameWidth":32,
-            "playerFrameHeight":48,
-        }],
+        }
+        // {
+        //     "playerX":6,
+        //     "playerY":77,
+        //     "playerName":"player1",
+        //     "playerFrameWidth":32,
+        //     "playerFrameHeight":48,
+        // }
+    ],
         "leaderName":null,
         "leaderDelay":null,
         "leaderX":null,
