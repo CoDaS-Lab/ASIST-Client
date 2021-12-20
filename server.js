@@ -7,7 +7,7 @@ app.use('/', express.static(public));
 const game_config = require('./config/game-map_v0.1.json');
 console.log("MapCols:", game_config.cols + ' | MapRows:' + game_config.rows)
 
-const survey_config = require('./config/survey_v0.1.json');
+const survey_config = require('./config/survey_v0.2.json');
 
 const navigation_config = require('./config/navigation-map_v0.1.json');
 
