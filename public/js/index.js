@@ -200,7 +200,7 @@ var gameInfoState = new Phaser.Class({
 
     },
     create: function() {
-        this._setNavigationMapCondition(["noKnowledgeCondition", "noKnowledgeCondition", "noKnowledgeCondition", "noKnowledgeCondition"]);
+        this._setNavigationMapCondition();
         this.navigationMapData = getNavigationMapData()
         this._createNavigationMapConfigData()
         this.gameNavigationInfo = new NavigationMap(this.navigationMapConfig, this)
@@ -240,26 +240,11 @@ var gameInfoState = new Phaser.Class({
             this.tr = "noKnowledgeCondition";
             this.bl = "noKnowledgeCondition";
             this.br = "noKnowledgeCondition";
-            if(Math.random() < .3){ // first randomization
-                if (Math.random() < .5){ // post accident*/
-                    this.tl = "knowledgeCondition";
-                    this.tr = "knowledgeCondition";
-                    this.bl = "knowledgeCondition";
-                    this.br = "knowledgeCondition";
-                }
-            }else{ // second randomization
-                if(Math.random() < .5){
-                    this.tl = "knowledgeCondition";
-                }
-                if(Math.random() < .5){
-                    this.tr = "knowledgeCondition";
-                }
-                if(Math.random() < .5){
-                    this.bl = "knowledgeCondition";
-                }
-                if(Math.random() < .5){
-                    this.br = "knowledgeCondition";
-                }
+            if(Math.random() < .5){
+                this.tl = "knowledgeCondition";
+                this.tr = "knowledgeCondition";
+                this.bl = "knowledgeCondition";
+                this.br = "knowledgeCondition";
             }
         }
         socket.emit("game_info", {"event": "navigation_map", "socket_id":socketId, "aws_id": turk.emit(), 'rm_id':roomIdx, 'p_id': playerId, "time":new Date().toISOString(),
