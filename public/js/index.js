@@ -200,7 +200,7 @@ var gameInfoState = new Phaser.Class({
 
     },
     create: function() {
-        this._setNavigationMapCondition();
+        this._setNavigationMapCondition(["noKnowledgeCondition", "noKnowledgeCondition", "noKnowledgeCondition", "noKnowledgeCondition"]);
         this.navigationMapData = getNavigationMapData()
         this._createNavigationMapConfigData()
         this.gameNavigationInfo = new NavigationMap(this.navigationMapConfig, this)
